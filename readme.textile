@@ -1,0 +1,7 @@
+h1. ForkUO.readme
+
+Keep in mind that the subversion may not always be stable enough to run as is, this is a working project. Although we will do our best to commit error free code so you can at least compile your own server if you want to do some testing.
+
+In order to compile your own server. You will need to open the project source file *ForkUO.sln* with *Visual Studio*. You then build the entire solution. As the build will fail if you don't allow it to build the Ultima library.
+
+Find more new and help on the "wiki(ForkUO Wiki)":https://www.assembla.com/spaces/forkuo/wiki.
