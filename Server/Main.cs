@@ -20,7 +20,6 @@ namespace Server
 
     public static class Core
     {
-        private static ArtworkFactory _artFactory;
         private static bool m_Crashed;
         private static Thread timerThread;
         private static string m_BaseDirectory;
@@ -35,18 +34,11 @@ namespace Server
         private static bool m_HaltOnWarning;
         private static bool m_VBdotNET;
         private static MultiTextWriter m_MultiConOut;
+        private static OpenUOSDK _openUOSDK;
 
         private static bool m_Profiling;
         private static DateTime m_ProfileStart;
         private static TimeSpan m_ProfileTime;
-
-        public static ArtworkFactory ArtFactory
-        {
-            get
-            {
-                return _artFactory;
-            }
-        }
 
         private static MessagePump m_MessagePump;
 
@@ -167,6 +159,13 @@ namespace Server
             get
             {
                 return m_MultiConOut;
+            }
+        }
+        public static OpenUOSDK OpenUOSDK
+        {
+            get
+            {
+                return _openUOSDK;
             }
         }
 
@@ -503,13 +502,6 @@ namespace Server
 
         public static void Main(string[] args)
         {
-            IoCContainer container = new IoCContainer();
-            container.RegisterModule<OpenUO.Ultima.UltimaSDKCoreModule>();
-            container.RegisterModule<OpenUO.Ultima.Windows.Forms.UltimaSDKBitmapModule>();
-
-            InstallLocation installLocation = InstallationLocator.Locate().FirstOrDefault();
-            _artFactory = new ArtworkFactory(installLocation/*@"C:\Server"*/, container);
-
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
 
@@ -613,6 +605,8 @@ namespace Server
                 Console.WriteLine("Core: Server garbage collection mode enabled");
                 Utility.PopColor();
             }
+
+            _openUOSDK = new OpenUOSDK();
 
             while (!ScriptCompiler.Compile(m_Debug, m_Cache))
             {
