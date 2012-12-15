@@ -826,11 +826,13 @@ namespace Server
         {
             try 
             { 
-                return Core.ArtFactory.GetStatic<Bitmap>(itemID);
+                return OpenUOSDK.ArtFactory.GetStatic<Bitmap>(itemID);
             }
-            catch (Exception e) 
-            { 
-                Console.WriteLine(e.ToString()); 
+            catch
+            {
+                Utility.PushColor(ConsoleColor.Red);
+                Console.WriteLine("Error: Not able to read client files.");
+                Utility.PopColor();
             }
 
             return null;

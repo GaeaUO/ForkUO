@@ -160,6 +160,34 @@ namespace Server.Movement
             {
                 StaticTile tile = tiles[i];
                 ItemData itemData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+				#region SA
+                if (m.Flying && (itemData.Name == "hover over"))
+                {
+                    newZ = tile.Z;
+                    return true;
+                }
+                else if (m is StygianDragon && map == Map.TerMur)
+                {
+                    if (x >= 307 && x <= 354 && y >= 126 && y <= 192)
+                    {
+                        if (tile.Z > newZ)
+                            newZ = tile.Z;
+
+                        moveIsOk = true;
+                    }
+                    else if (x >= 42 && x <= 89)
+                    {
+                        if ((y >= 333 && y <= 399) || (y >= 531 && y <= 597) || (y >= 739 && y <= 805))
+                        {
+                            if (tile.Z > newZ)
+                                newZ = tile.Z;
+
+                            moveIsOk = true;
+                        }
+                    }
+                }
+				#endregion
+
                 TileFlag flags = itemData.Flags;
 
                 if ((flags & ImpassableSurface) == TileFlag.Surface || (canSwim && (flags & TileFlag.Wet) != 0)) // Surface && !Impassable
@@ -216,6 +244,13 @@ namespace Server.Movement
                 ItemData itemData = item.ItemData;
                 TileFlag flags = itemData.Flags;
 
+				#region SA
+                if (m.Flying && (itemData.Name == "hover over"))
+                {
+                    newZ = item.Z;
+                    return true;
+                }
+				#endregion
                 if (!item.Movable && ((flags & ImpassableSurface) == TileFlag.Surface || (m.CanSwim && (flags & TileFlag.Wet) != 0))) // Surface && !Impassable && !Movable
                 {
                     if (cantWalk && (flags & TileFlag.Wet) == 0)
