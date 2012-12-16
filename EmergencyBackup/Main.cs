@@ -18,7 +18,7 @@ namespace EmergencyBackup
                     if (args.Length == 3)
                     {
                         int compression = 0;
-                        if (args[3] != null)
+                        if (args[2] != null)
                         {
                             try
                             {

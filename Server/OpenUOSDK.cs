@@ -166,7 +166,7 @@ namespace Server
             if (!Directory.Exists(location.ToString()))
             {
                 Utility.PushColor(ConsoleColor.Red);
-                Console.WriteLine("OpenUO Error: Client files now found.");
+                Console.WriteLine("OpenUO Error: Client files not found.");
                 Utility.PopColor();
             }
 
