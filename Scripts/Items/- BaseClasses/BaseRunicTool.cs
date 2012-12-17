@@ -316,17 +316,13 @@ namespace Server.Items
             SlayerGroup group = groups[Utility.Random(groups.Length - 1)]; //-1 To Exclude the Fey Slayer which appears ONLY on a certain artifact.
             SlayerEntry entry;
 
-            if (10 > Utility.Random(100)) // 10% chance to do super slayer
+            if (group.Entries.Length == 0 || 10 > Utility.Random(100)) // 10% chance to do super slayer
             {
                 entry = group.Super;
             }
             else
             {
                 SlayerEntry[] entries = group.Entries;
-
-                if (entries.Length == 0)
-                    return SlayerName.None;
-
                 entry = entries[Utility.Random(entries.Length)];
             }
 
