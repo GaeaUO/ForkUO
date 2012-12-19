@@ -55,6 +55,7 @@ namespace Server.Items
             count += MoonGen(PMList.Ilshenar);
             count += MoonGen(PMList.Malas);
             count += MoonGen(PMList.Tokuno);
+            count += MoonGen(PMList.TerMur);
 
             World.Broadcast(0x35, true, "{0} moongates generated.", count);
         }
@@ -246,6 +247,12 @@ namespace Server.Items
                 new PMEntry(new Point3D(802, 1204, 25), 1063413), // Makoto-Jima
                 new PMEntry(new Point3D(270, 628, 15), 1063414)// Homare-Jima
             });
+        public static readonly PMList TerMur =
+            new PMList(1113602, 1113602, Map.TerMur, new PMEntry[]
+			{
+				new PMEntry(new Point3D(852, 3526, -43), 1113603), // Royal City
+				new PMEntry(new Point3D(926, 3989, -36), 1112572), // Holy City
+			});
         public static readonly PMList[] UORLists = new PMList[] { Trammel, Felucca };
         public static readonly PMList[] UORListsYoung = new PMList[] { Trammel };
         public static readonly PMList[] LBRLists = new PMList[] { Trammel, Felucca, Ilshenar };
@@ -254,6 +261,8 @@ namespace Server.Items
         public static readonly PMList[] AOSListsYoung = new PMList[] { Trammel, Ilshenar, Malas };
         public static readonly PMList[] SELists = new PMList[] { Trammel, Felucca, Ilshenar, Malas, Tokuno };
         public static readonly PMList[] SEListsYoung = new PMList[] { Trammel, Ilshenar, Malas, Tokuno };
+		public static readonly PMList[] SALists	= new PMList[] { Trammel, Felucca, Ilshenar, Malas, Tokuno, TerMur };
+		public static readonly PMList[] SAListsYoung = new PMList[] { Trammel, Ilshenar, Malas, Tokuno, TerMur };
         public static readonly PMList[] RedLists = new PMList[] { Felucca };
         public static readonly PMList[] SigilLists = new PMList[] { Felucca };
         private readonly int m_Number;
@@ -326,7 +335,9 @@ namespace Server.Items
                     ClientFlags flags = mobile.NetState == null ? ClientFlags.None : mobile.NetState.Flags;
                     bool young = mobile is PlayerMobile ? ((PlayerMobile)mobile).Young : false;
 
-                    if (Core.SE && (flags & ClientFlags.Tokuno) != 0)
+                    if (Core.SA && (flags & ClientFlags.TerMur) != 0)
+                        checkLists = young ? PMList.SAListsYoung : PMList.SALists;
+                    else if (Core.SE && (flags & ClientFlags.Tokuno) != 0)
                         checkLists = young ? PMList.SEListsYoung : PMList.SELists;
                     else if (Core.AOS && (flags & ClientFlags.Malas) != 0)
                         checkLists = young ? PMList.AOSListsYoung : PMList.AOSLists;
