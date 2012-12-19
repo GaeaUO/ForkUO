@@ -92,10 +92,7 @@ namespace Server.Engines.Quests
         [Constructable]
         public FrightenedDryad()
             : base("The Frightened Dryad")
-        {
-            this.InitStats(100, 100, 25);
-
-            this.Female = true;
+        {       
         }
 
         public FrightenedDryad(Serial serial)
@@ -114,11 +111,11 @@ namespace Server.Engines.Quests
             }
         }
 
-        protected override void OnMapChange(Map oldMap)
+        public override void InitBody()
         {
-            base.OnMapChange(oldMap);
+            this.InitStats(100, 100, 25);
+            this.Female = true;
             this.Body = 266;
-            this.Name = "The Frightened Dryad";
         }
 
         public override void Serialize(GenericWriter writer)

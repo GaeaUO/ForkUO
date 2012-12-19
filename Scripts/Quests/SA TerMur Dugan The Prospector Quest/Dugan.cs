@@ -44,6 +44,7 @@ namespace Server.Engines.Quests
                 };
             }
         }
+
         public override void InitBody()
         {
             this.InitStats(100, 100, 25);
@@ -51,20 +52,20 @@ namespace Server.Engines.Quests
             this.Female = false;
             this.Race = Race.Human;
             this.Body = 0x190;
-            this.Blessed = true;
 
-            this.Hue = 0x8412;
-            this.HairItemID = 0x2047;
-            this.HairHue = 0x465;
+            this.Hue = 0x83EA;
+            this.HairItemID = 0x203C;
         }
 
         public override void InitOutfit()
         {
             this.AddItem(new Backpack());
-            this.AddItem(new Boots());
-            this.AddItem(new LongPants(0x6C7));
-            this.AddItem(new FancyShirt(0x6BB));
-            this.AddItem(new Cloak(0x59));
+            this.AddItem(new Shoes());
+            this.AddItem(new LeatherArms());
+            this.AddItem(new LeatherChest());
+            this.AddItem(new LeatherLegs());
+            this.AddItem(new LeatherGloves());
+            this.AddItem(new GnarledStaff());
         }
 
         public override void Serialize(GenericWriter writer)

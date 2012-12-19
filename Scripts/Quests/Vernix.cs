@@ -190,7 +190,7 @@ namespace Server.Engines.Quests
     {
         [Constructable]
         public Vernix()
-            : base("Vernix", "the Green Goblin King")
+            : base("Vernix")
         { 
         }
 
@@ -210,6 +210,7 @@ namespace Server.Engines.Quests
                 };
             }
         }
+
         public override void InitBody()
         {
             this.InitStats(100, 100, 25);
@@ -221,10 +222,6 @@ namespace Server.Engines.Quests
         public override void InitOutfit()
         {
             this.AddItem(new Backpack());
-            this.AddItem(new Shoes(0x755));
-            this.AddItem(new LongPants(0x1BB));
-            this.AddItem(new FancyShirt(0x71E));
-            this.AddItem(new Cloak(0x59));
         }
 
         public override void Advertise()

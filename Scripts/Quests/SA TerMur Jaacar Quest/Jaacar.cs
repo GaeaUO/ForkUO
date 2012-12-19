@@ -24,9 +24,8 @@ namespace Server.Engines.Quests
     {
         [Constructable]
         public Jaacar()
-            : base()
+            : base("Jaacar")
         {
-            this.Name = "Jaacar";
         }
 
         public Jaacar(Serial serial)
@@ -44,23 +43,12 @@ namespace Server.Engines.Quests
                 };
             }
         }
+
         public override void InitBody()
         {
-            this.HairItemID = 0x2044;//
-            this.HairHue = 1153;
-            this.FacialHairItemID = 0x204B;
-            this.FacialHairHue = 1153;
-            this.Body = 723;
-            this.Blessed = true;
-        }
-
-        public override void InitOutfit()
-        {
-            this.AddItem(new Backpack());
-            this.AddItem(new Boots());
-            this.AddItem(new LongPants(0x6C7));
-            this.AddItem(new FancyShirt(0x6BB));
-            this.AddItem(new Cloak(0x59));
+            this.InitStats(100, 100, 25);
+            this.Body = 334;
+            this.Female = false;
         }
 
         public override void Serialize(GenericWriter writer)
