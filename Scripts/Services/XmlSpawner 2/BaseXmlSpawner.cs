@@ -2991,7 +2991,7 @@ namespace Server.Mobiles
                                 {
                                     foreach (Mobile p in ((Item)refobject).GetMobilesInRange(range))
                                     {
-                                        if (p.Player && p.AccessLevel == AccessLevel.Player)
+                                        if (p.Player && p.IsPlayer())
                                             nplayers++;
                                     }
                                 }
@@ -2999,7 +2999,7 @@ namespace Server.Mobiles
                                 {
                                     foreach (Mobile p in ((Mobile)refobject).GetMobilesInRange(range))
                                     {
-                                        if (p.Player && p.AccessLevel == AccessLevel.Player)
+                                        if (p.Player && p.IsPlayer())
                                             nplayers++;
                                     }
                                 }
@@ -4781,7 +4781,7 @@ namespace Server.Mobiles
                     {
                         foreach (Mobile p in ((Item)o).GetMobilesInRange(range))
                         {
-                            if (p.Player && p.AccessLevel == AccessLevel.Player)
+                            if (p.Player && p.IsPlayer())
                                 nplayers++;
                         }
                     }
@@ -4789,7 +4789,7 @@ namespace Server.Mobiles
                     {
                         foreach (Mobile p in ((Mobile)o).GetMobilesInRange(range))
                         {
-                            if (p.Player && p.AccessLevel == AccessLevel.Player)
+                            if (p.Player && p.IsPlayer())
                                 nplayers++;
                         }
                     }

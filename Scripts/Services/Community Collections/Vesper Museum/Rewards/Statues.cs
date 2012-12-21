@@ -19,7 +19,7 @@ namespace Server.Items
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.AccessLevel == AccessLevel.Player) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
+            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
             {
                 int cliloc = Utility.RandomMinMax(1073266, 1073286);
 

@@ -913,7 +913,7 @@ namespace Server.Engines.XmlSpawner2
 
         public override string OnIdentify(Mobile from)
         {
-            if (from == null || from.AccessLevel == AccessLevel.Player)
+            if (from == null || from.IsPlayer())
                 return null;
 
             if (this.Expiration > TimeSpan.Zero)
@@ -1148,7 +1148,7 @@ namespace Server.Engines.XmlSpawner2
                         // check to see if anyone is around
                         foreach (Mobile p in ((Item)this.m_Siege.AttachedTo).GetMobilesInRange(24))
                         {
-                            if (p.Player /*&& p.AccessLevel == AccessLevel.Player */)
+                            if (p.Player /*&& p.IsPlayer() */)
                             {
                                 nplayers++;
                                 break;

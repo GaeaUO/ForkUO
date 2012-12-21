@@ -1256,11 +1256,15 @@ namespace Server
         {
             if (!System.IO.File.Exists("Data/Regions.xml"))
             {
+                Utility.PushColor(ConsoleColor.Red);
                 Console.WriteLine("Error: Data/Regions.xml does not exist");
+                Utility.PopColor();
                 return;
             }
 
+            Utility.PushColor(ConsoleColor.Yellow);
             Console.Write("Regions: Loading...");
+            Utility.PopColor();
 
             XmlDocument doc = new XmlDocument();
             doc.Load(System.IO.Path.Combine(Core.BaseDirectory, "Data/Regions.xml"));
@@ -1269,7 +1273,9 @@ namespace Server
 
             if (root == null)
             {
+                Utility.PushColor(ConsoleColor.Red);
                 Console.WriteLine("Could not find root element 'ServerRegions' in Regions.xml");
+                Utility.PopColor();
             }
             else
             {
@@ -1279,14 +1285,20 @@ namespace Server
                     if (ReadMap(facet, "name", ref map))
                     {
                         if (map == Map.Internal)
+                        {
+                            Utility.PushColor(ConsoleColor.Red);
                             Console.WriteLine("Invalid internal map in a facet element");
+                            Utility.PopColor();
+                        }
                         else
                             LoadRegions(facet, map, null);
                     }
                 }
             }
 
+            Utility.PushColor(ConsoleColor.Green);
             Console.WriteLine("done");
+            Utility.PopColor();
         }
 
         protected static string GetAttribute(XmlElement xml, string attribute, bool mandatory)

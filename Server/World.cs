@@ -178,7 +178,9 @@ namespace Server
             m_Loaded = true;
             m_LoadingType = null;
 
+            Utility.PushColor(ConsoleColor.Yellow);
             Console.Write("World: Loading...");
+            Utility.PopColor();
 
             Stopwatch watch = Stopwatch.StartNew();
 
@@ -380,7 +382,9 @@ namespace Server
                             }
                             catch
                             {
+                                Utility.PushColor(ConsoleColor.Red);
                                 Console.WriteLine("Error loading {0}, Serial: {1}", typeName, serial);
+                                Utility.PopColor();
                             }
 
                             if (saveData != null)
@@ -577,7 +581,9 @@ namespace Server
 
             if (failedItems || failedMobiles || failedGuilds || failedData)
             {
+                Utility.PushColor(ConsoleColor.Red);
                 Console.WriteLine("An error was encountered while loading a saved object");
+                Utility.PopColor();
 
                 Console.WriteLine(" - Type: {0}", failedType);
 
@@ -642,7 +648,9 @@ namespace Server
                 }
                 else
                 {
+                    Utility.PushColor(ConsoleColor.Red);
                     Console.WriteLine("An exception will be thrown and the server will terminate.");
+                    Utility.PopColor();
                 }
 
                 throw new Exception(String.Format("Load failed (items={0}, mobiles={1}, guilds={2}, customs={3}, type={6}, serial={7})", failedItems, failedMobiles, failedGuilds, failedData, failedType, (failedSerial != Serial.Zero ? failedSerial.ToString() : failedCustomSerial.ToString())), failed);
@@ -675,7 +683,9 @@ namespace Server
 
             watch.Stop();
 
+            Utility.PushColor(ConsoleColor.Green);
             Console.WriteLine("done ({1} items, {2} mobiles, {3} customs) ({0:F2} seconds)", watch.Elapsed.TotalSeconds, m_Items.Count, m_Mobiles.Count, _Data.Count);
+            Utility.PopColor();
         }
 
         public static void Save()

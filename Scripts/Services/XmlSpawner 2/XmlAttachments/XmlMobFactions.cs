@@ -1090,7 +1090,7 @@ namespace Server.Engines.XmlSpawner2
         public override string OnIdentify(Mobile from)
         {
             // dont let other people identify your faction standings
-            if (this.AttachedTo is Mobile && (from != (Mobile)this.AttachedTo && from != null && from.AccessLevel == AccessLevel.Player))
+            if (this.AttachedTo is Mobile && (from != (Mobile)this.AttachedTo && from != null && from.IsPlayer()))
                 return null;
 
             // display the faction status in a gump

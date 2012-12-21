@@ -1178,7 +1178,7 @@ namespace Server.Items
             if (!base.CanTeleport(m))
                 return false;
 
-            if (this.GetFlag(ConditionFlag.StaffOnly) && m.AccessLevel < AccessLevel.Counselor)
+            if (this.GetFlag(ConditionFlag.StaffOnly) && m.IsPlayer())
                 return false;
 
             if (this.GetFlag(ConditionFlag.DenyMounted) && m.Mounted)

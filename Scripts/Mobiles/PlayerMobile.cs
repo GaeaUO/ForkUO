@@ -4915,7 +4915,7 @@ namespace Server.Mobiles
 		{
 			get
 			{
-				return (this.AccessLevel < AccessLevel.Counselor) & !this.Flying;
+				return (this.IsPlayer()) & !this.Flying;
 			}
 		}
 

@@ -141,7 +141,7 @@ namespace Server.Engines.XmlSpawner2
             string msg = null;
 
             // can force identification before the skill mods can be applied
-            if (from != null && from.AccessLevel == AccessLevel.Player)
+            if (from != null && from.IsPlayer())
             {
                 this.m_Identified = true;
             }

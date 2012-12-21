@@ -39,7 +39,7 @@ namespace Server.Misc
         {
             Mobile from = e.Mobile;
 
-            if (from == null || from.AccessLevel < AccessLevel.Counselor)
+            if (from == null || from.IsPlayer())
                 return;
 
             if (HasDisconnected(from))

@@ -97,7 +97,7 @@ namespace Server.Engines.XmlSpawner2
 
         public override string OnIdentify(Mobile from)
         {
-            if (from == null || from.AccessLevel == AccessLevel.Player || !(this.AttachedTo is BaseCreature))
+            if (from == null || from.IsPlayer() || !(this.AttachedTo is BaseCreature))
                 return null;
 
             BaseCreature b = this.AttachedTo as BaseCreature;

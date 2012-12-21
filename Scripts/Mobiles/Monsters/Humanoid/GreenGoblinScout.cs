@@ -95,7 +95,7 @@ namespace Server.Mobiles
         {
             foreach (Mobile m in this.GetMobilesInRange(10))
             {
-                if (m.Player && m.Hidden && m.AccessLevel == AccessLevel.Player)
+                if (m.Player && m.Hidden && m.IsPlayer())
                 {
                     return m;
                 }

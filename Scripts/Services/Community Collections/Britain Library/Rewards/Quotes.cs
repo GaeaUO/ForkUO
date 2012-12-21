@@ -28,7 +28,7 @@ namespace Server.Items
         }// Library Friends - Quotes from the pen of Sherry the Mouse
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.AccessLevel == AccessLevel.Player) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
+            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
             {
                 this.PublicOverheadMessage(MessageType.Regular, 0x3B2, Utility.RandomMinMax(1073301, 1073309));
 				
@@ -81,7 +81,7 @@ namespace Server.Items
         }// Library Friends - Quotes from the pen of Wyrd Beastmaster
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.AccessLevel == AccessLevel.Player) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
+            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
             {
                 this.PublicOverheadMessage(MessageType.Regular, 0x3B2, Utility.RandomMinMax(1073311, 1073316));
 				
@@ -134,7 +134,7 @@ namespace Server.Items
         }// Library Friends - Quotes from the pen of Mercenary Justin
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.AccessLevel == AccessLevel.Player) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
+            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
             {
                 this.PublicOverheadMessage(MessageType.Regular, 0x3B2, Utility.RandomMinMax(1073318, 1073325));
 				
@@ -187,7 +187,7 @@ namespace Server.Items
         }// Library Friends - Quotes from the pen of Heigel of Moonglow
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.AccessLevel == AccessLevel.Player) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
+            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
             {
                 this.PublicOverheadMessage(MessageType.Regular, 0x3B2, Utility.RandomList(1073326, 1073328, 1073329, 1073330, 1073331));
 				
@@ -240,7 +240,7 @@ namespace Server.Items
         }// Library Friends - Quotes from the pen of Horace, Trader
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.AccessLevel == AccessLevel.Player) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
+            if (this.TurnedOn && this.IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, this.Location, 2) && !Utility.InRange(oldLocation, this.Location, 2))
             {
                 this.PublicOverheadMessage(MessageType.Regular, 0x3B2, Utility.RandomMinMax(1073332, 1073337));
 				

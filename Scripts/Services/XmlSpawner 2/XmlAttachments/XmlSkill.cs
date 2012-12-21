@@ -181,7 +181,7 @@ namespace Server.Engines.XmlSpawner2
             if (this.AttachedTo is BaseArmor || this.AttachedTo is BaseWeapon)
             {
                 // can force identification before the skill mods can be applied
-                if (from != null && from.AccessLevel == AccessLevel.Player)
+                if (from != null && from.IsPlayer())
                 {
                     this.m_Identified = true;
                 }

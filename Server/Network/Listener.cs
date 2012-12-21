@@ -157,7 +157,7 @@ namespace Server.Network
             }
 
             Utility.PushColor(ConsoleColor.DarkGreen);
-            Console.WriteLine(@"------------------------------------------------------------------------");
+            Console.WriteLine(@"----------------------------------------------------------------------");
             Utility.PopColor();
         }
 

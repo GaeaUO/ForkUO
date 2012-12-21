@@ -2540,7 +2540,7 @@ namespace Server.Engines.XmlSpawner2
         public override string OnIdentify(Mobile from)
         {
             // uncomment this if you dont want players being able to check points/rank on other players
-            //if((from != null) && (AttachedTo != from) && (from.AccessLevel == AccessLevel.Player)) return null;
+            //if((from != null) && (AttachedTo != from) && (from.IsPlayer())) return null;
             if (!(this.AttachedTo is Mobile))
                 return null;
 

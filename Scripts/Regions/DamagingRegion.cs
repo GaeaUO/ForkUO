@@ -45,7 +45,7 @@ namespace Server.Regions
         {
             base.OnEnter(m);
 		
-            if (m.Player && m.Alive && m.AccessLevel == AccessLevel.Player)
+            if (m.Player && m.Alive && m.IsPlayer())
             {
                 if (this.EnterSound > 0)
                     m.PlaySound(this.EnterSound);
@@ -63,7 +63,7 @@ namespace Server.Regions
 			
             this.StopTimer(m);
 			
-            if (m.Player && m.Alive && m.AccessLevel == AccessLevel.Player)
+            if (m.Player && m.Alive && m.IsPlayer())
                 this.StartTimer(m);
         }
 

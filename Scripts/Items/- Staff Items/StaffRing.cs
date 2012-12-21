@@ -32,7 +32,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from.AccessLevel < AccessLevel.Counselor)
+            if (from.IsPlayer())
             {
                 from.SendMessage("Your not a Staff member, you may not wear this Item..."); 
                 this.Delete();
@@ -41,7 +41,7 @@ namespace Server.Items
 
         public override bool OnEquip(Mobile from)
         {
-            if (from.AccessLevel < AccessLevel.Counselor)
+            if (from.IsPlayer())
             {
                 from.SendMessage("Your not a Staff member, you may not wear this Item..."); 
                 this.Delete();

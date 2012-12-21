@@ -42,7 +42,7 @@ namespace Server.Engines.XmlSpawner2
         {
             base.OnIdentify(from);
 
-            if (from == null || from.AccessLevel == AccessLevel.Player)
+            if (from == null || from.IsPlayer())
                 return null;
 
             if (this.Expiration > TimeSpan.Zero)

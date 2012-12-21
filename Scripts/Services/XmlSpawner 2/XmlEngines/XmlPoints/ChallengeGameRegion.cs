@@ -52,7 +52,7 @@ namespace Server.Engines.XmlSpawner2
             {
                 // dont allow other players to loot corpses while a challenge game is present
                 if ((this.ChallengeGame != null) && !this.ChallengeGame.Deleted && (m != null) && !(((Corpse)o).Owner is BaseCreature) &&
-                    (((Corpse)o).Owner != m) && (m.AccessLevel == AccessLevel.Player))
+                    (((Corpse)o).Owner != m) && (m.IsPlayer()))
                 {
                     XmlPoints.SendText(m, 100105); // "You are not allowed to open that here."
                     return false;

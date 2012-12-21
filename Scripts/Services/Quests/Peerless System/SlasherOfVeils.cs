@@ -178,7 +178,7 @@ namespace Server.Mobiles
         {
             base.OnMovement(m, oldLocation);
 
-            if (this.m_NextTerror < DateTime.Now && m != null && this.InRange(m.Location, 10) && m.AccessLevel == AccessLevel.Player)
+            if (this.m_NextTerror < DateTime.Now && m != null && this.InRange(m.Location, 10) && m.IsPlayer())
             {
                 m.Frozen = true;
                 m.SendLocalizedMessage(1080342, this.Name, 33); // Terror slices into your very being, destroying any chance of resisting ~1_name~ you might have had

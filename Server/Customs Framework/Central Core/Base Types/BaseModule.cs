@@ -14,6 +14,16 @@ namespace CustomsFramework
         {
         }
 
+        public BaseModule(Mobile from)
+        {
+            LinkMobile(from);
+        }
+
+        public BaseModule(Item item)
+        {
+            LinkItem(item);
+        }
+
         public BaseModule(CustomSerial serial)
             : base(serial)
         {

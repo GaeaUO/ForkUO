@@ -391,7 +391,7 @@ namespace Server.Items
 
         public override bool CheckHold(Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight)
         {
-            if (m.AccessLevel == AccessLevel.Player)
+            if (m.IsPlayer())
                 return false;
 
             return base.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
@@ -399,7 +399,7 @@ namespace Server.Items
 
         public override bool TryDropItem(Mobile from, Item dropped, bool sendFullMessage)
         {
-            if (from.AccessLevel == AccessLevel.Player)
+            if (from.IsPlayer())
                 return false;
 
             return base.TryDropItem(from, dropped, sendFullMessage);
@@ -417,7 +417,7 @@ namespace Server.Items
 
         public override bool CheckTarget(Mobile from, Server.Targeting.Target targ, object targeted)
         {
-            if (from.AccessLevel == AccessLevel.Player)
+            if (from.IsPlayer())
                 return false;
 
             return true;

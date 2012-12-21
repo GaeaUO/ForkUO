@@ -1220,7 +1220,7 @@ namespace Server.Items
                 return false;
 
             #region Stygian Abyss
-            if (from.Race == Race.Gargoyle && !this.CanBeWornByGargoyles && from.AccessLevel == AccessLevel.Player)
+            if (from.Race == Race.Gargoyle && !this.CanBeWornByGargoyles && from.IsPlayer())
             {
                 from.SendLocalizedMessage(1111708); // Gargoyles can't wear this.
                 return false;
