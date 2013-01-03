@@ -8930,7 +8930,7 @@ namespace Server
 			{
 				BankBox box = item as BankBox;
 
-				if (box != null && this.IsStaff() && (box.Owner != this || !box.Opened))
+				if (box != null && this.IsPlayer() && (box.Owner != this || !box.Opened))
 					return false;
 			}
 			else if (item is SecureTradeContainer)
