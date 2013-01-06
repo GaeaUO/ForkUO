@@ -688,6 +688,7 @@ namespace Server.Engines.XmlSpawner2
                 {
                     if (entry.Participant != null)
                     {
+                        ((PlayerMobile)entry.Participant).DismountAndStable();
                         this.RefreshNoto(entry.Participant);
                         XmlPoints afrom = (XmlPoints)XmlAttach.FindAttachment(entry.Participant, typeof(XmlPoints));
 
@@ -724,6 +725,7 @@ namespace Server.Engines.XmlSpawner2
                     if (entry.Participant == null || entry.Status == ChallengeStatus.Forfeit)
                         continue;
 
+                    ((PlayerMobile)entry.Participant).RetrivePet();
                     this.ClearChallenge(entry.Participant);
                     
                     // clear combatants

@@ -1164,55 +1164,68 @@ namespace Server.Items
             if (from.IsStaff() || from.InRange(this.GetWorldLocation(), 2))
             {
                 #region Self Looting
-                if (checkSelfLoot && from == this.m_Owner && !this.GetFlag(CorpseFlag.SelfLooted) && this.Items.Count != 0)
+                bool selfLoot = (checkSelfLoot && (from == m_Owner));
+
+                if (selfLoot)
                 {
-                    DeathRobe robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
+                    List<Item> items = new List<Item>(this.Items);
 
-                    if (robe != null)
+                    bool gathered = false;
+
+                    for (int k = 0; k < EquipItems.Count; ++k)
                     {
-                        Map map = from.Map;
+                        Item item2 = EquipItems[k];
 
-                        if (map != null && map != Map.Internal)
+                        if (!items.Contains(item2) && item2.IsChildOf(from.Backpack))
                         {
-                            robe.MoveToWorld(from.Location, map);
-                            robe.BeginDecay();
+                            items.Add(item2);
+                            gathered = true;
                         }
                     }
+
+                    bool didntFit = false;
 
                     Container pack = from.Backpack;
 
-                    if (this.m_RestoreEquip != null && pack != null)
-                    {
-                        List<Item> packItems = new List<Item>(pack.Items); // Only items in the top-level pack are re-equipped
-
-                        for (int i = 0; i < packItems.Count; i++)
-                        {
-                            Item packItem = packItems[i];
-
-                            if (this.m_RestoreEquip.Contains(packItem) && packItem.Movable)
-                                from.EquipItem(packItem);
-                        }
-                    }
-
-                    List<Item> items = new List<Item>(this.Items);
-
-                    bool didntFit = false;
+                    bool checkRobe = true;
 
                     for (int i = 0; !didntFit && i < items.Count; ++i)
                     {
                         Item item = items[i];
                         Point3D loc = item.Location;
 
-                        if ((item.Layer == Layer.Hair || item.Layer == Layer.FacialHair) || !item.Movable || !this.GetRestoreInfo(item, ref loc))
+                        if ((item.Layer == Layer.Hair || item.Layer == Layer.FacialHair) || !item.Movable)
                             continue;
 
-                        if (pack != null && pack.CheckHold(from, item, false, true))
+                        if (checkRobe)
+                        {
+                            DeathRobe robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
+
+                            if (robe != null)
+                            {
+                                if (Core.SA)
+                                {
+                                    robe.Delete();
+                                }
+                                else
+                                {
+                                    Map map = from.Map;
+
+                                    if (map != null && map != Map.Internal)
+                                        robe.MoveToWorld(from.Location, map);
+                                }
+                            }
+                        }
+
+                        if (m_EquipItems.Contains(item) && from.EquipItem(item))
+                        {
+                            gathered = true;
+                        }
+                        else if (pack != null && pack.CheckHold(from, item, false, true))
                         {
                             item.Location = loc;
                             pack.AddItem(item);
-
-                            if (this.m_RestoreEquip != null && this.m_RestoreEquip.Contains(item))
-                                from.EquipItem(item);
+                            gathered = true;
                         }
                         else
                         {
@@ -1220,29 +1233,28 @@ namespace Server.Items
                         }
                     }
 
-                    from.PlaySound(0x3E3);
-
-                    if (this.Items.Count != 0)
+                    if (gathered && !didntFit)
                     {
-                        from.SendLocalizedMessage(1062472); // You gather some of your belongings. The rest remain on the corpse.
-                    }
-                    else
-                    {
-                        this.SetFlag(CorpseFlag.Carved, true);
+                        SetFlag(CorpseFlag.Carved, true);
 
-                        if (this.ItemID == 0x2006)
+                        if (ItemID == 0x2006)
                         {
-                            this.ProcessDelta();
-                            this.SendRemovePacket();
-                            this.ItemID = Utility.Random(0xECA, 9); // bone graphic
-                            this.Hue = 0;
-                            this.ProcessDelta();
+                            ProcessDelta();
+                            SendRemovePacket();
+                            ItemID = Utility.Random(0xECA, 9); // bone graphic
+                            Hue = 0;
+                            ProcessDelta();
                         }
 
+                        from.PlaySound(0x3E3);
                         from.SendLocalizedMessage(1062471); // You quickly gather all of your belongings.
+                        items.Clear();
+                        m_EquipItems.Clear();
+                        return;
                     }
 
-                    this.SetFlag(CorpseFlag.SelfLooted, true);
+                    if (gathered && didntFit)
+                        from.SendLocalizedMessage(1062472); // You gather some of your belongings. The rest remain on the corpse.
                 }
                 #endregion
 

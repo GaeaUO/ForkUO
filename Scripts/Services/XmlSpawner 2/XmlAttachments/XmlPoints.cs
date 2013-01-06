@@ -12,6 +12,7 @@ using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Targeting;
+using CustomsFramework;
 
 namespace Server.Engines.XmlSpawner2
 {
@@ -2218,6 +2219,39 @@ namespace Server.Engines.XmlSpawner2
                 m.PlaySound(0x214);
                 m.FixedEffect(0x376A, 10, 16);
                 m.Resurrect();
+
+                #region Bank and Ethereals
+                BankBox bank = m.BankBox;
+
+                for (int i = 0; i < m.Backpack.Items.Count; i++)
+                {
+                    Item item = m.Backpack.Items[i];
+
+                    if (item.ItemID == 0xE7C && item.Layer == Layer.Bank)
+                    {
+                        Container cont = (Container)item;
+
+                        ArrayList contitem = new ArrayList(cont.Items);
+
+                        foreach (Item item2 in contitem)
+                        {
+                            Utilities.PlaceItemIn(bank, item2, item2.Location);
+                        }
+
+                        item.Delete();
+                    }
+
+                    if (item is EtherealMount)
+                    {
+                        EtherealMount mount = (EtherealMount)item;
+
+                        mount.ItemID = mount.RegularID;
+                        mount.Hue = 0;
+                        mount.Rider = null;
+                    }
+                }
+                #endregion
+
                 if (m.Corpse != null)
                 {
                     m.MoveToWorld(m.Corpse.Location, m.Corpse.Map);

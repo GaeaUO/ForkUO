@@ -105,10 +105,15 @@ namespace CustomsFramework
                 return SaveStrategyTypes.StandardSaveStrategy;
         }
 
-        public static void PlaceItemIn(Container container, int x, int y, Item item)
+        public static void PlaceItemIn(Container container, Item item, Point3D location)
         {
             container.AddItem(item);
-            item.Location = new Point3D(x, y, 0);
+            item.Location = location;
+        }
+
+        public static void PlaceItemIn(Container container, Item item, int x = 0, int y = 0, int z = 0)
+        {
+            PlaceItemIn(container, item, new Point3D(x, y, z));
         }
 
         public static Item BlessItem(Item item)
