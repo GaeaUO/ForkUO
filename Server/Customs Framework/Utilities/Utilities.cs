@@ -131,6 +131,13 @@ namespace CustomsFramework
             return item;
         }
 
+        public static void DumpToConsole(object element)
+        {
+            Console.WriteLine();
+            Console.WriteLine(ObjectDumper.Dump(element));
+            Console.WriteLine();
+        }
+
         public static void Compress7z(string copyPath, string outPath, CompressionLevel compressionLevel)
         {
             SevenZipCompressor compressor = new SevenZipCompressor();
