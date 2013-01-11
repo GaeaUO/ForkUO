@@ -6,7 +6,6 @@ namespace Server.Items
     {
         [Constructable]
         public ChannelersDefender()
-            : base(0x90C)
         {
             this.Name = ("Channeler's Defender");
 		
