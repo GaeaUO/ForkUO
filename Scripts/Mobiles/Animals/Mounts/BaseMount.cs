@@ -143,6 +143,7 @@ namespace Server.Mobiles
                 }
             }
         }
+
         protected Item InternalItem
         {
             get
@@ -150,12 +151,64 @@ namespace Server.Mobiles
                 return this.m_InternalItem;
             }
         }
-        public static void Dismount(Mobile m)
+
+        public static void Dismount(Mobile dismounted)
         {
-            IMount mount = m.Mount;
+            Dismount(dismounted, dismounted, BlockMountType.None, TimeSpan.FromSeconds(0), false);
+        }
+
+        public static void Dismount(Mobile dismounter, Mobile dismounted, BlockMountType blockmounttype, TimeSpan delay)
+        {
+            Dismount(dismounter, dismounted, blockmounttype, TimeSpan.FromSeconds(0), true);
+        }
+
+        public static void Dismount(Mobile dismounter, Mobile dismounted, BlockMountType blockmounttype, TimeSpan delay, bool message)
+        {
+            if (!dismounted.Mounted)
+                return;
+
+            if (dismounted is ChaosDragoonElite)
+            {
+                dismounter.SendLocalizedMessage(1042047); // You fail to knock the rider from its mount.
+            }
+
+            IMount mount = dismounted.Mount;
 
             if (mount != null)
+            {
                 mount.Rider = null;
+                BaseMount.SetMountPrevention(dismounted, blockmounttype, delay);
+
+                if (message)
+                    dismounted.SendLocalizedMessage(1040023); // You have been knocked off of your mount!
+            }
+            else if (dismounted.Flying)
+            {
+                if (!OnFlightPath(dismounted))
+                {
+                    dismounted.Flying = false;
+                    dismounted.Freeze(TimeSpan.FromSeconds(1));
+                    dismounted.Animate(61, 10, 1, true, false, 0);
+                }
+            }
+        }
+
+        public static bool OnFlightPath(Mobile m)
+        {
+            if (!m.Flying)
+                return false;
+
+            StaticTile[] tiles = m.Map.Tiles.GetStaticTiles(m.X, m.Y, true);
+            ItemData itemData;
+            bool onpath = false;
+
+            for (int i = 0; i < tiles.Length && !onpath; ++i)
+            {
+                itemData = TileData.ItemTable[tiles[i].ID & TileData.MaxItemValue];
+                onpath = (itemData.Name == "hover over");
+            }
+
+            return onpath;
         }
 
         public static void SetMountPrevention(Mobile mob, BlockMountType type, TimeSpan duration)
@@ -323,6 +376,13 @@ namespace Server.Mobiles
             if (from.Mounted)
             {
                 from.SendLocalizedMessage(1005583); // Please dismount first.
+                return;
+            }
+
+            if (from.Race == Race.Gargoyle && from.IsPlayer())
+            {
+                from.SendLocalizedMessage(1112281);
+                this.OnDisallowedRider(from);
                 return;
             }
 
