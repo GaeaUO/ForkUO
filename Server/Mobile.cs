@@ -4487,8 +4487,8 @@ namespace Server
 				if (item == pack)
 					continue;
 
-                if ((item.Insured || item.LootType == LootType.Blessed) && item.Parent == this && item.Layer != Layer.Mount)
-                   equip.Add(item); 
+				if ((item.Insured || item.LootType == LootType.Blessed) && item.Parent == this && item.Layer != Layer.Mount)
+				   equip.Add(item); 
 
 				DeathMoveResult res = this.GetParentMoveResultFor(item);
 
