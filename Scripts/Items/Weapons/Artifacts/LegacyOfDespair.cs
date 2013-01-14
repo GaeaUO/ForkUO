@@ -6,7 +6,6 @@ namespace Server.Items
     {
         [Constructable]
         public LegacyOfDespair()
-            : base(0x90B)
         {
             this.Name = ("Legacy Of Despair");
 		

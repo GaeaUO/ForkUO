@@ -10,7 +10,7 @@ namespace Server.Mobiles
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.4, 0.8)
         {
             this.Name = "a vollem";
-            this.Body = 714;
+            this.Body = 293;
             //			BaseSoundID = 397;
 
             this.SetStr(225, 245);
