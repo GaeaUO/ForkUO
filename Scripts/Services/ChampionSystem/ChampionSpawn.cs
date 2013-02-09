@@ -399,26 +399,34 @@ namespace Server.Engines.CannedEvil
         {
             if (this.RandomizeType)
             {
-                switch( Utility.Random(5) )
+                switch (Utility.Random(11))
                 {
                     case 0:
-                        this.Type = ChampionSpawnType.VerminHorde;
-                        break;
+                        this.Type = ChampionSpawnType.Abyss; break;
                     case 1:
-                        this.Type = ChampionSpawnType.UnholyTerror;
-                        break;
+                        this.Type = ChampionSpawnType.Arachnid; break;
                     case 2:
-                        this.Type = ChampionSpawnType.ColdBlood;
-                        break;
+                        this.Type = ChampionSpawnType.ColdBlood; break;
                     case 3:
-                        this.Type = ChampionSpawnType.Abyss;
-                        break;
+                        this.Type = ChampionSpawnType.ForestLord; break;
                     case 4:
-                        this.Type = ChampionSpawnType.Arachnid;
-                        break;
+                        this.Type = ChampionSpawnType.VerminHorde; break;
+                    case 5:
+                        this.Type = ChampionSpawnType.UnholyTerror; break;
+                    case 6:
+                        this.Type = ChampionSpawnType.SleepingDragon; break;
+                    case 7:
+                        this.Type = ChampionSpawnType.Glade; break;
+                    case 8:
+                        this.Type = ChampionSpawnType.Corrupt; break;
+                    case 9:
+                        this.Type = ChampionSpawnType.Terror; break;
+                    case 10:
+                        this.Type = ChampionSpawnType.Infuse; break;
+
                 }
             }
-			
+
             this.m_HasBeenAdvanced = false;
 
             this.Start();

@@ -5712,19 +5712,6 @@ namespace Server.Mobiles
 			}
 
 			[CommandProperty(AccessLevel.GameMaster)]
-			public int Pestilence
-			{
-				get
-				{
-					return this.GetValue(ChampionSpawnType.Pestilence);
-				}
-				set
-				{
-					this.SetValue(ChampionSpawnType.Pestilence, value);
-				}
-			}
-
-			[CommandProperty(AccessLevel.GameMaster)]
 			public int Abyss
 			{
 				get

@@ -478,14 +478,19 @@ namespace Server.Engines.Help
     {
         private static readonly int[] m_AccessLevelHues = new int[]
         {
-            2100,
-            2122,
-            2117,
-            2129,
-            2415,
-            2415,
-            2415
-        };
+                2100, //Player
+                2122, //VIP
+                2122, //Counselor
+                2117, //Decorator
+                2117, //Spawner
+                2117, //GameMaster
+                2129, //Seer
+                2415, //Admin
+                2415, //Developer
+                2415, //CoOwner
+                2415  //Owner
+        }; 
+        
         private readonly PageEntry m_Entry;
         private readonly Mobile m_Mobile;
         public PageEntryGump(Mobile m, PageEntry entry)

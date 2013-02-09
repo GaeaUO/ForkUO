@@ -50,6 +50,9 @@ namespace Server
     public delegate void GuildGumpRequestHandler(GuildGumpRequestArgs e);
     public delegate void QuestGumpRequestHandler(QuestGumpRequestArgs e);
     public delegate void ClientVersionReceivedHandler(ClientVersionReceivedArgs e);
+    public delegate void OnKilledByEventHandler(OnKilledByEventArgs e);
+    public delegate void OnItemUseEventHandler(OnItemUseEventArgs e);
+    public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
     public struct SkillNameValue
     {
@@ -121,6 +124,10 @@ namespace Server
         public static event GuildGumpRequestHandler GuildGumpRequest;
         public static event QuestGumpRequestHandler QuestGumpRequest;
         public static event ClientVersionReceivedHandler ClientVersionReceived;
+        public static event OnKilledByEventHandler OnKilledBy;
+        public static event OnItemUseEventHandler OnItemUse;
+        public static event OnEnterRegionEventHandler OnEnterRegion;
+
         public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
         {
             if (ClientVersionReceived != null)
@@ -373,6 +380,24 @@ namespace Server
         {
             if (WorldSave != null)
                 WorldSave(e);
+        }
+
+        public static void InvokeOnKilledBy(OnKilledByEventArgs e)
+        {
+            if (OnKilledBy != null)
+                OnKilledBy(e);
+        }
+
+        public static void InvokeOnItemUse(OnItemUseEventArgs e)
+        {
+            if (OnItemUse != null)
+                OnItemUse(e);
+        }
+
+        public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
+        {
+            if (OnEnterRegion != null)
+                OnEnterRegion(e);
         }
 
         public static void Reset()
@@ -1724,6 +1749,87 @@ namespace Server
             set
             {
                 this.m_Blocked = value;
+            }
+        }
+    }
+
+    public class OnKilledByEventArgs : EventArgs
+    {
+        private Mobile m_Killed;
+        private Mobile m_KilledBy;
+
+        public OnKilledByEventArgs(Mobile killed, Mobile killedBy)
+        {
+            this.m_Killed = killed;
+            this.m_KilledBy = killedBy;
+        }
+
+        public Mobile Killed
+        {
+            get
+            {
+                return this.m_Killed;
+            }
+        }
+        public Mobile KilledBy
+        {
+            get
+            {
+                return this.m_KilledBy;
+            }
+        }
+    }
+
+    public class OnItemUseEventArgs : EventArgs
+    {
+        private Mobile m_From;
+        private Item m_Item;
+
+        public OnItemUseEventArgs(Mobile from, Item item)
+        {
+            this.m_From = from;
+            this.m_Item = item;
+        }
+
+        public Mobile From
+        {
+            get
+            {
+                return this.m_From;
+            }
+        }
+        public Item Item
+        {
+            get
+            {
+                return this.m_Item;
+            }
+        }
+    }
+
+    public class OnEnterRegionEventArgs : EventArgs
+    {
+        private Mobile m_From;
+        private Region m_Region;
+
+        public OnEnterRegionEventArgs(Mobile from, Region region)
+        {
+            this.m_From = from;
+            this.m_Region = region;
+        }
+
+        public Mobile From
+        {
+            get
+            {
+                return this.m_From;
+            }
+        }
+        public Region Region
+        {
+            get
+            {
+                return this.m_Region;
             }
         }
     }

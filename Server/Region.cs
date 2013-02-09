@@ -1248,6 +1248,8 @@ namespace Server
                 {
                     newR.OnEnter(m);
                     newR = newR.Parent;
+
+                    EventSink.InvokeOnEnterRegion(new OnEnterRegionEventArgs(m, newR));
                 }
             }
         }

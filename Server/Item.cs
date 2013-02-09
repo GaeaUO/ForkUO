@@ -544,6 +544,26 @@ namespace Server
     public class Item : IEntity, IHued, IComparable<Item>, ISerializable, ISpawnable
     {
         #region Customs Framework
+        public BaseModule GetModule(string name)
+        {
+            return World.GetModule(this, name);
+        }
+
+        public BaseModule GetModule(Type type)
+        {
+            return World.GetModule(this, type);
+        }
+
+        public List<BaseModule> GetModules(string name)
+        {
+            return World.GetModules(this, name);
+        }
+
+        public List<BaseModule> SearchModules(string search)
+        {
+            return World.SearchModules(this, search);
+        }
+
         public BaseModule GetModule()
         {
             return World.GetModule(this);
@@ -553,7 +573,6 @@ namespace Server
         {
             return World.GetModules(this);
         }
-
         #endregion
 
         public static readonly List<Item> EmptyItems = new List<Item>();
