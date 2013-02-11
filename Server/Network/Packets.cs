@@ -1039,7 +1039,7 @@ namespace Server.Network
             this.EnsureCapacity(12 + (length * 8));
 
             this.m_Stream.Write((short)0x14);
-            this.m_Stream.Write((short)0x02); // New layout
+            this.m_Stream.Write((short)0x01);
 
             IEntity target = menu.Target as IEntity;
 
