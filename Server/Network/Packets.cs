@@ -1060,12 +1060,9 @@ namespace Server.Network
             {
                 ContextMenuEntry e = entries[i];
 
-                if (e.Number <= 65535)
-                    this.m_Stream.Write((uint)(e.Number + 3000000)); 
-                else
-                    this.m_Stream.Write((uint)e.Number);
-
                 this.m_Stream.Write((short)i);
+
+                this.m_Stream.Write((ushort)e.Number);
 
                 int range = e.Range;
 
