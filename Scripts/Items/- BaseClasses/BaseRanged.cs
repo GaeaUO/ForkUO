@@ -157,7 +157,7 @@ namespace Server.Items
 
         public override void OnHit(Mobile attacker, Mobile defender, double damageBonus)
         {
-            if (attacker.Player && !defender.Player && (defender.Body.IsAnimal || defender.Body.IsMonster) && 0.4 >= Utility.RandomDouble())
+            if (this.AmmoType != null && attacker.Player && !defender.Player && (defender.Body.IsAnimal || defender.Body.IsMonster) && 0.4 >= Utility.RandomDouble())
                 defender.AddToBackpack(this.Ammo);
 
             if (Core.ML && this.m_Velocity > 0)
@@ -187,7 +187,7 @@ namespace Server.Items
                 {
                     PlayerMobile p = attacker as PlayerMobile;
 
-                    if (p != null)
+                    if (p != null && this.AmmoType != null)
                     {
                         Type ammo = this.AmmoType;
 

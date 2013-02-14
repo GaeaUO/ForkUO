@@ -16,7 +16,7 @@ namespace Server.Items
         [Constructable]
         public PowerGenerator(int sideLength)
         {
-            this.AddGeneratorComponent(0x4FA1, 0, 0, 0);
+            this.AddGeneratorComponent(0x73, 0, 0, 0);
             this.AddGeneratorComponent(0x76, -1, 0, 0);
             this.AddGeneratorComponent(0x75, 0, -1, 0);
             this.AddGeneratorComponent(0x37F4, 0, 0, 13);

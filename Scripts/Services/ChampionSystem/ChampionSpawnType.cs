@@ -13,7 +13,6 @@ namespace Server.Engines.CannedEvil
         UnholyTerror,
         SleepingDragon,
         Glade,
-        Pestilence,
         Corrupt,
         #region Stygian Abyss
         Terror,

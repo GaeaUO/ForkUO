@@ -1015,7 +1015,7 @@ namespace Server
                 {
                     BaseModule module = data as BaseModule;
 
-                    if (module.Name == name)
+                    if (module.Name == name && module.LinkedMobile == mobile)
                         return module;
                 }
             }
@@ -1033,7 +1033,7 @@ namespace Server
                 {
                     BaseModule module = data as BaseModule;
 
-                    if (module.Name == name)
+                    if (module.Name == name && module.LinkedMobile == mobile)
                         results.Add(module);
                 }
             }
@@ -1049,7 +1049,57 @@ namespace Server
                 {
                     BaseModule module = data as BaseModule;
 
-                    if (module.GetType() == type)
+                    if (module.GetType() == type && module.LinkedMobile == mobile)
+                        return module;
+                }
+            }
+
+            return null;
+        }
+
+        public static BaseModule GetModule(Item item, string name)
+        {
+            foreach (SaveData data in _Data.Values)
+            {
+                if (data is BaseModule)
+                {
+                    BaseModule module = data as BaseModule;
+
+                    if (module.Name == name && module.LinkedItem == item)
+                        return module;
+                }
+            }
+
+            return null;
+        }
+
+        public static List<BaseModule> GetModules(Item item, string name)
+        {
+            List<BaseModule> results = new List<BaseModule>();
+
+            foreach (SaveData data in _Data.Values)
+            {
+                if (data is BaseModule)
+                {
+                    BaseModule module = data as BaseModule;
+
+                    if (module.Name == name && module.LinkedItem == item)
+                        results.Add(module);
+                }
+            }
+
+            return results;
+        }
+
+        public static BaseModule GetModule(Item item, Type type)
+        {
+            foreach (SaveData data in _Data.Values)
+            {
+                if (data is BaseModule)
+                {
+                    BaseModule module = data as BaseModule;
+
+                    if (module.GetType() == type && module.LinkedItem == item)
                         return module;
                 }
             }
@@ -1077,7 +1127,35 @@ namespace Server
                             match = false;
                     }
 
-                    if (match)
+                    if (match && module.LinkedMobile == mobile)
+                        results.Add(module);
+                }
+            }
+
+            return results;
+        }
+
+        public static List<BaseModule> SearchModules(Item item, string text)
+        {
+            string[] keywords = text.ToLower().Split(' ');
+            List<BaseModule> results = new List<BaseModule>();
+
+            foreach (SaveData data in _Data.Values)
+            {
+                if (data is BaseModule)
+                {
+                    BaseModule module = data as BaseModule;
+
+                    bool match = true;
+                    string name = module.Name.ToLower();
+
+                    for (int i = 0; i < keywords.Length; i++)
+                    {
+                        if (name.IndexOf(keywords[i]) == -1)
+                            match = false;
+                    }
+
+                    if (match && module.LinkedItem == item)
                         results.Add(module);
                 }
             }

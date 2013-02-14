@@ -5786,6 +5786,8 @@ namespace Server.Mobiles
 
             if (this.GivesSAArtifact && Paragon.CheckArtifactChance(mob, this))
                 GiveSAArtifact(mob);
+
+            EventSink.InvokeOnKilledBy(new OnKilledByEventArgs(this, mob));
         }
 
         public override void OnDeath(Container c)
