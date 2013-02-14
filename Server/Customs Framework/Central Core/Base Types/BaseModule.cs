@@ -4,12 +4,13 @@ using Server.Gumps;
 
 namespace CustomsFramework
 {
-    public class BaseModule : BaseCore, ICustomsEntity, ISerializable
+    public sealed class BaseModule : BaseCore, ICustomsEntity, ISerializable
     {
         private Mobile _LinkedMobile;
         private Item _LinkedItem;
         private DateTime _CreatedTime;
         private DateTime _LastEditedTime;
+
         public BaseModule()
         {
         }
@@ -31,63 +32,43 @@ namespace CustomsFramework
 
         public override string Name
         {
-            get
-            {
-                return @"Base Module";
-            }
+            get { return @"Base Module"; }
         }
+
         public override string Description
         {
-            get
-            {
-                return "Base Module, inherit from this class and override all interface items.";
-            }
+            get { return "Base Module, inherit from this class and override all interface items."; }
         }
+
         public override string Version
         {
-            get
-            {
-                return "1.0";
-            }
+            get { return "1.0"; }
         }
+
         public override AccessLevel EditLevel
         {
-            get
-            {
-                return AccessLevel.Developer;
-            }
+            get { return AccessLevel.Developer; }
         }
+
         public override Gump SettingsGump
         {
-            get
-            {
-                return null;
-            }
+            get { return null; }
         }
+
         [CommandProperty(AccessLevel.Administrator)]
         public Mobile LinkedMobile
         {
-            get
-            {
-                return this._LinkedMobile;
-            }
-            set
-            {
-                this._LinkedMobile = value;
-            }
+            get { return this._LinkedMobile; }
+            set { LinkMobile(value); }
         }
+
         [CommandProperty(AccessLevel.Administrator)]
         public Item LinkedItem
         {
-            get
-            {
-                return this._LinkedItem;
-            }
-            set
-            {
-                this._LinkedItem = value;
-            }
+            get { return this._LinkedItem; }
+            set { LinkItem(value); }
         }
+
         [CommandProperty(AccessLevel.Administrator)]
         public DateTime CreatedTime
         {
@@ -96,14 +77,13 @@ namespace CustomsFramework
                 return this._CreatedTime;
             }
         }
+
         [CommandProperty(AccessLevel.Administrator)]
         public DateTime LastEditedTime
         {
-            get
-            {
-                return this._LastEditedTime;
-            }
+            get { return this._LastEditedTime; }
         }
+
         public override string ToString()
         {
             return this.Name;
@@ -115,14 +95,25 @@ namespace CustomsFramework
 
         public override void Delete()
         {
+            if (this._LinkedMobile != null)
+            {
+                this._LinkedMobile.Modules.Remove(this);
+                this._LinkedMobile = null;
+            }
+
+            if (this._LinkedItem != null)
+            {
+                this._LinkedItem.Modules.Remove(this);
+                this._LinkedItem = null;
+            }
         }
 
-        public virtual void Update()
+        public void Update()
         {
             this._LastEditedTime = DateTime.Now;
         }
 
-        public virtual bool LinkMobile(Mobile from)
+        public bool LinkMobile(Mobile from)
         {
             if (this._LinkedMobile != null)
                 return false;
@@ -130,13 +121,16 @@ namespace CustomsFramework
                 return false;
             else
             {
+                if (!from.Modules.Contains(this))
+                    from.Modules.Add(this);
+
                 this._LinkedMobile = from;
                 this.Update();
                 return true;
             }
         }
 
-        public virtual bool LinkItem(Item item)
+        public bool LinkItem(Item item)
         {
             if (this._LinkedItem == null)
                 return false;
@@ -150,7 +144,7 @@ namespace CustomsFramework
             }
         }
 
-        public virtual bool UnlinkMobile()
+        public bool UnlinkMobile()
         {
             if (this._LinkedMobile == null)
                 return false;
@@ -162,7 +156,7 @@ namespace CustomsFramework
             }
         }
 
-        public virtual bool UnlinkItem()
+        public bool UnlinkItem()
         {
             if (this._LinkedItem == null)
                 return false;
@@ -193,8 +187,8 @@ namespace CustomsFramework
             {
                 case 0:
                     {
-                        this._LinkedMobile = reader.ReadMobile();
-                        this._LinkedItem = reader.ReadItem();
+                        this.LinkedMobile = reader.ReadMobile();
+                        this.LinkedItem = reader.ReadItem();
                         this._CreatedTime = reader.ReadDateTime();
                         this._LastEditedTime = reader.ReadDateTime();
                         break;

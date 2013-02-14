@@ -69,25 +69,25 @@ namespace Services.Toolbar.Gumps
 					}
 				case 3:
 					{
-						_Info.Collumns++;
+						_Info.Rows++;
 						m.SendGump(new ToolbarEdit(_Info, this.p_Expanded));
 						break;
 					}
 				case 4:
 					{
-						_Info.Collumns--;
+						_Info.Rows--;
 						m.SendGump(new ToolbarEdit(_Info, this.p_Expanded));
 						break;
 					}
 				case 5:
 					{
-						_Info.Rows++;
+						_Info.Collumns++;
 						m.SendGump(new ToolbarEdit(_Info, this.p_Expanded));
 						break;
 					}
 				case 6:
 					{
-						_Info.Rows--;
+						_Info.Collumns--;
 						m.SendGump(new ToolbarEdit(_Info, this.p_Expanded));
 						break;
 					}

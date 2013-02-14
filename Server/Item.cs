@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using CustomsFramework;
 using Server.ContextMenus;
 using Server.Items;
@@ -163,7 +164,7 @@ namespace Server
         /// </summary>
         Update = 0x00000001,
         /// <summary>
-        /// Resend the item only if it is equiped.
+        /// Resend the item only if it is equipped.
         /// </summary>
         EquipOnly = 0x00000002,
         /// <summary>
@@ -182,7 +183,7 @@ namespace Server
         /// </summary>
         MoveToCorpse,
         /// <summary>
-        /// The item should remain equiped.
+        /// The item should remain equipped.
         /// </summary>
         RemainEquiped,
         /// <summary>
@@ -544,16 +545,60 @@ namespace Server
     public class Item : IEntity, IHued, IComparable<Item>, ISerializable, ISpawnable
     {
         #region Customs Framework
-        public BaseModule GetModule()
+        [CommandProperty(AccessLevel.Developer)]
+        public List<BaseModule> Modules { get; private set; }
+
+        public BaseModule GetModule(string name)
         {
-            return World.GetModule(this);
+            BaseModule module = null;
+
+            foreach (BaseModule mod in Modules.Where(mod => mod.Name == name))
+            {
+                module = mod;
+            }
+
+            return module;
         }
 
-        public List<BaseModule> GetModules()
+        public BaseModule GetModule(Type type)
         {
-            return World.GetModules(this);
+            BaseModule module = null;
+
+            foreach (BaseModule mod in Modules.Where(mod => mod.GetType() == type))
+            {
+                module = mod;
+            }
+
+            return module;
         }
 
+        public List<BaseModule> GetModules(string name)
+        {
+            return Modules.Where(mod => mod.Name == name).ToList();
+        }
+
+        public List<BaseModule> SearchModules(string search)
+        {
+            string[] keywords = search.ToLower().Split(' ');
+            List<BaseModule> modules = new List<BaseModule>();
+
+            foreach (BaseModule mod in Modules)
+            {
+                bool match = true;
+                string name = mod.Name.ToLower();
+
+                foreach (string keyword in keywords)
+                {
+                    if (name.IndexOf(keyword, StringComparison.Ordinal) == -1)
+                        match = false;
+                }
+
+                if (match)
+                    modules.Add(mod);
+            }
+
+            return modules;
+        }
         #endregion
 
         public static readonly List<Item> EmptyItems = new List<Item>();

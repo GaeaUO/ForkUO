@@ -2988,8 +2988,8 @@ namespace Server.Mobiles
 		}
 
 		public override DeathMoveResult GetInventoryMoveResultFor(Item item)
-        {
-            if (this.CheckInsuranceOnDeath(item) && !this.Young)
+		{
+			if (this.CheckInsuranceOnDeath(item) && !this.Young)
 				return DeathMoveResult.MoveToBackpack;
 
 			DeathMoveResult res = base.GetInventoryMoveResultFor(item);
@@ -6078,67 +6078,67 @@ namespace Server.Mobiles
 
 		#endregion
 
-        #region XML PVP Dismount Pet
-        public void DismountAndStable()
-        {
-            BaseCreature bc = Mount as BaseCreature;
+		#region XML PVP Dismount Pet
+		public void DismountAndStable()
+		{
+			BaseCreature bc = Mount as BaseCreature;
 
-            if (Mount != null)
-            {
-                Mount.Rider = null;
-            }
+			if (Mount != null)
+			{
+				Mount.Rider = null;
+			}
 
-            if (bc != null)
-            {
-                bc.ControlTarget = null;
-                bc.ControlOrder = OrderType.Stay;
-                bc.Internalize();
-                bc.SetControlMaster(null);
-                bc.SummonMaster = null;
-                bc.IsStabled = true;
+			if (bc != null)
+			{
+				bc.ControlTarget = null;
+				bc.ControlOrder = OrderType.Stay;
+				bc.Internalize();
+				bc.SetControlMaster(null);
+				bc.SummonMaster = null;
+				bc.IsStabled = true;
 
-                Stabled.Add(bc);
-                m_AutoStabled.Add(bc);
+				Stabled.Add(bc);
+				m_AutoStabled.Add(bc);
 
-                this.SendMessage("Your Mount has been Stabled !.");
-            }
-        }
+				this.SendMessage("Your Mount has been Stabled !.");
+			}
+		}
 
-        public void RetrivePet()
-        {
-            if (m_AutoStabled.Count < 1)
-                return;
+		public void RetrivePet()
+		{
+			if (m_AutoStabled.Count < 1)
+				return;
 
-            for (int k = 0; k < m_AutoStabled.Count; ++k)
-            {
-                BaseCreature bc = (BaseCreature)m_AutoStabled[k];
+			for (int k = 0; k < m_AutoStabled.Count; ++k)
+			{
+				BaseCreature bc = (BaseCreature)m_AutoStabled[k];
 
-                if (Stabled.Contains(bc))
-                {
-                    bc.ControlTarget = null;
-                    bc.ControlOrder = OrderType.Follow;
-                    bc.SetControlMaster(this);
-                    bc.SummonMaster = null;
+				if (Stabled.Contains(bc))
+				{
+					bc.ControlTarget = null;
+					bc.ControlOrder = OrderType.Follow;
+					bc.SetControlMaster(this);
+					bc.SummonMaster = null;
 
-                    if (bc.Summoned)
-                        bc.SummonMaster = this;
+					if (bc.Summoned)
+						bc.SummonMaster = this;
 
-                    bc.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully happy
+					bc.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully happy
 
-                    bc.MoveToWorld(Location, Map);
+					bc.MoveToWorld(Location, Map);
 
-                    bc.IsStabled = false;
+					bc.IsStabled = false;
 
-                    if (m_AutoStabled.Contains(bc))
-                        m_AutoStabled.Remove(bc);
+					if (m_AutoStabled.Contains(bc))
+						m_AutoStabled.Remove(bc);
 
-                    this.SendMessage("Your Mount return to You !.");
-                }
-            }
-            m_AutoStabled.Clear();
-        }
-        #endregion
- 
+					this.SendMessage("Your Mount return to You !.");
+				}
+			}
+			m_AutoStabled.Clear();
+		}
+		#endregion
+ 
 		public void AutoStablePets()
 		{
 			if (Core.SE && this.AllFollowers.Count > 0)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using CustomsFramework;
 using Server.Accounting;
@@ -590,36 +591,60 @@ namespace Server
 
 		#endregion
 		#region Customs Framework
-		public BaseModule GetModule(string name)
+	    [CommandProperty(AccessLevel.Developer)]
+	    public List<BaseModule> Modules { get; private set; }
+
+	    public BaseModule GetModule(string name)
 		{
-			return World.GetModule(this, name);
+			BaseModule module = null;
+
+			foreach (BaseModule mod in Modules.Where(mod => mod.Name == name))
+			{
+			    module = mod;
+			}
+
+			return module;
 		}
 
 		public BaseModule GetModule(Type type)
 		{
-			return World.GetModule(this, type);
+			BaseModule module = null;
+
+			foreach (BaseModule mod in Modules.Where(mod => mod.GetType() == type))
+			{
+			    module = mod;
+			}
+
+			return module;
 		}
 
 		public List<BaseModule> GetModules(string name)
 		{
-			return World.GetModules(this, name);
+		    return Modules.Where(mod => mod.Name == name).ToList();
 		}
 
-		public List<BaseModule> SearchModules(string search)
+	    public List<BaseModule> SearchModules(string search)
 		{
-			return World.SearchModules(this, search);
-		}
+			string[] keywords = search.ToLower().Split(' ');
+			List<BaseModule> modules = new List<BaseModule>();
 
-		public BaseModule GetModule()
-		{
-			return World.GetModule(this);
-		}
+			foreach (BaseModule mod in Modules)
+			{
+				bool match = true;
+				string name = mod.Name.ToLower();
 
-		public List<BaseModule> GetModules()
-		{
-			return World.GetModules(this);
-		}
+				foreach (string keyword in keywords)
+				{
+				    if (name.IndexOf(keyword, StringComparison.Ordinal) == -1)
+				        match = false;
+				}
 
+			    if (match)
+					modules.Add(mod);
+			}
+
+			return modules;
+		}
 		#endregion
 
 		private static bool m_DragEffects = true;
