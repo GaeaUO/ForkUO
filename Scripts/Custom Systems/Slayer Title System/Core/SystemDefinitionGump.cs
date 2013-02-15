@@ -224,7 +224,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
                         else
                             m_TitleDefinitions.Add(new TitleDefinition(titleName, enabled, creatureRegistry, titleRegistry));
 
-                        sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_TitleDefinitions, m_TitleIndex / 10));
+                        sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_TitleDefinitions, (m_TitleIndex / 10) * 10));
                     }
                     else
                     {
@@ -238,7 +238,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
 
                     break;
                 default:
-                    sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_TitleDefinitions, m_TitleIndex / 10));
+                    sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_TitleDefinitions, (m_TitleIndex / 10) * 10));
                     break;
             }
         }

@@ -1,14 +1,23 @@
 using System;
+using System.Collections.Generic;
 using Server.Items;
 using Server.Mobiles;
 using Server.Spells;
 using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
 
+using CustomsFramework.Systems.FoodEffects;
+
 namespace Server.Misc
 {
+    public delegate Int32 RegenBonusHandler(Mobile from);
+
     public class RegenRates
     {
+        public static List<RegenBonusHandler> HitsBonusHandlers = new List<RegenBonusHandler>();
+        public static List<RegenBonusHandler> StamBonusHandlers = new List<RegenBonusHandler>();
+        public static List<RegenBonusHandler> ManaBonusHandlers = new List<RegenBonusHandler>();
+
         [CallPriority(10)]
         public static void Configure()
         {
@@ -91,6 +100,10 @@ namespace Server.Misc
             if (CheckAnimal(from, typeof(Dog)) || CheckAnimal(from, typeof(Cat)))
                 points += from.Skills[SkillName.Ninjitsu].Fixed / 30;
 
+            if (Core.AOS)
+                foreach (RegenBonusHandler handler in HitsBonusHandlers)
+                    points += handler(from);
+
             return TimeSpan.FromSeconds(1.0 / (0.1 * (1 + points)));
         }
 
@@ -121,6 +134,10 @@ namespace Server.Misc
 
             if (points < -1)
                 points = -1;
+
+            if (Core.AOS)
+                foreach (RegenBonusHandler handler in StamBonusHandlers)
+                    points += handler(from);
 
             return TimeSpan.FromSeconds(1.0 / (0.1 * (2 + points)));
         }
@@ -171,6 +188,9 @@ namespace Server.Misc
 
                 if (Core.ML)
                     totalPoints = Math.Floor(totalPoints);
+
+                foreach (RegenBonusHandler handler in ManaBonusHandlers)
+                    totalPoints += handler(from);
 
                 rate = 1.0 / (0.1 * (2 + totalPoints));
             }

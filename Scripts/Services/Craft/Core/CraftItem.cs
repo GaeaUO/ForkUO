@@ -1440,6 +1440,8 @@ namespace Server.Engines.Craft
 
                     if (item is ICraftable)
                         endquality = ((ICraftable)item).OnCraft(quality, makersMark, from, craftSystem, typeRes, tool, this, resHue);
+                    else if (item is Food)
+                        ((Food)item).PlayerConstructed = true;
                     else if (item.Hue == 0)
                         item.Hue = resHue;
 

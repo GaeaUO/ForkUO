@@ -9,6 +9,7 @@ namespace Server.Items
         private Mobile m_Poisoner;
         private Poison m_Poison;
         private int m_FillFactor;
+        private bool m_PlayerConstructed;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Poisoner
@@ -20,6 +21,19 @@ namespace Server.Items
             set
             {
                 this.m_Poisoner = value;
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool PlayerConstructed
+        {
+            get
+            {
+                return this.m_PlayerConstructed;
+            }
+            set
+            {
+                this.m_PlayerConstructed = value;
             }
         }
 
@@ -102,6 +116,8 @@ namespace Server.Items
 
                 this.Consume();
 
+                EventSink.InvokeOnConsume(new OnConsumeEventArgs(from, this));
+
                 return true;
             }
 
@@ -152,8 +168,9 @@ namespace Server.Items
         {
             base.Serialize(writer);
 
-            writer.Write((int)4); // version
+            writer.Write((int)5); // version
 
+            writer.Write((bool)m_PlayerConstructed);
             writer.Write(this.m_Poisoner);
 
             Poison.Serialize(this.m_Poison, writer);
@@ -206,6 +223,11 @@ namespace Server.Items
                     {
                         this.m_Poisoner = reader.ReadMobile();
                         goto case 3;
+                    }
+                case 5:
+                    {
+                        this.m_PlayerConstructed = reader.ReadBool();
+                        goto case 4;
                     }
             }
         }

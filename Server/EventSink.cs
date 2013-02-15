@@ -53,6 +53,7 @@ namespace Server
     public delegate void OnKilledByEventHandler(OnKilledByEventArgs e);
     public delegate void OnItemUseEventHandler(OnItemUseEventArgs e);
     public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
+    public delegate void OnConsumeEventHandler(OnConsumeEventArgs e);
 
     public struct SkillNameValue
     {
@@ -127,6 +128,7 @@ namespace Server
         public static event OnKilledByEventHandler OnKilledBy;
         public static event OnItemUseEventHandler OnItemUse;
         public static event OnEnterRegionEventHandler OnEnterRegion;
+        public static event OnConsumeEventHandler OnConsume;
 
         public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
         {
@@ -398,6 +400,12 @@ namespace Server
         {
             if (OnEnterRegion != null)
                 OnEnterRegion(e);
+        }
+
+        public static void InvokeOnConsume(OnConsumeEventArgs e)
+        {
+            if (OnConsume != null)
+                OnConsume(e);
         }
 
         public static void Reset()
@@ -1830,6 +1838,48 @@ namespace Server
             get
             {
                 return this.m_Region;
+            }
+        }
+    }
+
+    public class OnConsumeEventArgs : EventArgs
+    {
+        private Mobile m_Consumer;
+        private Item m_Consumed;
+        private int m_Quantity;
+
+        public OnConsumeEventArgs(Mobile consumer, Item consumed) : this(consumer, consumed, 1)
+        {
+        }
+
+        public OnConsumeEventArgs(Mobile consumer, Item consumed, int quantity)
+        {
+            m_Consumer = consumer;
+            m_Consumed = consumed;
+            m_Quantity = quantity;
+        }
+
+        public Mobile Consumer
+        {
+            get
+            {
+                return this.m_Consumer;
+            }
+        }
+
+        public Item Consumed
+        {
+            get
+            {
+                return m_Consumed;
+            }
+        }
+
+        public int Quantity
+        {
+            get
+            {
+                return m_Quantity;
             }
         }
     }
