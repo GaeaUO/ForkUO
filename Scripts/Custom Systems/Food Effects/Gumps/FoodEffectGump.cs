@@ -146,10 +146,10 @@ namespace CustomsFramework.Systems.FoodEffects
                 case ID_Apply_Button:
                     Boolean valid = true;
 
-                    valid &= IsFoodType(m_Values[0]);
+                    valid &= IsFoodType(values[0]);
 
                     for (Int32 i = 1; i < 8; i++)
-                        valid &= IsValidNumber(m_Values[i], (i < 7));
+                        valid &= IsValidNumber(values[i], (i < 7));
 
                     if (valid)
                     {
