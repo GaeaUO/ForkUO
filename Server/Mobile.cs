@@ -591,39 +591,30 @@ namespace Server
 
 		#endregion
 		#region Customs Framework
-	    [CommandProperty(AccessLevel.Developer)]
-	    public List<BaseModule> Modules { get; private set; }
+		[CommandProperty(AccessLevel.Developer)]
+		public List<BaseModule> Modules { get; private set; }
 
-	    public BaseModule GetModule(string name)
+		public BaseModule GetModule(string name)
 		{
-			BaseModule module = null;
-
 			foreach (BaseModule mod in Modules.Where(mod => mod.Name == name))
 			{
-			    module = mod;
+				return mod;
 			}
 
-			return module;
+			return null;
 		}
 
 		public BaseModule GetModule(Type type)
 		{
-			BaseModule module = null;
-
-			foreach (BaseModule mod in Modules.Where(mod => mod.GetType() == type))
-			{
-			    module = mod;
-			}
-
-			return module;
+			return Modules.FirstOrDefault(mod => mod.GetType() == type);
 		}
 
 		public List<BaseModule> GetModules(string name)
 		{
-		    return Modules.Where(mod => mod.Name == name).ToList();
+			return Modules.Where(mod => mod.Name == name).ToList();
 		}
 
-	    public List<BaseModule> SearchModules(string search)
+		public List<BaseModule> SearchModules(string search)
 		{
 			string[] keywords = search.ToLower().Split(' ');
 			List<BaseModule> modules = new List<BaseModule>();
@@ -635,11 +626,11 @@ namespace Server
 
 				foreach (string keyword in keywords)
 				{
-				    if (name.IndexOf(keyword, StringComparison.Ordinal) == -1)
-				        match = false;
+					if (name.IndexOf(keyword, StringComparison.Ordinal) == -1)
+						match = false;
 				}
 
-			    if (match)
+				if (match)
 					modules.Add(mod);
 			}
 
@@ -10647,8 +10638,8 @@ namespace Server
 		/// </summary>
 		public virtual void OnItemUsed(Mobile from, Item item)
 		{
-            EventSink.InvokeOnItemUse(new OnItemUseEventArgs(from, item));
-        }
+			EventSink.InvokeOnItemUse(new OnItemUseEventArgs(from, item));
+		}
 
 		public virtual bool CheckNonlocalDrop(Mobile from, Item item, Item target)
 		{
