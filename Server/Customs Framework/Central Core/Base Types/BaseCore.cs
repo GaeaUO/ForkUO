@@ -56,13 +56,17 @@ namespace CustomsFramework
                 return AccessLevel.Developer;
             }
         }
-        // TODO: Impliment Custom Systems Control
+        // TODO: Implement Custom Systems Control
         public virtual Gump SettingsGump
         {
             get
             {
                 return null;
             }
+        }
+        public virtual bool ShardControlEnabled
+        {
+            get { return false; }
         }
         public override string ToString()
         {

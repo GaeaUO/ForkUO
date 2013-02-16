@@ -4,7 +4,7 @@ using Server.Gumps;
 
 namespace CustomsFramework
 {
-    public sealed class BaseModule : BaseCore, ICustomsEntity, ISerializable
+    public class BaseModule : SaveData, ICustomsEntity, ISerializable
     {
         private Mobile _LinkedMobile;
         private Item _LinkedItem;

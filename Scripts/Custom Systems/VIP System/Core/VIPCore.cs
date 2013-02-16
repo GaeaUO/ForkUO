@@ -22,7 +22,7 @@ namespace CustomsFramework.Systems.VIPSystem
         public VIPCore()
             : base()
         {
-            this.Enabled = true;
+            this.Enabled = false;
 
             this._ServiceTimespan = TimeSpan.FromDays(30.0);
             this._ExchangeRate = 0.1;
@@ -166,13 +166,13 @@ namespace CustomsFramework.Systems.VIPSystem
         }
         public static void Initialize()
         {
-            VIPCore core = World.GetCore(typeof(VIPCore)) as VIPCore;
+            //VIPCore core = World.GetCore(typeof(VIPCore)) as VIPCore;
 
-            if (core == null)
-            {
-                core = new VIPCore();
-                core.Prep();
-            }
+            //if (core == null)
+            //{
+            //    core = new VIPCore();
+            //    core.Prep();
+            //}
         }
 
         public static void VIPHook_Login(LoginEventArgs e)
