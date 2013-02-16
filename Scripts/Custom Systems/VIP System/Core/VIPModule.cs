@@ -232,10 +232,6 @@ namespace CustomsFramework.Systems.VIPSystem
             }
         }
 
-        public override void Update()
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

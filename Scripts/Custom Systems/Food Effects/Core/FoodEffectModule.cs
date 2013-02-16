@@ -11,7 +11,6 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public FoodEffectModule(Mobile from) : base()
         {
-            this.Enabled = true;
             this.LinkMobile(from);
         }
 
@@ -48,10 +47,6 @@ namespace CustomsFramework.Systems.FoodEffects
         public override void Prep()
         {
             base.Prep();
-        }
-
-        public override void Update()
-        {
         }
 
         public void ApplyEffect(FoodEffect effect)

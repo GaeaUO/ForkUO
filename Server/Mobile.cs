@@ -591,18 +591,17 @@ namespace Server
 
 		#endregion
 		#region Customs Framework
-		[CommandProperty(AccessLevel.Developer)]
-		public List<BaseModule> Modules { get; private set; }
+        private List<BaseModule> m_Modules = new List<BaseModule>();
+
+        [CommandProperty(AccessLevel.Developer)]
+        public List<BaseModule> Modules { get { return m_Modules; } set { m_Modules = value; } }
+		//public List<BaseModule> Modules { get; private set; }
+
 
 		public BaseModule GetModule(string name)
 		{
-			foreach (BaseModule mod in Modules.Where(mod => mod.Name == name))
-			{
-				return mod;
-			}
-
-			return null;
-		}
+            return Modules.FirstOrDefault(mod => mod.Name == name);
+        }
 
 		public BaseModule GetModule(Type type)
 		{

@@ -545,31 +545,19 @@ namespace Server
     public class Item : IEntity, IHued, IComparable<Item>, ISerializable, ISpawnable
     {
         #region Customs Framework
+        private List<BaseModule> m_Modules = new List<BaseModule>();
+
         [CommandProperty(AccessLevel.Developer)]
-        public List<BaseModule> Modules { get; private set; }
+        public List<BaseModule> Modules { get { return m_Modules; } set { m_Modules = value; } }
 
         public BaseModule GetModule(string name)
         {
-            BaseModule module = null;
-
-            foreach (BaseModule mod in Modules.Where(mod => mod.Name == name))
-            {
-                module = mod;
-            }
-
-            return module;
+            return Modules.FirstOrDefault(mod => mod.Name == name);
         }
 
         public BaseModule GetModule(Type type)
         {
-            BaseModule module = null;
-
-            foreach (BaseModule mod in Modules.Where(mod => mod.GetType() == type))
-            {
-                module = mod;
-            }
-
-            return module;
+            return Modules.FirstOrDefault(mod => mod.GetType() == type);
         }
 
         public List<BaseModule> GetModules(string name)

@@ -24,6 +24,9 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
     {
         private Hashtable m_TitleEntries = new Hashtable();
 
+        private Boolean m_Enabled;
+        public Boolean Enabled { get { return m_Enabled; } set { m_Enabled = value; } }
+
         public SlayerModule(Mobile from)
             : base()
         {
@@ -87,10 +90,6 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
             base.Prep();
         }
 
-        public override void Update()
-        {
-        }
-
         public void IncrementCounter(String titleName)
         {
             if (m_TitleEntries.ContainsKey(titleName))
@@ -119,6 +118,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
             Utilities.WriteVersion(writer, 0);
 
             // Version 0
+            writer.Write((Boolean)m_Enabled);
             writer.Write((Int32)m_TitleEntries.Keys.Count);
 
             foreach (String title in m_TitleEntries.Keys)
@@ -138,6 +138,8 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
             {
                 case 0:
                     // Version 0
+                    m_Enabled = reader.ReadBool();
+
                     Int32 entryCount = reader.ReadInt();
 
                     for (Int32 i = 0; i < entryCount; i++)

@@ -35,22 +35,22 @@ namespace CustomsFramework
             get { return @"Base Module"; }
         }
 
-        public override string Description
+        public virtual string Description
         {
             get { return "Base Module, inherit from this class and override all interface items."; }
         }
 
-        public override string Version
+        public virtual string Version
         {
             get { return "1.0"; }
         }
 
-        public override AccessLevel EditLevel
+        public virtual AccessLevel EditLevel
         {
             get { return AccessLevel.Developer; }
         }
 
-        public override Gump SettingsGump
+        public virtual Gump SettingsGump
         {
             get { return null; }
         }
