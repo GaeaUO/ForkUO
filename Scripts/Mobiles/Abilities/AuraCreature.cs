@@ -70,7 +70,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int AuraRange
+        public new int AuraRange
         {
             get
             {

@@ -57,5 +57,30 @@ namespace CustomsFramework.Systems.FoodEffects
                     return true;
             }
         }
+
+        public String GetBuffInfoText()
+        {
+            String buffText = "";
+
+            if (m_StrBonus != 0)
+                buffText = String.Format("{0}{1}{2}{3} Str", buffText, (buffText != "" ? "<BR>" : ""), (m_StrBonus < 0 ? "-" : "+"), m_StrBonus);
+
+            if (m_DexBonus != 0)
+                buffText = String.Format("{0}{1}{2}{3} Dex", buffText, (buffText != "" ? "<BR>" : ""), (m_DexBonus < 0 ? "-" : "+"), m_DexBonus);
+
+            if (m_IntBonus != 0)
+                buffText = String.Format("{0}{1}{2}{3} Int", buffText, (buffText != "" ? "<BR>" : ""), (m_IntBonus < 0 ? "-" : "+"), m_IntBonus);
+
+            if (m_RegenHits != 0)
+                buffText = String.Format("{0}{1}{2}{3} HP Regen", buffText, (buffText != "" ? "<BR>" : ""), (m_RegenHits < 0 ? "-" : "+"), m_RegenHits);
+
+            if (m_RegenStam != 0)
+                buffText = String.Format("{0}{1}{2}{3} Stam Regen", buffText, (buffText != "" ? "<BR>" : ""), (m_RegenStam < 0 ? "-" : "+"), m_RegenStam);
+
+            if (m_RegenMana != 0)
+                buffText = String.Format("{0}{1}{2}{3} Mana Regen", buffText, (buffText != "" ? "<BR>" : ""), (m_RegenMana < 0 ? "-" : "+"), m_RegenMana);
+
+            return buffText;
+        }
     }
 }

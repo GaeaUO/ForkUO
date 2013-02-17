@@ -130,7 +130,7 @@ namespace Server.Mobiles
                 this.FireRing();
         }
 
-        public virtual void FireRing()
+        public override void FireRing()
         {
             for (int i = 0; i < m_North.Length; i += 2)
             {

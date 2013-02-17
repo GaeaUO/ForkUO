@@ -164,6 +164,8 @@ namespace CustomsFramework.Systems.FoodEffects
 
                         sender.Mobile.SendMessage("Food effect System is {0}!  System contains {1} foods defined.", (m_Core.Enabled ? "enabled" : "disabled"), m_Core.FoodEffects.Keys.Count);
 
+                        FoodEffectsCore.InvokeOnFoodEffectSystemUpdate(m_Core);
+
                         break;
                     case ID_LastPage:
                         sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_FoodTypes, m_FoodEffects, m_EffectIndex - 10));

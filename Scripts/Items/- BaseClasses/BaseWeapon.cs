@@ -4182,7 +4182,6 @@ namespace Server.Items
                 default:
                     oreType = 0;
                     break;
-                    break;
             }
 
             if (oreType != 0)

@@ -19,6 +19,7 @@ namespace CustomsFramework.Systems.FoodEffects
         public static event FoodEffectEventHandler OnEffectActivated;
         public static event FoodEffectEventHandler OnEffectCanceled;
         public static event FoodEffectEventHandler OnEffectExpired;
+        public static event BaseCoreEventHandler OnFoodEffectSystemUpdate;
 
         public static void InvokeOnEffectActivated(Mobile from, FoodEffect effect)
         {
@@ -37,12 +38,18 @@ namespace CustomsFramework.Systems.FoodEffects
             if (OnEffectExpired != null)
                 OnEffectExpired(from, effect);
         }
+
+        public static void InvokeOnFoodEffectSystemUpdate(FoodEffectsCore core)
+        {
+            if (OnFoodEffectSystemUpdate != null)
+                OnFoodEffectSystemUpdate(new BaseCoreEventArgs(core));
+        }
         #endregion
 
         private Dictionary<Type, FoodEffect> m_FoodEffects = new Dictionary<Type, FoodEffect>();
         public Dictionary<Type, FoodEffect> FoodEffects { get { return m_FoodEffects; } }
 
-        public const String SystemVersion = "1.0";
+        public const String SystemVersion = "1.5";
 
         private FoodAllowanceHandler m_ShouldFoodBeAllowed;
         public FoodAllowanceHandler ShouldFoodBeAllowed { get { return m_ShouldFoodBeAllowed; } set { m_ShouldFoodBeAllowed = value; } }
@@ -112,6 +119,7 @@ namespace CustomsFramework.Systems.FoodEffects
         public override void Prep()
         {
             EventSink.OnConsume += EventSink_OnConsume;
+            EventSink.PlayerDeath += EventSink_PlayerDeath;
 
             RegenRates.HitsBonusHandlers.Add(new RegenBonusHandler(GetHitsRegenModifier));
             RegenRates.StamBonusHandlers.Add(new RegenBonusHandler(GetStamRegenModifier));
@@ -158,11 +166,20 @@ namespace CustomsFramework.Systems.FoodEffects
             }
         }
 
+        private void EventSink_PlayerDeath(PlayerDeathEventArgs e)
+        {
+            if (!this.Enabled || !Core.AOS)
+                return;
+
+            FoodEffectModule module = e.Mobile.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
+
+            if (module != null)
+                module.EffectExpired(true);
+        }
+
         public Int32 GetHitsRegenModifier(Mobile m)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (core == null || !core.Enabled || !Core.AOS)
+            if (!Enabled || !Core.AOS)
                 return 0;
 
             FoodEffectModule module = m.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -175,9 +192,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public Int32 GetStamRegenModifier(Mobile m)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (core == null || !core.Enabled || !Core.AOS)
+            if (!Enabled || !Core.AOS)
                 return 0;
 
             FoodEffectModule module = m.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -190,9 +205,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public Int32 GetManaRegenModifier(Mobile m)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (core == null || !core.Enabled || !Core.AOS)
+            if (!Enabled || !Core.AOS)
                 return 0;
 
             FoodEffectModule module = m.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -201,6 +214,30 @@ namespace CustomsFramework.Systems.FoodEffects
                 return 0;
 
             return module.GetRegenModifier(FoodEffectRegenType.Hits);
+        }
+
+        public static FoodEffect GetEffects(Food item)
+        {
+            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
+
+            if (!core.Enabled || !Core.AOS)
+                return null;
+
+            Boolean effectAllowed = false;
+
+            if (item.PlayerConstructed)
+                effectAllowed = true;
+
+            if (core.ShouldFoodBeAllowed != null && core.ShouldFoodBeAllowed(item))
+                effectAllowed = true;
+
+            if (!core.FoodEffects.ContainsKey(item.GetType()))
+                effectAllowed = false;
+
+            if (effectAllowed)
+                return core.FoodEffects[item.GetType()];
+            else
+                return null;
         }
 
         public override void Serialize(GenericWriter writer)
