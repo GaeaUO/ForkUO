@@ -162,38 +162,56 @@ namespace Server.Items
             if (pm == null)
                 return;
 
-            ContextMenuEntry miningEntry = new ContextMenuEntry(pm.ToggleMiningStone ? 6179 : 6178);
+            int typeentry = 0;
+
+            if (pm.ToggleMiningStone)
+                typeentry = 6179;
+            if (pm.ToggleMiningGem)
+                typeentry = 1112239;
+            if (!pm.ToggleMiningStone && !pm.ToggleMiningGem)
+                typeentry = 6178;
+
+            ContextMenuEntry miningEntry = new ContextMenuEntry(typeentry);
             miningEntry.Color = 0x421F;
             list.Add(miningEntry);
 
-            list.Add(new ToggleMiningStoneEntry(pm, false, 6176));
-            list.Add(new ToggleMiningStoneEntry(pm, true, 6177));
+            list.Add(new ToggleMiningStoneEntry(pm, false, false, 6176));
+            list.Add(new ToggleMiningStoneEntry(pm, true, false, 6177));
+            list.Add(new ToggleMiningStoneEntry(pm, false, true, 1112237));
         }
 
         private class ToggleMiningStoneEntry : ContextMenuEntry
         {
             private readonly PlayerMobile m_Mobile;
-            private readonly bool m_Value;
+            private bool m_Valuestone;
+            private bool m_Valuegem;
 
-            public ToggleMiningStoneEntry(PlayerMobile mobile, bool value, int number)
+            public ToggleMiningStoneEntry(PlayerMobile mobile, bool valuestone, bool valuegem, int number)
                 : base(number)
             {
                 this.m_Mobile = mobile;
-                this.m_Value = value;
+                this.m_Valuestone = valuestone;
+                this.m_Valuegem = valuegem;
 
                 bool stoneMining = (mobile.StoneMining && mobile.Skills[SkillName.Mining].Base >= 100.0);
+                bool gemMining = (mobile.GemMining && mobile.Skills[SkillName.Mining].Base >= 100.0);
 
-                if (mobile.ToggleMiningStone == value || (value && !stoneMining))
+                if (valuestone && mobile.ToggleMiningStone == valuestone || (valuestone && !stoneMining))
+                    this.Flags |= CMEFlags.Disabled;
+                else if (valuegem && mobile.ToggleMiningGem == valuegem || (valuegem && !gemMining))
+                    this.Flags |= CMEFlags.Disabled;
+                else if (!valuestone && !valuegem && !mobile.ToggleMiningStone && !mobile.ToggleMiningGem)
                     this.Flags |= CMEFlags.Disabled;
             }
 
             public override void OnClick()
             {
-                bool oldValue = this.m_Mobile.ToggleMiningStone;
+                bool oldValuestone = this.m_Mobile.ToggleMiningStone;
+                bool oldValuegem = this.m_Mobile.ToggleMiningGem;
 
-                if (this.m_Value)
+                if (this.m_Valuestone)
                 {
-                    if (oldValue)
+                    if (oldValuestone)
                     {
                         this.m_Mobile.SendLocalizedMessage(1054023); // You are already set to mine both ore and stone!
                     }
@@ -204,14 +222,33 @@ namespace Server.Items
                     else
                     {
                         this.m_Mobile.ToggleMiningStone = true;
+                        this.m_Mobile.ToggleMiningGem = false;
                         this.m_Mobile.SendLocalizedMessage(1054022); // You are now set to mine both ore and stone.
+                    }
+                }
+                else if (this.m_Valuegem)
+                {
+                    if (oldValuegem)
+                    {
+                        this.m_Mobile.SendLocalizedMessage(1112235); // You are already set to mine both ore and gems!
+                    }
+                    else if (!this.m_Mobile.GemMining || this.m_Mobile.Skills[SkillName.Mining].Base < 100.0)
+                    {
+                        this.m_Mobile.SendLocalizedMessage(1112234); // You have not learned how to mine gems or you do not have enough skill!
+                    }
+                    else
+                    {
+                        this.m_Mobile.ToggleMiningGem = true;
+                        this.m_Mobile.ToggleMiningStone = false;
+                        this.m_Mobile.SendLocalizedMessage(1112236); // You are now set to mine both ore and gems.
                     }
                 }
                 else
                 {
-                    if (oldValue)
+                    if (oldValuestone || oldValuegem)
                     {
                         this.m_Mobile.ToggleMiningStone = false;
+                        this.m_Mobile.ToggleMiningGem = false;
                         this.m_Mobile.SendLocalizedMessage(1054020); // You are now set to mine only ore.
                     }
                     else

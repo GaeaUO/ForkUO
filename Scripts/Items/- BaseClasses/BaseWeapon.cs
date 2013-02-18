@@ -4326,7 +4326,16 @@ namespace Server.Items
 
             #region Mondain's Legacy
             if (this.m_Slayer3 != TalismanSlayerName.None)
-                list.Add((int)this.m_Slayer3);
+            {
+                if (this.m_Slayer3 == TalismanSlayerName.Wolf)
+                    list.Add(1075462);
+                else if (this.m_Slayer3 == TalismanSlayerName.Goblin)
+                    list.Add(1095010);
+                else if (this.m_Slayer3 == TalismanSlayerName.Undead)
+                    list.Add(1060479);
+                else
+                    list.Add(1072503 + (int)this.m_Slayer3);
+            }
             #endregion
 
             base.AddResistanceProperties(list);

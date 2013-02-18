@@ -1033,55 +1033,51 @@ namespace Server.Network
             : base(0xBF)
         {
             ContextMenuEntry[] entries = menu.Entries;
-
+ 
             int length = (byte)entries.Length;
-
+ 
             this.EnsureCapacity(12 + (length * 8));
-
+ 
             this.m_Stream.Write((short)0x14);
-            this.m_Stream.Write((short)0x01);
-
+            this.m_Stream.Write((short)0x02); // New layout
+ 
             IEntity target = menu.Target as IEntity;
-
+ 
             this.m_Stream.Write((int)(target == null ? Serial.MinusOne : target.Serial));
-
+ 
             this.m_Stream.Write((byte)length);
-
+ 
             Point3D p;
-
+ 
             if (target is Mobile)
                 p = target.Location;
             else if (target is Item)
                 p = ((Item)target).GetWorldLocation();
             else
                 p = Point3D.Zero;
-
+ 
             for (int i = 0; i < length; ++i)
             {
                 ContextMenuEntry e = entries[i];
-
+ 
+                if (e.Number <= 65535)
+                    this.m_Stream.Write((uint)(e.Number + 3000000));
+                else
+                    this.m_Stream.Write((uint)e.Number);
+ 
                 this.m_Stream.Write((short)i);
-
-                this.m_Stream.Write((ushort)e.Number);
-
+ 
                 int range = e.Range;
-
+ 
                 if (range == -1)
                     range = 18;
-
+ 
                 CMEFlags flags = (e.Enabled && menu.From.InRange(p, range)) ? CMEFlags.None : CMEFlags.Disabled;
-
-                int color = e.Color & 0xFFFF;
-
-                if (color != 0xFFFF)
-                    flags |= CMEFlags.Colored;
-
+ 
                 flags |= e.Flags;
-
+ 
                 this.m_Stream.Write((short)flags);
-
-                if ((flags & CMEFlags.Colored) != 0)
-                    this.m_Stream.Write((short)color);
+ 
             }
         }
     }
