@@ -2,6 +2,7 @@ using System;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
+using Server.Spells.Ninjitsu;
 
 namespace Server.Items
 {
@@ -53,6 +54,10 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1070902); // You can't use this while in an animal form!
             }
+			else if (from.Flying)
+			{
+				from.SendLocalizedMessage(1113414); // You cannot use this while flying!
+			}
             else
             {
                 EtherealMount.StopMounting(from);
@@ -100,6 +105,7 @@ namespace Server.Items
 
             Mobile from = (Mobile)states[0];
             Mobile to = (Mobile)states[1];
+			
 
             if (Core.AOS)
                 new Bola().MoveToWorld(to.Location, to.Map);
@@ -110,10 +116,29 @@ namespace Server.Items
                 from.SendLocalizedMessage(1042047); // You fail to knock the rider from its mount.
 
             IMount mt = to.Mount;
-            if (mt != null && !(to is ChaosDragoon || to is ChaosDragoonElite))
-                mt.Rider = null;
+			AnimalFormContext context = AnimalForm.GetContext( to );
+            
+			if ( mt != null && !( to is ChaosDragoon || to is ChaosDragoonElite ) )
+			{
+				mt.Rider = null;
 
-            to.SendLocalizedMessage(1040023); // You have been knocked off of your mount!
+				to.SendLocalizedMessage( 1040023 ); // You have been knocked off of your mount!
+				from.SendMessage("You knock them from their mount!");
+			}
+			
+			if ( AnimalForm.UnderTransformation( to ) && context != null )
+			{
+				Server.Spells.Ninjitsu.AnimalForm.RemoveContext( to, context, true );
+				to.SendMessage("{0} knocked you out of animal form!", from.Name);
+				from.SendMessage("You've knocked {0} out of animal form!", to.Name);
+			}
+			
+			if( to.Flying )
+			{
+				to.Flying = false;
+				to.SendMessage("You've been grounded by {0}", from.Name);
+				from.SendMessage("You've grounded {0}", to.Name);
+			}
 
             BaseMount.SetMountPrevention(to, BlockMountType.Dazed, TimeSpan.FromSeconds(3.0));
 
