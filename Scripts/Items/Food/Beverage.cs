@@ -512,7 +512,7 @@ namespace Server.Items
         {
             get
             {
-                return 5;
+                return Content == BeverageType.Water ? 40 : 5;
             }
         }
 
@@ -811,6 +811,7 @@ namespace Server.Items
 
                 this.m_Quantity = value;
 
+                this.QuantityChanged();
                 this.InvalidateProperties();
 
                 int itemID = this.ComputeItemID();
@@ -834,6 +835,10 @@ namespace Server.Items
                 return 1042973; // It's half full.
             else
                 return 1042972; // It's full.
+        }
+
+        public virtual void QuantityChanged()
+        {
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -914,13 +919,14 @@ namespace Server.Items
 
                 if (this.Quantity == 0 || (this.Content == BeverageType.Water && !this.IsFull))
                 {
+                    this.Content = BeverageType.Water;
+
                     int iNeed = Math.Min((this.MaxQuantity - this.Quantity), bwc.Quantity);
 
                     if (iNeed > 0 && !bwc.IsEmpty && !this.IsFull)
                     {
                         bwc.Quantity -= iNeed;
                         this.Quantity += iNeed;
-                        this.Content = BeverageType.Water;
 
                         from.PlaySound(0x4E);
                     }
@@ -1267,6 +1273,13 @@ namespace Server.Items
                             }
                         }
                     }
+                }
+            }
+            else if (targ is WaterElemental)
+            {
+                if (this is Pitcher && this.Content == BeverageType.Water)
+                {
+                    EndlessDecanter.HandleThrow(this, (WaterElemental)targ, from);
                 }
             }
             else

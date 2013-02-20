@@ -8,14 +8,18 @@ namespace CustomsFramework.Systems.FoodEffects
     {
         private FoodEffect m_FoodEffect;
         private EffectTimer m_Timer;
+        private BuffInfo m_BuffInfo;
 
         public FoodEffectModule(Mobile from) : base()
         {
             this.LinkMobile(from);
+
+            BaseCore.OnEnabledChanged += BaseCore_OnEnabledChanged;
         }
 
         public FoodEffectModule(CustomSerial serial) : base(serial)
         {
+            BaseCore.OnEnabledChanged += BaseCore_OnEnabledChanged;
         }
 
         public override String Name
@@ -49,6 +53,12 @@ namespace CustomsFramework.Systems.FoodEffects
             base.Prep();
         }
 
+        private void BaseCore_OnEnabledChanged(BaseCoreEventArgs e)
+        {
+            if (FoodEffectsCore.Core == e.Core && !e.Core.Enabled)
+                EffectExpired(true);
+        }
+
         public void ApplyEffect(FoodEffect effect)
         {
             ApplyEffect(effect, false);
@@ -56,6 +66,12 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public void ApplyEffect(FoodEffect effect, Boolean silent)
         {
+            if (FoodEffectsCore.Core == null || !FoodEffectsCore.Core.Enabled || !Core.AOS)
+            {
+                EffectExpired(true);
+                return;
+            }
+
             if (LinkedMobile != null)
             {
                 if (m_Timer != null)
@@ -67,6 +83,9 @@ namespace CustomsFramework.Systems.FoodEffects
                 LinkedMobile.RemoveStatMod("Food-StrBonus");
                 LinkedMobile.RemoveStatMod("Food-DexBonus");
                 LinkedMobile.RemoveStatMod("Food-IntBonus");
+
+                if (m_BuffInfo != null)
+                    BuffInfo.RemoveBuff(LinkedMobile, m_BuffInfo);
 
                 if (m_FoodEffect != null)
                     FoodEffectsCore.InvokeOnEffectCanceled(LinkedMobile, m_FoodEffect);
@@ -92,12 +111,19 @@ namespace CustomsFramework.Systems.FoodEffects
 
                 m_Timer = new EffectTimer(this);
 
-                if (m_FoodEffect != null)
-                    FoodEffectsCore.InvokeOnEffectActivated(LinkedMobile, m_FoodEffect);
+                FoodEffectsCore.InvokeOnEffectActivated(LinkedMobile, m_FoodEffect);
+
+                m_BuffInfo = new BuffInfo(BuffIcon.ActiveMeditation, 1074240, 1114057, m_FoodEffect.EffectTimeSpan, LinkedMobile, m_FoodEffect.GetBuffInfoText());
+                BuffInfo.AddBuff(LinkedMobile, m_BuffInfo);
             }
         }
 
         public void EffectExpired()
+        {
+            EffectExpired(false);
+        }
+
+        public void EffectExpired(Boolean silent)
         {
             if (m_Timer != null)
             {
@@ -107,24 +133,27 @@ namespace CustomsFramework.Systems.FoodEffects
 
             if (m_FoodEffect != null)
             {
-                if (m_FoodEffect.Added.AddMinutes(m_FoodEffect.Duration) < DateTime.Now)
+                if (LinkedMobile != null)
                 {
-                    if (LinkedMobile != null)
-                    {
-                        LinkedMobile.RemoveStatMod("Food-StrBonus");
-                        LinkedMobile.RemoveStatMod("Food-DexBonus");
-                        LinkedMobile.RemoveStatMod("Food-IntBonus");
+                    LinkedMobile.RemoveStatMod("Food-StrBonus");
+                    LinkedMobile.RemoveStatMod("Food-DexBonus");
+                    LinkedMobile.RemoveStatMod("Food-IntBonus");
 
+                    if (m_BuffInfo != null)
+                        BuffInfo.RemoveBuff(LinkedMobile, m_BuffInfo);
+
+                    if (!silent)
+                    {
                         LinkedMobile.PlaySound(0x1E6);
 
                         LinkedMobile.SendMessage(12, "Your food effect has worn off");
-
-                        if (m_FoodEffect != null)
-                            FoodEffectsCore.InvokeOnEffectExpired(LinkedMobile, m_FoodEffect);
                     }
 
-                    m_FoodEffect = null;
+                    if (m_FoodEffect != null)
+                        FoodEffectsCore.InvokeOnEffectExpired(LinkedMobile, m_FoodEffect);
                 }
+
+                m_FoodEffect = null;
             }
         }
 

@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Items
 {
-    public class StarSapphire : Item
+    public class StarSapphire : Item, IGem
     {
         [Constructable]
         public StarSapphire()

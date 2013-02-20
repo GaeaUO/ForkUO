@@ -91,8 +91,8 @@ namespace Server.Engines.Harvest
             res = new HarvestResource[]
             {
                 new HarvestResource(00.0, 00.0, 100.0, 1007072, typeof(IronOre), typeof(Granite)),
-                new HarvestResource(65.0, 25.0, 105.0, 1007073, typeof(DullCopperOre),	typeof(DullCopperGranite),	typeof(DullCopperElemental)),
-                new HarvestResource(70.0, 30.0, 110.0, 1007074, typeof(ShadowIronOre),	typeof(ShadowIronGranite),	typeof(ShadowIronElemental)),
+                new HarvestResource(65.0, 25.0, 105.0, 1007073, typeof(DullCopperOre),	typeof(DullCopperGranite), typeof(DullCopperElemental)),
+                new HarvestResource(70.0, 30.0, 110.0, 1007074, typeof(ShadowIronOre),	typeof(ShadowIronGranite), typeof(ShadowIronElemental)),
                 new HarvestResource(75.0, 35.0, 115.0, 1007075, typeof(CopperOre), typeof(CopperGranite), typeof(CopperElemental)),
                 new HarvestResource(80.0, 40.0, 120.0, 1007076, typeof(BronzeOre), typeof(BronzeGranite), typeof(BronzeElemental)),
                 new HarvestResource(85.0, 45.0, 125.0, 1007077, typeof(GoldOre), typeof(GoldGranite), typeof(GoldenElemental)),
@@ -202,7 +202,11 @@ namespace Server.Engines.Harvest
             if (def == this.m_OreAndStone)
             {
                 PlayerMobile pm = from as PlayerMobile;
-                if (pm != null && pm.StoneMining && pm.ToggleMiningStone && from.Skills[SkillName.Mining].Base >= 100.0 && 0.1 > Utility.RandomDouble())
+
+                if (pm != null && pm.GemMining && pm.ToggleMiningGem && from.Skills[SkillName.Mining].Base >= 100.0 && 0.1 > Utility.RandomDouble())
+                    return Loot.RandomGem().GetType();
+
+                if (pm != null && pm.StoneMining && pm.ToggleMiningStone && from.Skills[SkillName.Mining].Base >= 100.0 && 0.15 > Utility.RandomDouble())
                     return resource.Types[1];
 
                 return resource.Types[0];
@@ -234,6 +238,8 @@ namespace Server.Engines.Harvest
         {
             if (item is BaseGranite)
                 from.SendLocalizedMessage(1044606); // You carefully extract some workable stone from the ore vein!
+            else if (item is IGem)
+                from.SendLocalizedMessage(1112233); // You carefully extract a glistening gem from the vein!
             else
                 base.SendSuccessTo(from, item, resource);
         }

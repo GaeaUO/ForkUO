@@ -6,6 +6,8 @@ namespace CustomsFramework
 {
     public partial class BaseCore : SaveData, ICustomsEntity, ISerializable
     {
+        public static event BaseCoreEventHandler OnEnabledChanged;
+
         private bool _Enabled;
         public BaseCore()
         {
@@ -25,7 +27,13 @@ namespace CustomsFramework
             }
             set
             {
-                this._Enabled = value;
+                if (value != this._Enabled)
+                {
+                    this._Enabled = value;
+
+                    if (OnEnabledChanged != null)
+                        OnEnabledChanged(new BaseCoreEventArgs(this));
+                }
             }
         }
         public override string Name

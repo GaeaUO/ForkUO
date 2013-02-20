@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Items
 {
-    public class Sapphire : Item
+    public class Sapphire : Item, IGem
     {
         [Constructable]
         public Sapphire()

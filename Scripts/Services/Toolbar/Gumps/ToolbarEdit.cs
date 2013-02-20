@@ -106,12 +106,11 @@ namespace Services.Toolbar.Gumps
 					goto case 0;
 				case 12:	// Apply
 					{
-						ToolbarModule module = m.GetModule(typeof(ToolbarModule)) as ToolbarModule;
+						ToolbarModule module = m.GetModule(typeof(ToolbarModule)) as ToolbarModule ?? new ToolbarModule(m);
 
-						if (module == null)
-							module = new ToolbarModule(m);
+					    module.ToolbarInfo.Entries = this.AnalyzeEntries();
 
-						if (info.ButtonID == 12)
+					    if (info.ButtonID == 12)
 							m.SendGump(new ToolbarEdit(_Info, this.p_Expanded));
 
 						m.CloseGump(typeof(ToolbarGump));

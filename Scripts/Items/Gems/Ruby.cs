@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Items
 {
-    public class Ruby : Item
+    public class Ruby : Item, IGem
     {
         [Constructable]
         public Ruby()

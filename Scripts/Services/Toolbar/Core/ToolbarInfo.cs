@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Server;
+using Server.Commands;
 using CustomsFramework;
 
 namespace Services.Toolbar.Core
 {
-    public partial class ToolbarInfo
+    public class ToolbarInfo
     {
         private int _Font, _Skin;
         private bool _Phantom, _Stealth, _Reverse, _Lock;
@@ -175,54 +176,54 @@ namespace Services.Toolbar.Core
                     }
                 case AccessLevel.Counselor:
                     {
-                        entries.Add("[GMBody"); entries.Add("[StaffRunebook");
-                        entries.Add("[SpeedBoost"); entries.Add("[M Tele");
-                        entries.Add("[Where"); entries.Add("[Who");
+                        entries.Add(CommandSystem.Prefix + "GMBody"); entries.Add(CommandSystem.Prefix + "StaffRunebook");
+                        entries.Add(CommandSystem.Prefix + "SpeedBoost"); entries.Add(CommandSystem.Prefix + "M Tele");
+                        entries.Add(CommandSystem.Prefix + "Where"); entries.Add(CommandSystem.Prefix + "Who");
 
                         break;
                     }
                 case AccessLevel.Decorator:
                     {
-                        entries.Add("[GMBody"); entries.Add("[StaffRunebook");
-                        entries.Add("[SpeedBoost"); entries.Add("[M Tele");
-                        entries.Add("[Where"); entries.Add("[Who");
+                        entries.Add(CommandSystem.Prefix + "GMBody"); entries.Add(CommandSystem.Prefix + "StaffRunebook");
+                        entries.Add(CommandSystem.Prefix + "SpeedBoost"); entries.Add(CommandSystem.Prefix + "M Tele");
+                        entries.Add(CommandSystem.Prefix + "Where"); entries.Add(CommandSystem.Prefix + "Who");
 
                         for (int j = 0; j < 3; j++)
                             entries.Add("-*UNUSED*-");
 
-                        entries.Add("[Add"); entries.Add("[Remove");
-                        entries.Add("[Move"); entries.Add("[ShowArt");
-                        entries.Add("[Get ItemID"); entries.Add("[Get Hue");
+                        entries.Add(CommandSystem.Prefix + "Add"); entries.Add(CommandSystem.Prefix + "Remove");
+                        entries.Add(CommandSystem.Prefix + "Move"); entries.Add(CommandSystem.Prefix + "ShowArt");
+                        entries.Add(CommandSystem.Prefix + "Get ItemID"); entries.Add(CommandSystem.Prefix + "Get Hue");
 
                         break;
                     }
                 case AccessLevel.Spawner:
                     {
-                        entries.Add("[GMBody"); entries.Add("[StaffRunebook");
-                        entries.Add("[SpeedBoost"); entries.Add("[M Tele");
-                        entries.Add("[Where"); entries.Add("[Who");
+                        entries.Add(CommandSystem.Prefix + "GMBody"); entries.Add(CommandSystem.Prefix + "StaffRunebook");
+                        entries.Add(CommandSystem.Prefix + "SpeedBoost"); entries.Add(CommandSystem.Prefix + "M Tele");
+                        entries.Add(CommandSystem.Prefix + "Where"); entries.Add(CommandSystem.Prefix + "Who");
 
                         for (int j = 0; j < 3; j++)
                             entries.Add("-*UNUSED*-");
 
-                        entries.Add("[Add"); entries.Add("[Remove");
-                        entries.Add("[XmlAdd"); entries.Add("[XmlFind");
-                        entries.Add("[XmlShow"); entries.Add("[XmlHide");
+                        entries.Add(CommandSystem.Prefix + "Add"); entries.Add(CommandSystem.Prefix + "Remove");
+                        entries.Add(CommandSystem.Prefix + "XmlAdd"); entries.Add(CommandSystem.Prefix + "XmlFind");
+                        entries.Add(CommandSystem.Prefix + "XmlShow"); entries.Add(CommandSystem.Prefix + "XmlHide");
 
                         break;
                     }
                 case AccessLevel.GameMaster:
                     {
-                        entries.Add("[GMBody"); entries.Add("[StaffRunebook");
-                        entries.Add("[SpeedBoost"); entries.Add("[M Tele");
-                        entries.Add("[Where"); entries.Add("[Who");
+                        entries.Add(CommandSystem.Prefix + "GMBody"); entries.Add(CommandSystem.Prefix + "StaffRunebook");
+                        entries.Add(CommandSystem.Prefix + "SpeedBoost"); entries.Add(CommandSystem.Prefix + "M Tele");
+                        entries.Add(CommandSystem.Prefix + "Where"); entries.Add(CommandSystem.Prefix + "Who");
 
                         for (int j = 0; j < 3; j++)
                             entries.Add("-*UNUSED*-");
 
-                        entries.Add("[Add"); entries.Add("[Remove");
-                        entries.Add("[Props"); entries.Add("[Move");
-                        entries.Add("[Kill"); entries.Add("[Follow");
+                        entries.Add(CommandSystem.Prefix + "Add"); entries.Add(CommandSystem.Prefix + "Remove");
+                        entries.Add(CommandSystem.Prefix + "Props"); entries.Add(CommandSystem.Prefix + "Move");
+                        entries.Add(CommandSystem.Prefix + "Kill"); entries.Add(CommandSystem.Prefix + "Follow");
 
                         break;
                     }
@@ -232,16 +233,16 @@ namespace Services.Toolbar.Core
                     }
                 case AccessLevel.Administrator:
                     {
-                        entries.Add("[Admin"); entries.Add("[StaffRunebook");
-                        entries.Add("[SpeedBoost"); entries.Add("[M Tele");
-                        entries.Add("[Where"); entries.Add("[Who");
+                        entries.Add(CommandSystem.Prefix + "Admin"); entries.Add(CommandSystem.Prefix + "StaffRunebook");
+                        entries.Add(CommandSystem.Prefix + "SpeedBoost"); entries.Add(CommandSystem.Prefix + "M Tele");
+                        entries.Add(CommandSystem.Prefix + "Where"); entries.Add(CommandSystem.Prefix + "Who");
 
                         for (int j = 0; j < 3; j++)
                             entries.Add("-*UNUSED*-");
 
-                        entries.Add("[Props"); entries.Add("[Move");
-                        entries.Add("[Add"); entries.Add("[Remove");
-                        entries.Add("[ViewEquip"); entries.Add("[Kill");
+                        entries.Add(CommandSystem.Prefix + "Props"); entries.Add(CommandSystem.Prefix + "Move");
+                        entries.Add(CommandSystem.Prefix + "Add"); entries.Add(CommandSystem.Prefix + "Remove");
+                        entries.Add(CommandSystem.Prefix + "ViewEquip"); entries.Add(CommandSystem.Prefix + "Kill");
 
                         break;
                     }

@@ -10,8 +10,8 @@ namespace Services.Toolbar.Core
 {
     public partial class ToolbarCore : BaseCore
     {
-        public const string SystemVersion = "2.1";
-        public const string ReleaseDate = "January 14, 2013";
+        public const string SystemVersion = "2.2";
+        public const string ReleaseDate = "February 17, 2013";
 
         public static void Initialize()
         {
@@ -20,12 +20,12 @@ namespace Services.Toolbar.Core
             if (core == null)
                 core = new ToolbarCore();
 
-            CommandHandlers.Register("Toolbar", AccessLevel.VIP, new CommandEventHandler(Toolbar_OnCommand));
-            EventSink.Login += new LoginEventHandler(OnLogin);
-            EventSink.PlayerDeath += new PlayerDeathEventHandler(OnPlayerDeath);
+            CommandHandlers.Register("Toolbar", AccessLevel.VIP, Toolbar_OnCommand);
+            EventSink.Login += OnLogin;
+            EventSink.PlayerDeath += OnPlayerDeath;
         }
 
-        public ToolbarCore() : base()
+        public ToolbarCore()
         {
             this.Enabled = true;
         }
@@ -101,11 +101,9 @@ namespace Services.Toolbar.Core
 
         public static void SendToolbar(Mobile from)
         {
-            ToolbarModule module = from.GetModule(typeof(ToolbarModule)) as ToolbarModule;
+            ToolbarModule module = @from.GetModule(typeof(ToolbarModule)) as ToolbarModule ?? new ToolbarModule(@from);
 
-            if (module == null)
-                module = new ToolbarModule(from);
-
+            from.CloseGump(typeof (Gumps.ToolbarGump));
             from.SendGump(new Gumps.ToolbarGump(module.ToolbarInfo));
         }
 

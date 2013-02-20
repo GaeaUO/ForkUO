@@ -631,10 +631,14 @@ namespace Server.Items
 
             if (this.m_Slayer != TalismanSlayerName.None)
             {
-                if (this.m_Slayer != TalismanSlayerName.Wolf)
-                    list.Add(1072503 + (int)this.m_Slayer);
-                else
+                if (this.m_Slayer == TalismanSlayerName.Wolf)
                     list.Add(1075462);
+                else if (this.m_Slayer == TalismanSlayerName.Goblin)
+                    list.Add(1095010);
+                else if (this.m_Slayer == TalismanSlayerName.Undead)
+                    list.Add(1060479);
+                else
+                    list.Add(1072503 + (int)this.m_Slayer);
             }
         }
 

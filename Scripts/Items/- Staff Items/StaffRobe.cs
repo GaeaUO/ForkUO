@@ -4,7 +4,7 @@ namespace Server.Items
 {
     public class StaffRobe : BaseSuit
     {
-        private readonly int _DecoratorHue;
+        private int _DecoratorHue = 0x0;
         private int _OwnerHue, _CoOwnerHue = 0x481;
         private int _DeveloperHue = 0x497;
         private int _AdminHue = 0x47E;
@@ -117,7 +117,7 @@ namespace Server.Items
             }
             set
             {
-                this._GamemasterHue = value;
+                this._DecoratorHue = value;
             }
         }
         [CommandProperty(AccessLevel.Counselor)]
