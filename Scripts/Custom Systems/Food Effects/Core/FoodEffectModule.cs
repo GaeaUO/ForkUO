@@ -55,9 +55,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private void BaseCore_OnEnabledChanged(BaseCoreEventArgs e)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (core == e.Core && !e.Core.Enabled)
+            if (FoodEffectsCore.Core == e.Core && !e.Core.Enabled)
                 EffectExpired(true);
         }
 
@@ -68,9 +66,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public void ApplyEffect(FoodEffect effect, Boolean silent)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (!core.Enabled || !Core.AOS)
+            if (FoodEffectsCore.Core == null || !FoodEffectsCore.Core.Enabled || !Core.AOS)
             {
                 EffectExpired(true);
                 return;

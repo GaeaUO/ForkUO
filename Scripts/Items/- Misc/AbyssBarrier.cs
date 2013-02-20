@@ -21,8 +21,9 @@ namespace Server.Items
         {
             PlayerMobile mobile = m as PlayerMobile;
 
-            if (m.AccessLevel > AccessLevel.Player)
+            if (m.IsStaff())
                 return true;
+            else if (mobile != null)
             {
 
                 if (mobile.AbyssEntry == false)
@@ -36,6 +37,8 @@ namespace Server.Items
                     return true;
                 }
             }
+            else
+                return false;
         }
 
         public AbyssBarrier(Serial serial): base(serial)

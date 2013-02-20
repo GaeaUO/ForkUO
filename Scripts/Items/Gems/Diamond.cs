@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Items
 {
-    public class Diamond : Item
+    public class Diamond : Item, IGem
     {
         [Constructable]
         public Diamond()

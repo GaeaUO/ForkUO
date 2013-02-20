@@ -24,7 +24,6 @@ namespace CustomsFramework.Systems.FoodEffects
         private const Int32 HUE_InvalidEntry = 34;
 
         private Mobile m_From;
-        private FoodEffectsCore m_Core;
         private Boolean m_CoreEnabled;
         private Int32 m_EffectIndex;
 
@@ -33,10 +32,9 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private String[] m_Values;
 
-        public FoodEffectGump(Mobile from, FoodEffectsCore core, Boolean coreEnabled, List<Type> foodTypes, List<FoodEffect> foodEffects, Int32 effectIndex, String[] values, Boolean validate) : base(150, 100)
+        public FoodEffectGump(Mobile from, Boolean coreEnabled, List<Type> foodTypes, List<FoodEffect> foodEffects, Int32 effectIndex, String[] values, Boolean validate) : base(150, 100)
         {
             m_From = from;
-            m_Core = core;
             m_CoreEnabled = coreEnabled;
             m_FoodTypes = foodTypes;
             m_FoodEffects = foodEffects;
@@ -173,16 +171,16 @@ namespace CustomsFramework.Systems.FoodEffects
                             m_FoodEffects.Add(effect);
                         }
 
-                        sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_FoodTypes, m_FoodEffects, (m_EffectIndex / 10) * 10));
+                        sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_CoreEnabled, m_FoodTypes, m_FoodEffects, (m_EffectIndex / 10) * 10));
                     }
                     else
                     {
-                        sender.Mobile.SendGump(new FoodEffectGump(sender.Mobile, m_Core, m_CoreEnabled, m_FoodTypes, m_FoodEffects, m_EffectIndex, values, true));
+                        sender.Mobile.SendGump(new FoodEffectGump(sender.Mobile, m_CoreEnabled, m_FoodTypes, m_FoodEffects, m_EffectIndex, values, true));
                     }
 
                     break;
                 default:
-                    sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_FoodTypes, m_FoodEffects, (m_EffectIndex / 10) * 10));
+                    sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_CoreEnabled, m_FoodTypes, m_FoodEffects, (m_EffectIndex / 10) * 10));
                     break;
             }
         }

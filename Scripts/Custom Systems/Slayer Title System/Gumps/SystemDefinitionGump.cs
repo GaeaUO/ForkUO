@@ -34,7 +34,6 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
         private const Int32 HUE_InvalidEntry = 34;
 
         private Mobile m_From;
-        private SlayerTitleCore m_Core;
         private Boolean m_CoreEnabled;
         private Int32 m_TitleIndex;
 
@@ -44,10 +43,9 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
         private List<String> m_Titles = new List<string>();
         private List<String> m_Counts = new List<string>();
 
-        public TitleDefinitionGump(Mobile from, SlayerTitleCore core, Boolean coreEnabled, List<TitleDefinition> titleDefinitions, Int32 titleIndex, List<String> creatureNames, List<String> titles, List<String> counts, Boolean validate) : base(50, 100)
+        public TitleDefinitionGump(Mobile from, Boolean coreEnabled, List<TitleDefinition> titleDefinitions, Int32 titleIndex, List<String> creatureNames, List<String> titles, List<String> counts, Boolean validate) : base(50, 100)
         {
             m_From = from;
-            m_Core = core;
             m_CoreEnabled = coreEnabled;
             m_TitleDefinitions = titleDefinitions;
             m_TitleIndex = titleIndex;
@@ -224,7 +222,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
                         else
                             m_TitleDefinitions.Add(new TitleDefinition(titleName, enabled, creatureRegistry, titleRegistry));
 
-                        sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_TitleDefinitions, (m_TitleIndex / 10) * 10));
+                        sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_CoreEnabled, m_TitleDefinitions, (m_TitleIndex / 10) * 10));
                     }
                     else
                     {
@@ -233,12 +231,12 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
                         else
                             m_TitleDefinitions.Add(new TitleDefinition(titleName, enabled, new List<Type>(), new List<TitleEntry>()));
 
-                        sender.Mobile.SendGump(new TitleDefinitionGump(sender.Mobile, m_Core, m_CoreEnabled, m_TitleDefinitions, m_TitleIndex, m_CreatureNames, m_Titles, m_Counts, true));
+                        sender.Mobile.SendGump(new TitleDefinitionGump(sender.Mobile, m_CoreEnabled, m_TitleDefinitions, m_TitleIndex, m_CreatureNames, m_Titles, m_Counts, true));
                     }
 
                     break;
                 default:
-                    sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_Core, m_CoreEnabled, m_TitleDefinitions, (m_TitleIndex / 10) * 10));
+                    sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_CoreEnabled, m_TitleDefinitions, (m_TitleIndex / 10) * 10));
                     break;
             }
         }

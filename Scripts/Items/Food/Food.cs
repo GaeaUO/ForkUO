@@ -90,9 +90,7 @@ namespace Server.Items
 
         private void FoodEffectsCore_OnFoodEffectSystemUpdate(BaseCoreEventArgs e)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (e.Core == core)
+            if (e.Core == FoodEffectsCore.Core)
                 InvalidateProperties();
         }
 

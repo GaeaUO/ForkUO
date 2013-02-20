@@ -51,6 +51,9 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public const String SystemVersion = "1.5";
 
+        private static FoodEffectsCore m_Core;
+        public static FoodEffectsCore Core { get { return m_Core; } }
+
         private FoodAllowanceHandler m_ShouldFoodBeAllowed;
         public FoodAllowanceHandler ShouldFoodBeAllowed { get { return m_ShouldFoodBeAllowed; } set { m_ShouldFoodBeAllowed = value; } }
 
@@ -112,6 +115,8 @@ namespace CustomsFramework.Systems.FoodEffects
                 core.FoodEffects.Add(typeof(SushiPlatter), new FoodEffect(10, 0, 10, 20, 0, 20, 10)); //90
             }
 
+            m_Core = core;
+
             CommandSystem.Register("FES", AccessLevel.Developer, new CommandEventHandler(FES_OnCommand));
         }
 
@@ -130,9 +135,7 @@ namespace CustomsFramework.Systems.FoodEffects
         [Description("Displays the Food Effects System configuration gump.")]
         public static void FES_OnCommand(CommandEventArgs e)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (core == null)
+            if (m_Core == null)
                 return;
 
             e.Mobile.SendGump(new FoodEffectsSetupGump(e.Mobile));
@@ -140,7 +143,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private void EventSink_OnConsume(OnConsumeEventArgs e)
         {
-            if (!this.Enabled || !Core.AOS)
+            if (!this.Enabled || !Server.Core.AOS)
                 return;
 
             FoodEffectModule module = e.Consumer.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -168,7 +171,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private void EventSink_PlayerDeath(PlayerDeathEventArgs e)
         {
-            if (!this.Enabled || !Core.AOS)
+            if (!this.Enabled || !Server.Core.AOS)
                 return;
 
             FoodEffectModule module = e.Mobile.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -179,7 +182,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public Int32 GetHitsRegenModifier(Mobile m)
         {
-            if (!Enabled || !Core.AOS)
+            if (!Enabled || !Server.Core.AOS)
                 return 0;
 
             FoodEffectModule module = m.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -192,7 +195,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public Int32 GetStamRegenModifier(Mobile m)
         {
-            if (!Enabled || !Core.AOS)
+            if (!Enabled || !Server.Core.AOS)
                 return 0;
 
             FoodEffectModule module = m.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -205,7 +208,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public Int32 GetManaRegenModifier(Mobile m)
         {
-            if (!Enabled || !Core.AOS)
+            if (!Enabled || !Server.Core.AOS)
                 return 0;
 
             FoodEffectModule module = m.GetModule(typeof(FoodEffectModule)) as FoodEffectModule;
@@ -218,9 +221,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
         public static FoodEffect GetEffects(Food item)
         {
-            FoodEffectsCore core = World.GetCore(typeof(FoodEffectsCore)) as FoodEffectsCore;
-
-            if (!core.Enabled || !Core.AOS)
+            if (!m_Core.Enabled || !Server.Core.AOS)
                 return null;
 
             Boolean effectAllowed = false;
@@ -228,14 +229,14 @@ namespace CustomsFramework.Systems.FoodEffects
             if (item.PlayerConstructed)
                 effectAllowed = true;
 
-            if (core.ShouldFoodBeAllowed != null && core.ShouldFoodBeAllowed(item))
+            if (m_Core.ShouldFoodBeAllowed != null && m_Core.ShouldFoodBeAllowed(item))
                 effectAllowed = true;
 
-            if (!core.FoodEffects.ContainsKey(item.GetType()))
+            if (!m_Core.FoodEffects.ContainsKey(item.GetType()))
                 effectAllowed = false;
 
             if (effectAllowed)
-                return core.FoodEffects[item.GetType()];
+                return m_Core.FoodEffects[item.GetType()];
             else
                 return null;
         }

@@ -37,6 +37,9 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
 
         public const String SystemVersion = "3.0";
 
+        private static SlayerTitleCore m_Core;
+        public static SlayerTitleCore Core { get { return m_Core; } }
+
         public SlayerTitleCore() : base()
         {
             this.Enabled = false;
@@ -65,6 +68,8 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
                 core.Prep();
             }
 
+            m_Core = core;
+
             CommandSystem.Register("STS", AccessLevel.Developer, new CommandEventHandler(STS_OnCommand));
         }
 
@@ -78,9 +83,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
         [Description("Displays the Slayer Title System configuration gump.")]
         public static void STS_OnCommand(CommandEventArgs e)
         {
-            SlayerTitleCore core = World.GetCore(typeof(SlayerTitleCore)) as SlayerTitleCore;
-
-            if (core == null)
+            if (SlayerTitleCore.Core == null)
                 return;
 
             e.Mobile.SendGump(new SlayerTitleSetupGump(e.Mobile));

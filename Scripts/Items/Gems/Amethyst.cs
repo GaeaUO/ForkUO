@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Items
 {
-    public class Amethyst : Item
+    public class Amethyst : Item, IGem
     {
         [Constructable]
         public Amethyst()

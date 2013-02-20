@@ -2,7 +2,7 @@ using System;
 
 namespace Server.Items
 {
-    public class Tourmaline : Item
+    public class Tourmaline : Item, IGem
     {
         [Constructable]
         public Tourmaline()

@@ -6,6 +6,11 @@ namespace Server.Mobiles
     [CorpseName("a water elemental corpse")]
     public class WaterElemental : BaseCreature
     {
+        private Boolean m_HasDecanter = true;
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Boolean HasDecanter { get { return m_HasDecanter; } set { m_HasDecanter = value; } }
+
         [Constructable]
         public WaterElemental()
             : base(AIType.AI_Mage, FightMode.Closest, 10, 1, 0.2, 0.4)
@@ -89,13 +94,24 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write((int)0);
+            writer.Write((int)1);
+
+            writer.Write((Boolean)m_HasDecanter);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
+
+            switch (version)
+            {
+                case 0:
+                    break;
+                case 1:
+                    m_HasDecanter = reader.ReadBool();
+                    break;
+            }
         }
     }
 }
