@@ -1,138 +1,97 @@
-/***************************************************************************
-*                               GumpImageTileButton.cs
-*                            -------------------
-*   begin                : April 26, 2005
-*   copyright            : (C) The RunUO Software Team
-*   email                : info@runuo.com
-*
-*   $Id: GumpImageTileButton.cs 4 2006-06-15 04:28:39Z mark $
-*
-***************************************************************************/
-
-
-
-
-
-
-
-
-/***************************************************************************
-*
-*   This program is free software; you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation; either version 2 of the License, or
-*   (at your option) any later version.
-*
-***************************************************************************/
 using System;
 using Server.Network;
 
 namespace Server.Gumps
 {
-    public class GumpImageTileButton : GumpEntry
+    public class GumpImageTileButton : GumpEntry, IInputEntry
     {
-        private static readonly byte[] m_LayoutName = Gump.StringToBuffer("buttontileart");
-        private static readonly byte[] m_LayoutTooltip = Gump.StringToBuffer(" }{ tooltip");
-        //Note, on OSI, The tooltip supports ONLY clilocs as far as I can figure out, and the tooltip ONLY works after the buttonTileArt (as far as I can tell from testing)
-        private int m_X, m_Y;
-        private int m_ID1, m_ID2;
-        private int m_ButtonID;
-        private GumpButtonType m_Type;
-        private int m_Param;
-        private int m_ItemID;
-        private int m_Hue;
-        private int m_Width;
-        private int m_Height;
-        private int m_LocalizedTooltip;
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height)
-            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, -1)
+        private static readonly byte[] _LayoutName = Gump.StringToBuffer("buttontileart");
+        private static readonly byte[] _LayoutTooltip = Gump.StringToBuffer(" }{ tooltip");
+        private int _ButtonID;
+        private object _Callback;
+        private object _CallbackParam;
+        private int _Height;
+        private int _Hue;
+        private int _ID1, _ID2;
+        private int _ItemID;
+        private int _LocalizedTooltip;
+        private string _Name;
+        private int _Param;
+        private GumpButtonType _Type;
+        private int _Width;
+        private int _X, _Y;
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
+                                   int param, int itemID, int hue, int width, int height, string name,
+                                   ButtonResponse callback, object callbackParam)
+            : this(
+                x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, -1, name, callback,
+                callbackParam)
         {
         }
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, int localizedTooltip)
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
+                                   int param, int itemID, int hue, int width, int height, int localizedTooltip,
+                                   string name, ButtonResponse callback, object callbackParam)
         {
-            this.m_X = x;
-            this.m_Y = y;
-            this.m_ID1 = normalID;
-            this.m_ID2 = pressedID;
-            this.m_ButtonID = buttonID;
-            this.m_Type = type;
-            this.m_Param = param;
+            this._X = x;
+            this._Y = y;
+            this._ID1 = normalID;
+            this._ID2 = pressedID;
+            this._ButtonID = buttonID;
+            this._Type = type;
+            this._Param = param;
 
-            this.m_ItemID = itemID;
-            this.m_Hue = hue;
-            this.m_Width = width;
-            this.m_Height = height;
+            this._ItemID = itemID;
+            this._Hue = hue;
+            this._Width = width;
+            this._Height = height;
 
-            this.m_LocalizedTooltip = localizedTooltip;
+            this._LocalizedTooltip = localizedTooltip;
+
+            this._Name = name;
+            this._Callback = callback;
+            this._CallbackParam = callbackParam;
         }
 
         public int X
         {
-            get
-            {
-                return this.m_X;
-            }
-            set
-            {
-                this.Delta(ref this.m_X, value);
-            }
+            get { return this._X; }
+            set { this.Delta(ref this._X, value); }
         }
+
         public int Y
         {
-            get
-            {
-                return this.m_Y;
-            }
-            set
-            {
-                this.Delta(ref this.m_Y, value);
-            }
+            get { return this._Y; }
+            set { this.Delta(ref this._Y, value); }
         }
+
         public int NormalID
         {
-            get
-            {
-                return this.m_ID1;
-            }
-            set
-            {
-                this.Delta(ref this.m_ID1, value);
-            }
+            get { return this._ID1; }
+            set { this.Delta(ref this._ID1, value); }
         }
+
         public int PressedID
         {
-            get
-            {
-                return this.m_ID2;
-            }
-            set
-            {
-                this.Delta(ref this.m_ID2, value);
-            }
+            get { return this._ID2; }
+            set { this.Delta(ref this._ID2, value); }
         }
+
         public int ButtonID
         {
-            get
-            {
-                return this.m_ButtonID;
-            }
-            set
-            {
-                this.Delta(ref this.m_ButtonID, value);
-            }
+            get { return this._ButtonID; }
+            set { this.Delta(ref this._ButtonID, value); }
         }
+
         public GumpButtonType Type
         {
-            get
-            {
-                return this.m_Type;
-            }
+            get { return this._Type; }
             set
             {
-                if (this.m_Type != value)
+                if (this._Type != value)
                 {
-                    this.m_Type = value;
+                    this._Type = value;
 
                     Gump parent = this.Parent;
 
@@ -143,100 +102,108 @@ namespace Server.Gumps
                 }
             }
         }
+
         public int Param
         {
-            get
-            {
-                return this.m_Param;
-            }
-            set
-            {
-                this.Delta(ref this.m_Param, value);
-            }
+            get { return this._Param; }
+            set { this.Delta(ref this._Param, value); }
         }
+
         public int ItemID
         {
-            get
-            {
-                return this.m_ItemID;
-            }
-            set
-            {
-                this.Delta(ref this.m_ItemID, value);
-            }
+            get { return this._ItemID; }
+            set { this.Delta(ref this._ItemID, value); }
         }
+
         public int Hue
         {
-            get
-            {
-                return this.m_Hue;
-            }
-            set
-            {
-                this.Delta(ref this.m_Hue, value);
-            }
+            get { return this._Hue; }
+            set { this.Delta(ref this._Hue, value); }
         }
+
         public int Width
         {
-            get
-            {
-                return this.m_Width;
-            }
-            set
-            {
-                this.Delta(ref this.m_Width, value);
-            }
+            get { return this._Width; }
+            set { this.Delta(ref this._Width, value); }
         }
+
         public int Height
         {
-            get
-            {
-                return this.m_Height;
-            }
-            set
-            {
-                this.Delta(ref this.m_Height, value);
-            }
+            get { return this._Height; }
+            set { this.Delta(ref this._Height, value); }
         }
+
         public int LocalizedTooltip
         {
-            get
+            get { return this._LocalizedTooltip; }
+            set { this.Delta(ref this._LocalizedTooltip, value); }
+        }
+
+        public string Name
+        {
+            get { return this._Name; }
+            set { this.Delta(ref this._Name, value); }
+        }
+
+        public object Callback
+        {
+            get { return this._Callback; }
+            set { this.Delta(ref this._Callback, value); }
+        }
+
+        public object CallbackParam
+        {
+            get { return this._CallbackParam; }
+            set { this.Delta(ref this._CallbackParam, value); }
+        }
+
+        public void Invoke()
+        {
+            ButtonResponse callback = this._Callback as ButtonResponse;
+
+            if (callback != null)
+                callback();
+            else
             {
-                return this.m_LocalizedTooltip;
-            }
-            set
-            {
-                this.m_LocalizedTooltip = value;
+                ButtonParamResponse response = this._CallbackParam as ButtonParamResponse;
+
+                if (response != null)
+                    response(this._CallbackParam);
             }
         }
+
         public override string Compile()
         {
-            if (this.m_LocalizedTooltip > 0)
-                return String.Format("{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}{{ tooltip {11} }}", this.m_X, this.m_Y, this.m_ID1, this.m_ID2, (int)this.m_Type, this.m_Param, this.m_ButtonID, this.m_ItemID, this.m_Hue, this.m_Width, this.m_Height, this.m_LocalizedTooltip);
-            else
-                return String.Format("{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}", this.m_X, this.m_Y, this.m_ID1, this.m_ID2, (int)this.m_Type, this.m_Param, this.m_ButtonID, this.m_ItemID, this.m_Hue, this.m_Width, this.m_Height);
+            return this._LocalizedTooltip > 0
+                       ? String.Format(
+                           "{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}{{ tooltip {11} }}",
+                           this._X, this._Y, this._ID1, this._ID2, (int) this._Type, this._Param, this._ButtonID,
+                           this._ItemID, this._Hue, this._Width, this._Height, this._LocalizedTooltip)
+                       : String.Format("{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}", this._X,
+                                       this._Y, this._ID1, this._ID2, (int) this._Type, this._Param,
+                                       this._ButtonID, this._ItemID, this._Hue, this._Width, this._Height);
         }
 
         public override void AppendTo(IGumpWriter disp)
         {
-            disp.AppendLayout(m_LayoutName);
-            disp.AppendLayout(this.m_X);
-            disp.AppendLayout(this.m_Y);
-            disp.AppendLayout(this.m_ID1);
-            disp.AppendLayout(this.m_ID2);
-            disp.AppendLayout((int)this.m_Type);
-            disp.AppendLayout(this.m_Param);
-            disp.AppendLayout(this.m_ButtonID);
+            disp.AppendLayout(_LayoutName);
+            disp.AppendLayout(this._X);
+            disp.AppendLayout(this._Y);
+            disp.AppendLayout(this._ID1);
+            disp.AppendLayout(this._ID2);
+            disp.AppendLayout((int) this._Type);
+            disp.AppendLayout(this._Param);
+            disp.AppendLayout(this._ButtonID);
 
-            disp.AppendLayout(this.m_ItemID);
-            disp.AppendLayout(this.m_Hue);
-            disp.AppendLayout(this.m_Width);
-            disp.AppendLayout(this.m_Height);
+            disp.AppendLayout(this._ItemID);
+            disp.AppendLayout(this._Hue);
+            disp.AppendLayout(this._Width);
+            disp.AppendLayout(this._Height);
 
-            if (this.m_LocalizedTooltip > 0)
+            if (this._LocalizedTooltip > 0)
             {
-                disp.AppendLayout(m_LayoutTooltip);
-                disp.AppendLayout(this.m_LocalizedTooltip);
+                disp.AppendLayout(_LayoutTooltip);
+                disp.AppendLayout(this._LocalizedTooltip);
             }
         }
     }

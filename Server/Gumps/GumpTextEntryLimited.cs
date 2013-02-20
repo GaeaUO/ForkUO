@@ -1,159 +1,137 @@
-/***************************************************************************
-*                          GumpTextEntryLimited.cs
-*                            -------------------
-*   begin                : May 1, 2002
-*   copyright            : (C) The RunUO Software Team
-*   email                : info@runuo.com
-*
-*   $Id: GumpTextEntryLimited.cs 77 2006-08-27 19:36:26Z krrios $
-*
-***************************************************************************/
-
-
-
-
-
-
-
-
-/***************************************************************************
-*
-*   This program is free software; you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation; either version 2 of the License, or
-*   (at your option) any later version.
-*
-***************************************************************************/
 using System;
 using Server.Network;
 
 namespace Server.Gumps
 {
-    public class GumpTextEntryLimited : GumpEntry
+    public class GumpTextEntryLimited : GumpEntry, IInputEntry
     {
-        private static readonly byte[] m_LayoutName = Gump.StringToBuffer("textentrylimited");
-        private int m_X, m_Y;
-        private int m_Width, m_Height;
-        private int m_Hue;
-        private int m_EntryID;
-        private string m_InitialText;
-        private int m_Size;
-        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size)
+        private static readonly byte[] _LayoutName = Gump.StringToBuffer("textentrylimited");
+        private object _Callback;
+        private object _CallbackParam;
+        private int _EntryID;
+        private int _Height;
+        private int _Hue;
+        private string _InitialText;
+        private string _Name;
+        private int _Size;
+        private int _Width;
+        private int _X, _Y;
+
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string name,
+                                    TextResponse callback, object callbackParam, string initialText, int size)
         {
-            this.m_X = x;
-            this.m_Y = y;
-            this.m_Width = width;
-            this.m_Height = height;
-            this.m_Hue = hue;
-            this.m_EntryID = entryID;
-            this.m_InitialText = initialText;
-            this.m_Size = size;
+            this._X = x;
+            this._Y = y;
+            this._Width = width;
+            this._Height = height;
+            this._Hue = hue;
+            this._EntryID = entryID;
+            this._Name = name;
+            this._Callback = callback;
+            this._CallbackParam = callbackParam;
+            this._InitialText = initialText;
+            this._Size = size;
         }
 
         public int X
         {
-            get
-            {
-                return this.m_X;
-            }
-            set
-            {
-                this.Delta(ref this.m_X, value);
-            }
+            get { return this._X; }
+            set { this.Delta(ref this._X, value); }
         }
+
         public int Y
         {
-            get
-            {
-                return this.m_Y;
-            }
-            set
-            {
-                this.Delta(ref this.m_Y, value);
-            }
+            get { return this._Y; }
+            set { this.Delta(ref this._Y, value); }
         }
+
         public int Width
         {
-            get
-            {
-                return this.m_Width;
-            }
-            set
-            {
-                this.Delta(ref this.m_Width, value);
-            }
+            get { return this._Width; }
+            set { this.Delta(ref this._Width, value); }
         }
+
         public int Height
         {
-            get
-            {
-                return this.m_Height;
-            }
-            set
-            {
-                this.Delta(ref this.m_Height, value);
-            }
+            get { return this._Height; }
+            set { this.Delta(ref this._Height, value); }
         }
+
         public int Hue
         {
-            get
-            {
-                return this.m_Hue;
-            }
-            set
-            {
-                this.Delta(ref this.m_Hue, value);
-            }
+            get { return this._Hue; }
+            set { this.Delta(ref this._Hue, value); }
         }
+
         public int EntryID
         {
-            get
-            {
-                return this.m_EntryID;
-            }
-            set
-            {
-                this.Delta(ref this.m_EntryID, value);
-            }
+            get { return this._EntryID; }
+            set { this.Delta(ref this._EntryID, value); }
         }
+
         public string InitialText
         {
-            get
-            {
-                return this.m_InitialText;
-            }
-            set
-            {
-                this.Delta(ref this.m_InitialText, value);
-            }
+            get { return this._InitialText; }
+            set { this.Delta(ref this._InitialText, value); }
         }
+
         public int Size
         {
-            get
+            get { return this._Size; }
+            set { this.Delta(ref this._Size, value); }
+        }
+
+        public string Name
+        {
+            get { return this._Name; }
+            set { this.Delta(ref this._Name, value); }
+        }
+
+        public object Callback
+        {
+            get { return this._Callback; }
+            set { this.Delta(ref this._Callback, value); }
+        }
+
+        public object CallbackParam
+        {
+            get { return this._CallbackParam; }
+            set { this.Delta(ref this._CallbackParam, value); }
+        }
+
+        public void Invoke(string input)
+        {
+            TextResponse callback = this._Callback as TextResponse;
+
+            if (callback != null)
+                callback(input);
+            else
             {
-                return this.m_Size;
-            }
-            set
-            {
-                this.Delta(ref this.m_Size, value);
+                TextParamResponse response = this._CallbackParam as TextParamResponse;
+
+                if (response != null)
+                    response(input, this._CallbackParam);
             }
         }
+
         public override string Compile()
         {
-            return String.Format("{{ textentrylimited {0} {1} {2} {3} {4} {5} {6} {7} }}", this.m_X, this.m_Y, this.m_Width, this.m_Height, this.m_Hue, this.m_EntryID, this.Parent.Intern(this.m_InitialText), this.m_Size);
+            return String.Format("{{ textentrylimited {0} {1} {2} {3} {4} {5} {6} {7} }}", this._X, this._Y, this._Width,
+                                 this._Height, this._Hue, this._EntryID, this.Parent.Intern(this._InitialText),
+                                 this._Size);
         }
 
         public override void AppendTo(IGumpWriter disp)
         {
-            disp.AppendLayout(m_LayoutName);
-            disp.AppendLayout(this.m_X);
-            disp.AppendLayout(this.m_Y);
-            disp.AppendLayout(this.m_Width);
-            disp.AppendLayout(this.m_Height);
-            disp.AppendLayout(this.m_Hue);
-            disp.AppendLayout(this.m_EntryID);
-            disp.AppendLayout(this.Parent.Intern(this.m_InitialText));
-            disp.AppendLayout(this.m_Size);
+            disp.AppendLayout(_LayoutName);
+            disp.AppendLayout(this._X);
+            disp.AppendLayout(this._Y);
+            disp.AppendLayout(this._Width);
+            disp.AppendLayout(this._Height);
+            disp.AppendLayout(this._Hue);
+            disp.AppendLayout(this._EntryID);
+            disp.AppendLayout(this.Parent.Intern(this._InitialText));
+            disp.AppendLayout(this._Size);
 
             disp.TextEntries++;
         }

@@ -1,165 +1,229 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Server.Network;
 
 namespace Server.Gumps
 {
+    public interface IInputEntry
+    {
+        string Name { get; set; }
+        object Callback { get; set; }
+        object CallbackParam { get; set; }
+    }
+        
+        
+
     public class Gump
     {
-        internal int m_TextEntries, m_Switches;
-        private static readonly byte[] m_BeginLayout = StringToBuffer("{ ");
-        private static readonly byte[] m_EndLayout = StringToBuffer(" }");
-        private static readonly byte[] m_NoMove = StringToBuffer("{ nomove }");
-        private static readonly byte[] m_NoClose = StringToBuffer("{ noclose }");
-        private static readonly byte[] m_NoDispose = StringToBuffer("{ nodispose }");
-        private static readonly byte[] m_NoResize = StringToBuffer("{ noresize }");
-        private static int m_NextSerial = 1;
-        private readonly List<GumpEntry> m_Entries;
-        private readonly List<string> m_Strings;
-        private readonly int m_TypeID;
-        private int m_Serial;
-        private int m_X, m_Y;
-        private bool m_Dragable = true;
-        private bool m_Closable = true;
-        private bool m_Resizable = true;
-        private bool m_Disposable = true;
+        private static readonly byte[] _BeginLayout = StringToBuffer("{ ");
+        private static readonly byte[] _EndLayout = StringToBuffer(" }");
+        private static readonly byte[] _NoMove = StringToBuffer("{ nomove }");
+        private static readonly byte[] _NoClose = StringToBuffer("{ noclose }");
+        private static readonly byte[] _NoDispose = StringToBuffer("{ nodispose }");
+        private static readonly byte[] _NoResize = StringToBuffer("{ noresize }");
+        private static int _NextSerial = 1;
+        private readonly List<GumpEntry> _Entries;
+        private readonly List<string> _Strings;
+        private readonly int _TypeID;
+        private List<int> _UsedIDs = new List<int>();
+        private List<Mobile> _Users = new List<Mobile>();
+        private List<Mobile> _Viewers = new List<Mobile>();
+        private Mobile _Address;
+        private bool _Closable = true;
+        private bool _Disposable = true;
+        private bool _Dragable = true;
+        //private Mobile _Hijacker;
+        private bool _MacroProtection;
+        private int _NewID = 1;
+        private bool _Resizable = true;
+        private int _Serial;
+        private bool _SharedGump;
+        internal int _Switches;
+        internal int _TextEntries;
+        private int _X, _Y;
+
         public Gump(int x, int y)
         {
             do
             {
-                this.m_Serial = m_NextSerial++;
-            }
-            while (this.m_Serial == 0); // standard client apparently doesn't send a gump response packet if serial == 0
+                this._Serial = _NextSerial++;
+            } while (this._Serial == 0);
 
-            this.m_X = x;
-            this.m_Y = y;
+            this._X = x;
+            this._Y = y;
 
-            this.m_TypeID = GetTypeID(this.GetType());
+            this._TypeID = GetTypeID(this.GetType());
 
-            this.m_Entries = new List<GumpEntry>();
-            this.m_Strings = new List<string>();
+            this._Entries = new List<GumpEntry>();
+            this._Strings = new List<string>();
+        }
+
+        public Gump(int x, int y, List<Mobile> users)
+            : this(x, y)
+        {
+            if (users == null) return;
+
+            this._Users = users;
+            this._SharedGump = true;
         }
 
         public int TypeID
         {
-            get
-            {
-                return this.m_TypeID;
-            }
+            get { return this._TypeID; }
         }
+
         public List<GumpEntry> Entries
         {
-            get
-            {
-                return this.m_Entries;
-            }
+            get { return this._Entries; }
         }
+
         public int Serial
         {
-            get
-            {
-                return this.m_Serial;
-            }
+            get { return this._Serial; }
             set
             {
-                if (this.m_Serial != value)
+                if (this._Serial != value)
                 {
-                    this.m_Serial = value;
+                    this._Serial = value;
                     this.Invalidate();
                 }
             }
         }
+
         public int X
         {
-            get
-            {
-                return this.m_X;
-            }
+            get { return this._X; }
             set
             {
-                if (this.m_X != value)
-                {
-                    this.m_X = value;
-                    this.Invalidate();
-                }
+                if (this._X == value) return;
+
+                this._X = value;
+                this.Invalidate();
             }
         }
+
         public int Y
         {
-            get
-            {
-                return this.m_Y;
-            }
+            get { return this._Y; }
             set
             {
-                if (this.m_Y != value)
-                {
-                    this.m_Y = value;
-                    this.Invalidate();
-                }
+                if (this._Y == value) return;
+
+                this._Y = value;
+                this.Invalidate();
             }
         }
+
+        public Mobile Address
+        {
+            get { return this._Address; }
+            set
+            {
+                if (this._Address == value) return;
+
+                this._Address = value;
+                this.Invalidate();
+            }
+        }
+
+        public List<Mobile> Users
+        {
+            get { return this._Users; }
+            set
+            {
+                if (this._Users == value) return;
+
+                this._Users = value;
+                this.Invalidate();
+            }
+        }
+
+        public List<Mobile> Viewers
+        {
+            get { return this._Viewers; }
+            set
+            {
+                if (this._Viewers == value) return;
+
+                this._Viewers = value;
+                this.Invalidate();
+            }
+        }
+
         public bool Disposable
         {
-            get
-            {
-                return this.m_Disposable;
-            }
+            get { return this._Disposable; }
             set
             {
-                if (this.m_Disposable != value)
-                {
-                    this.m_Disposable = value;
-                    this.Invalidate();
-                }
+                if (this._Disposable == value) return;
+
+                this._Disposable = value;
+                this.Invalidate();
             }
         }
+
         public bool Resizable
         {
-            get
-            {
-                return this.m_Resizable;
-            }
+            get { return this._Resizable; }
             set
             {
-                if (this.m_Resizable != value)
-                {
-                    this.m_Resizable = value;
-                    this.Invalidate();
-                }
+                if (this._Resizable == value) return;
+
+                this._Resizable = value;
+                this.Invalidate();
             }
         }
+
+        public bool MacroProtection
+        {
+            get { return this._MacroProtection; }
+            set
+            {
+                if (this._MacroProtection == value) return;
+
+                this._MacroProtection = value;
+                this.Invalidate();
+            }
+        }
+
+        public bool SharedGump
+        {
+            get { return this._SharedGump; }
+            set
+            {
+                if (this._SharedGump == value) return;
+
+                this._SharedGump = value;
+                this.Invalidate();
+            }
+        }
+
         public bool Dragable
         {
-            get
-            {
-                return this.m_Dragable;
-            }
+            get { return this._Dragable; }
             set
             {
-                if (this.m_Dragable != value)
-                {
-                    this.m_Dragable = value;
-                    this.Invalidate();
-                }
+                if (this._Dragable == value) return;
+
+                this._Dragable = value;
+                this.Invalidate();
             }
         }
+
         public bool Closable
         {
-            get
-            {
-                return this.m_Closable;
-            }
+            get { return this._Closable; }
             set
             {
-                if (this.m_Closable != value)
-                {
-                    this.m_Closable = value;
-                    this.Invalidate();
-                }
+                if (this._Closable == value) return;
+
+                this._Closable = value;
+                this.Invalidate();
             }
         }
+
         public static int GetTypeID(Type type)
         {
             return type.FullName.GetHashCode();
@@ -172,8 +236,75 @@ namespace Server.Gumps
 
         public void Invalidate()
         {
-            //if ( m_Strings.Count > 0 )
-            //	m_Strings.Clear();
+        }
+
+        public bool AddUser(Mobile from)
+        {
+            this.Invalidate();
+
+            if (this._Users == null)
+                this._Users = new List<Mobile>();
+
+            if (this._Users.Contains(from))
+                return false;
+
+            this._Users.Add(from);
+
+            this._SharedGump = true;
+
+            return true;
+        }
+
+        public bool RemoveUser(Mobile from)
+        {
+            this.Invalidate();
+
+            bool result = false;
+
+            if (this._Users.Contains(from))
+            {
+                this._Users.Remove(from);
+                result = true;
+
+                if (this._Users.FirstOrDefault() == null && this._Viewers.FirstOrDefault() == null)
+                    this.SharedGump = false;
+            }
+
+            return result;
+        }
+
+        public bool AddViewer(Mobile from)
+        {
+            this.Invalidate();
+
+            if (this._Viewers == null)
+                this._Viewers = new List<Mobile>();
+
+            if (this._Viewers.Contains(from))
+                return false;
+
+            this._Viewers.Add(from);
+
+            this._SharedGump = true;
+
+            return true;
+        }
+
+        public bool RemoveViewer(Mobile from)
+        {
+            this.Invalidate();
+
+            bool result = false;
+
+            if (this._Viewers.Remove(from))
+            {
+                result = true;
+
+                if (this._Viewers.FirstOrDefault() == null && this._Users.FirstOrDefault() == null)
+                    this.SharedGump = false;
+            }
+
+            return result;
         }
 
         public void AddPage(int page)
@@ -191,15 +322,169 @@ namespace Server.Gumps
             this.Add(new GumpBackground(x, y, width, height, gumpID));
         }
 
+        #region AddButton(...)
+
+        // Full new method.
+        public void AddButton(int x, int y, int normalID, int pressedID, int buttonID, string name,
+                              ButtonResponse callback, object callbackParam, GumpButtonType type, int param)
+        {
+            this.Add(new GumpButton(x, y, normalID, pressedID, buttonID, name, callback, callbackParam, type, param));
+        }
+
+        // New method, no need to worry about buttonID.
+        // May randomize buttonID every time by setting MacroProtection to True.
+        // Close buttons shouldn't use this method, and should specify ID 0.
+        public void AddButton(int x, int y, int normalID, int pressedID, string name, ButtonResponse callback,
+                              object callbackParam, GumpButtonType type, int param)
+        {
+            this.Add(new GumpButton(x, y, normalID, pressedID, this.NewID(), name, callback, callbackParam, type, param));
+        }
+
+        // Legacy method.
         public void AddButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param)
         {
-            this.Add(new GumpButton(x, y, normalID, pressedID, buttonID, type, param));
+            this.Add(new GumpButton(x, y, normalID, pressedID, buttonID, String.Format("Button:{0}", buttonID), null,
+                                    null, type, param));
+        }
+
+        #endregion
+        #region AddImageTiledButton(...)
+
+        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
+                                        int param, int itemID, int hue, int width, int height, string name,
+                                        ButtonResponse callback, object callbackParam)
+        {
+            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
+                                             height, name, callback, callbackParam));
+        }
+
+        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param,
+                                        int itemID, int hue, int width, int height, string name, ButtonResponse callback,
+                                        object callbackParam)
+        {
+            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, this.NewID(), type, param, itemID, hue, width,
+                                             height, name, callback, callbackParam));
+        }
+
+        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
+                                        int param, int itemID, int hue, int width, int height)
+        {
+            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
+                                             height, String.Format("ImageTileButton:{0}", buttonID), null, null));
+        }
+
+        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
+                                        int param, int itemID, int hue, int width, int height, int localizedTooltip,
+                                        string name, ButtonResponse callback, object callbackParam)
+        {
+            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
+                                             height, localizedTooltip, name, callback, callbackParam));
+        }
+
+        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param,
+                                        int itemID, int hue, int width, int height, int localizedTooltip, string name,
+                                        ButtonResponse callback, object callbackParam)
+        {
+            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, this.NewID(), type, param, itemID, hue, width,
+                                             height, localizedTooltip, name, callback, callbackParam));
+        }
+
+        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
+                                        int param, int itemID, int hue, int width, int height, int localizedTooltip)
+        {
+            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
+                                             height, localizedTooltip, String.Format("ImageTileButton:{0}", buttonID),
+                                             null, null));
+        }
+
+        #endregion
+        #region AddCheck(...)
+
+        public void AddCheck(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, string name,
+                             CheckResponse callback, object callbackParam)
+        {
+            this.Add(new GumpCheck(x, y, inactiveID, activeID, initialState, switchID, name, callback, callbackParam));
+        }
+
+        public void AddCheck(int x, int y, int inactiveID, int activeID, bool initialState, string name,
+                             CheckResponse callback, object callbackParam)
+        {
+            this.Add(new GumpCheck(x, y, inactiveID, activeID, initialState, this.NewID(), name, callback, callbackParam));
         }
 
         public void AddCheck(int x, int y, int inactiveID, int activeID, bool initialState, int switchID)
         {
-            this.Add(new GumpCheck(x, y, inactiveID, activeID, initialState, switchID));
+            this.Add(new GumpCheck(x, y, inactiveID, activeID, initialState, switchID, String.Format("Check:{0}", switchID), null, null));
         }
+
+        #endregion
+        #region AddRadio(...)
+
+        public void AddRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, string name,
+                             RadioResponse callback, object callbackParam)
+        {
+            this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, switchID, name, callback, callbackParam));
+        }
+
+        public void AddRadio(int x, int y, int inactiveID, int activeID, bool initialState, string name,
+                             RadioResponse callback, object callbackParam)
+        {
+            this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, this.NewID(), name, callback, callbackParam));
+        }
+
+        public void AddRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID)
+        {
+            this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, switchID,
+                                   String.Format("Radio:{0}", switchID), null, null));
+        }
+
+        #endregion
+        #region AddTextentry(...)
+
+        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string name,
+                                 TextResponse callback, object callbackParam, string initialText)
+        {
+            this.Add(new GumpTextEntry(x, y, width, height, hue, entryID, name, callback, callbackParam, initialText));
+        }
+
+        public void AddTextEntry(int x, int y, int width, int height, int hue, string name, TextResponse callback,
+                                 object callbackParam, string initialText)
+        {
+            this.Add(new GumpTextEntry(x, y, width, height, hue, this.NewID(), name, callback, callbackParam,
+                                       initialText));
+        }
+
+        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText)
+        {
+            this.Add(new GumpTextEntry(x, y, width, height, hue, entryID, String.Format("TextEntry:{0}", entryID), null,
+                                       null, initialText));
+        }
+
+        #endregion
+        #region TextEntryLimited(...)
+
+        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string name,
+                                 TextResponse callback, object callbackParam, string initialText, int size)
+        {
+            this.Add(new GumpTextEntryLimited(x, y, width, height, hue, entryID, name, callback, callbackParam,
+                                              initialText, size));
+        }
+
+        public void AddTextEntry(int x, int y, int width, int height, int hue, string name, TextResponse callback,
+                                 object callbackParam, string initialText, int size)
+        {
+            this.Add(new GumpTextEntryLimited(x, y, width, height, hue, this.NewID(), name, callback, callbackParam,
+                                              initialText, size));
+        }
+
+        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, int size)
+        {
+            this.Add(new GumpTextEntryLimited(x, y, width, height, hue, entryID,
+                                              String.Format("LimitedTextEntry:{0}", entryID), null, null, initialText,
+                                              size));
+        }
+
+        #endregion
 
         public void AddGroup(int group)
         {
@@ -221,12 +506,14 @@ namespace Server.Gumps
             this.Add(new GumpHtmlLocalized(x, y, width, height, number, background, scrollbar));
         }
 
-        public void AddHtmlLocalized(int x, int y, int width, int height, int number, int color, bool background, bool scrollbar)
+        public void AddHtmlLocalized(int x, int y, int width, int height, int number, int color, bool background,
+                                     bool scrollbar)
         {
             this.Add(new GumpHtmlLocalized(x, y, width, height, number, color, background, scrollbar));
         }
 
-        public void AddHtmlLocalized(int x, int y, int width, int height, int number, string args, int color, bool background, bool scrollbar)
+        public void AddHtmlLocalized(int x, int y, int width, int height, int number, string args, int color,
+                                     bool background, bool scrollbar)
         {
             this.Add(new GumpHtmlLocalized(x, y, width, height, number, args, color, background, scrollbar));
         }
@@ -244,16 +531,6 @@ namespace Server.Gumps
         public void AddImageTiled(int x, int y, int width, int height, int gumpID)
         {
             this.Add(new GumpImageTiled(x, y, width, height, gumpID));
-        }
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height));
-        }
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, int localizedTooltip)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, localizedTooltip));
         }
 
         public void AddItem(int x, int y, int itemID)
@@ -276,65 +553,128 @@ namespace Server.Gumps
             this.Add(new GumpLabelCropped(x, y, width, height, hue, text));
         }
 
-        public void AddRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID)
-        {
-            this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, switchID));
-        }
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText)
-        {
-            this.Add(new GumpTextEntry(x, y, width, height, hue, entryID, initialText));
-        }
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, int size)
-        {
-            this.Add(new GumpTextEntryLimited(x, y, width, height, hue, entryID, initialText, size));
-        }
-
         public void Add(GumpEntry g)
         {
             if (g.Parent != this)
             {
                 g.Parent = this;
             }
-            else if (!this.m_Entries.Contains(g))
+            else if (!this._Entries.Contains(g))
             {
                 this.Invalidate();
-                this.m_Entries.Add(g);
+                this._Entries.Add(g);
             }
         }
 
-        public void Remove(GumpEntry g)
+        protected int NewID()
+        {
+            int id;
+
+            if (this._MacroProtection)
+            {
+                id = Utility.RandomMinMax(1, 65535);
+
+                if (this._UsedIDs.Contains(id))
+                    return this.NewID();
+            }
+            else
+            {
+                id = this._NewID;
+
+                if (this._UsedIDs.Contains(id))
+                {
+                    this._NewID++;
+                    return this.NewID();
+                }
+            }
+
+            _UsedIDs.Add(id);
+
+            return id;
+        }
+
+        public void Remove(GumpEntry entry)
         {
             this.Invalidate();
-            this.m_Entries.Remove(g);
-            g.Parent = null;
+            this._Entries.Remove(entry);
+            entry.Parent = null;
         }
 
         public int Intern(string value)
         {
-            int indexOf = this.m_Strings.IndexOf(value);
+            int indexOf = this._Strings.IndexOf(value);
 
             if (indexOf >= 0)
             {
                 return indexOf;
             }
-            else
-            {
-                this.Invalidate();
-                this.m_Strings.Add(value);
-                return this.m_Strings.Count - 1;
-            }
+
+            this.Invalidate();
+            this._Strings.Add(value);
+            return this._Strings.Count - 1;
         }
 
         public void SendTo(NetState state)
         {
-            state.AddGump(this);
-            state.Send(this.Compile(state));
+            this._Address = state.Mobile;
+
+            if (!this._SharedGump)
+            {
+                state.AddGump(this);
+                state.Send(this.Compile(state));
+            }
+            else
+            {
+                foreach (Mobile m in _Users)
+                {
+                    m.NetState.AddGump(this);
+                    m.NetState.Send(this.Compile(state));
+                }
+
+                foreach (Mobile m in _Viewers)
+                {
+                    m.NetState.AddGump(this);
+                    m.NetState.Send(this.Compile(state, true));
+                }
+            }
         }
 
         public virtual void OnResponse(NetState sender, RelayInfo info)
         {
+            int buttonID = info.ButtonID;
+
+            foreach (GumpCheck entry in this._Entries.OfType<GumpCheck>())
+                entry.Invoke(info.IsSwitched(entry.SwitchID));
+
+            foreach (GumpRadio entry in this.Entries.OfType<GumpRadio>())
+                entry.Invoke(info.IsSwitched(entry.SwitchID));
+            
+            foreach (GumpTextEntry entry in this._Entries.OfType<GumpTextEntry>())
+            {
+                TextRelay relay = info.GetTextEntry(entry.EntryID);
+
+                entry.Invoke(relay != null ? relay.Text : String.Empty);
+            }
+            
+            foreach (GumpTextEntryLimited entry in this._Entries.OfType<GumpTextEntryLimited>())
+            {
+                TextRelay relay = info.GetTextEntry(entry.EntryID);
+
+                entry.Invoke(relay != null ? relay.Text : String.Empty);
+            }
+
+            foreach (
+                GumpImageTileButton button in
+                    this._Entries.OfType<GumpImageTileButton>().Where(button => button.ButtonID == buttonID))
+            {
+                button.Invoke();
+            }
+
+            foreach (
+                GumpButton button in this._Entries.OfType<GumpButton>().Where(button => button.ButtonID == buttonID))
+            {
+                button.Invoke();
+            }
         }
 
         public virtual void OnServerClose(NetState owner)
@@ -346,7 +686,7 @@ namespace Server.Gumps
             return this.Compile(null);
         }
 
-        protected Packet Compile(NetState ns)
+        protected Packet Compile(NetState ns, bool convertToViewer = false)
         {
             IGumpWriter disp;
 
@@ -355,36 +695,73 @@ namespace Server.Gumps
             else
                 disp = new DisplayGumpFast(this);
 
-            if (!this.m_Dragable)
-                disp.AppendLayout(m_NoMove);
+            if (!this._Dragable)
+                disp.AppendLayout(_NoMove);
 
-            if (!this.m_Closable)
-                disp.AppendLayout(m_NoClose);
+            if (!this._Closable)
+                disp.AppendLayout(_NoClose);
 
-            if (!this.m_Disposable)
-                disp.AppendLayout(m_NoDispose);
+            if (!this._Disposable)
+                disp.AppendLayout(_NoDispose);
 
-            if (!this.m_Resizable)
-                disp.AppendLayout(m_NoResize);
+            if (!this._Resizable)
+                disp.AppendLayout(_NoResize);
 
-            int count = this.m_Entries.Count;
-            GumpEntry e;
+            int count = this._Entries.Count;
 
             for (int i = 0; i < count; ++i)
             {
-                e = this.m_Entries[i];
+                GumpEntry e = this._Entries[i];
 
-                disp.AppendLayout(m_BeginLayout);
-                e.AppendTo(disp);
-                disp.AppendLayout(m_EndLayout);
+                disp.AppendLayout(_BeginLayout);
+
+                if (!convertToViewer)
+                    e.AppendTo(disp);
+                else
+                {
+                    GumpButton button = e as GumpButton;
+
+                    if (button != null)
+                        new GumpImage(button.X, button.Y, button.NormalID).AppendTo(disp);
+                    else
+                    {
+                        GumpImageTileButton tileButton = e as GumpImageTileButton;
+
+                        if (tileButton != null)
+                            new GumpImageTiled(tileButton.X, tileButton.Y, tileButton.Width, tileButton.Height,
+                                               tileButton.NormalID).AppendTo(disp);
+                        else
+                        {
+                            GumpRadio radio = e as GumpRadio;
+
+                            if (radio != null)
+                                new GumpImage(radio.X, radio.Y, radio.InitialState ? radio.ActiveID : radio.InactiveID)
+                                    .AppendTo(disp);
+                            else
+                            {
+                                GumpCheck check = e as GumpCheck;
+
+                                if (check != null)
+                                    new GumpImage(check.X, check.Y,
+                                                  check.InitialState ? check.ActiveID : check.InactiveID).AppendTo(disp);
+                                else
+                                {
+                                    // Process text fields
+                                }
+                            }
+                        }
+                    }
+                }
+
+                disp.AppendLayout(_EndLayout);
             }
 
-            disp.WriteStrings(this.m_Strings);
+            disp.WriteStrings(this._Strings);
 
             disp.Flush();
 
-            this.m_TextEntries = disp.TextEntries;
-            this.m_Switches = disp.Switches;
+            this._TextEntries = disp.TextEntries;
+            this._Switches = disp.Switches;
 
             return disp as Packet;
         }

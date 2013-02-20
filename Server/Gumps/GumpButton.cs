@@ -1,161 +1,147 @@
-/***************************************************************************
-*                               GumpButton.cs
-*                            -------------------
-*   begin                : May 1, 2002
-*   copyright            : (C) The RunUO Software Team
-*   email                : info@runuo.com
-*
-*   $Id: GumpButton.cs 4 2006-06-15 04:28:39Z mark $
-*
-***************************************************************************/
-
-
-
-
-
-
-
-
-/***************************************************************************
-*
-*   This program is free software; you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation; either version 2 of the License, or
-*   (at your option) any later version.
-*
-***************************************************************************/
 using System;
 using Server.Network;
 
 namespace Server.Gumps
 {
+    public delegate void ButtonResponse();
+
+    public delegate void ButtonParamResponse(object obj);
+
     public enum GumpButtonType
     {
         Page = 0,
         Reply = 1
     }
 
-    public class GumpButton : GumpEntry
+    public class GumpButton : GumpEntry, IInputEntry
     {
-        private static readonly byte[] m_LayoutName = Gump.StringToBuffer("button");
-        private int m_X, m_Y;
-        private int m_ID1, m_ID2;
-        private int m_ButtonID;
-        private GumpButtonType m_Type;
-        private int m_Param;
-        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param)
+        private static readonly byte[] _LayoutName = Gump.StringToBuffer("button");
+        private int _ButtonID;
+        private object _Callback;
+        private object _CallbackParam;
+        private int _ID1, _ID2;
+        private string _Name;
+        private int _Param;
+        private GumpButtonType _Type;
+        private int _X, _Y;
+
+        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, string name, ButtonResponse callback,
+                          object callbackParam, GumpButtonType type, int param)
         {
-            this.m_X = x;
-            this.m_Y = y;
-            this.m_ID1 = normalID;
-            this.m_ID2 = pressedID;
-            this.m_ButtonID = buttonID;
-            this.m_Type = type;
-            this.m_Param = param;
+            this._X = x;
+            this._Y = y;
+            this._ID1 = normalID;
+            this._ID2 = pressedID;
+            this._ButtonID = buttonID;
+            this._Name = name;
+            this._Callback = callback;
+            this._CallbackParam = callbackParam;
+            this._Type = type;
+            this._Param = param;
         }
 
         public int X
         {
-            get
-            {
-                return this.m_X;
-            }
-            set
-            {
-                this.Delta(ref this.m_X, value);
-            }
+            get { return this._X; }
+            set { this.Delta(ref this._X, value); }
         }
+
         public int Y
         {
-            get
-            {
-                return this.m_Y;
-            }
-            set
-            {
-                this.Delta(ref this.m_Y, value);
-            }
+            get { return this._Y; }
+            set { this.Delta(ref this._Y, value); }
         }
+
         public int NormalID
         {
-            get
-            {
-                return this.m_ID1;
-            }
-            set
-            {
-                this.Delta(ref this.m_ID1, value);
-            }
+            get { return this._ID1; }
+            set { this.Delta(ref this._ID1, value); }
         }
+
         public int PressedID
         {
-            get
-            {
-                return this.m_ID2;
-            }
-            set
-            {
-                this.Delta(ref this.m_ID2, value);
-            }
+            get { return this._ID2; }
+            set { this.Delta(ref this._ID2, value); }
         }
+
         public int ButtonID
         {
-            get
-            {
-                return this.m_ButtonID;
-            }
-            set
-            {
-                this.Delta(ref this.m_ButtonID, value);
-            }
+            get { return this._ButtonID; }
+            set { this.Delta(ref this._ButtonID, value); }
         }
+
         public GumpButtonType Type
         {
-            get
-            {
-                return this.m_Type;
-            }
+            get { return this._Type; }
             set
             {
-                if (this.m_Type != value)
+                if (this._Type == value) return;
+
+                this._Type = value;
+                Gump parent = this.Parent;
+
+                if (parent != null)
                 {
-                    this.m_Type = value;
-
-                    Gump parent = this.Parent;
-
-                    if (parent != null)
-                    {
-                        parent.Invalidate();
-                    }
+                    parent.Invalidate();
                 }
             }
         }
+
         public int Param
         {
-            get
+            get { return this._Param; }
+            set { this.Delta(ref this._Param, value); }
+        }
+
+        public string Name
+        {
+            get { return this._Name; }
+            set { this.Delta(ref this._Name, value); }
+        }
+
+        public object Callback
+        {
+            get { return this._Callback; }
+            set { this.Delta(ref this._Callback, value); }
+        }
+
+        public object CallbackParam
+        {
+            get { return this._CallbackParam; }
+            set { this.Delta(ref this._CallbackParam, value); }
+        }
+
+        public void Invoke()
+        {
+            ButtonResponse callback = this._Callback as ButtonResponse;
+
+            if (callback != null)
+                callback();
+            else
             {
-                return this.m_Param;
-            }
-            set
-            {
-                this.Delta(ref this.m_Param, value);
+                ButtonParamResponse response = this._CallbackParam as ButtonParamResponse;
+
+                if (response != null)
+                    response(this._CallbackParam);
             }
         }
+
         public override string Compile()
         {
-            return String.Format("{{ button {0} {1} {2} {3} {4} {5} {6} }}", this.m_X, this.m_Y, this.m_ID1, this.m_ID2, (int)this.m_Type, this.m_Param, this.m_ButtonID);
+            return String.Format("{{ button {0} {1} {2} {3} {4} {5} {6} }}", this._X, this._Y, this._ID1, this._ID2,
+                                 (int) this._Type, this._Param, this._ButtonID);
         }
 
         public override void AppendTo(IGumpWriter disp)
         {
-            disp.AppendLayout(m_LayoutName);
-            disp.AppendLayout(this.m_X);
-            disp.AppendLayout(this.m_Y);
-            disp.AppendLayout(this.m_ID1);
-            disp.AppendLayout(this.m_ID2);
-            disp.AppendLayout((int)this.m_Type);
-            disp.AppendLayout(this.m_Param);
-            disp.AppendLayout(this.m_ButtonID);
+            disp.AppendLayout(_LayoutName);
+            disp.AppendLayout(this._X);
+            disp.AppendLayout(this._Y);
+            disp.AppendLayout(this._ID1);
+            disp.AppendLayout(this._ID2);
+            disp.AppendLayout((int) this._Type);
+            disp.AppendLayout(this._Param);
+            disp.AppendLayout(this._ButtonID);
         }
     }
 }
