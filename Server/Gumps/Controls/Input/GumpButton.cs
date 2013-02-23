@@ -25,19 +25,18 @@ namespace Server.Gumps
         private GumpButtonType _Type;
         private int _X, _Y;
 
-        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, string name, ButtonResponse callback,
-                          object callbackParam, GumpButtonType type, int param)
+        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, ButtonResponse callback, object callbackParam, string name = "")
         {
             this._X = x;
             this._Y = y;
             this._ID1 = normalID;
             this._ID2 = pressedID;
             this._ButtonID = buttonID;
-            this._Name = name;
-            this._Callback = callback;
-            this._CallbackParam = callbackParam;
             this._Type = type;
             this._Param = param;
+            this._Callback = callback;
+            this._CallbackParam = callbackParam;
+            this._Name = name;
         }
 
         public int X

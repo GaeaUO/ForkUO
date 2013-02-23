@@ -6,10 +6,6 @@ namespace Server.Gumps
     {
         private Gump m_Parent;
 
-        protected GumpEntry()
-        {
-        }
-
         public Gump Parent
         {
             get { return this.m_Parent; }

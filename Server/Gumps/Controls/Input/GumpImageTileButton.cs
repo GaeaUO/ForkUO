@@ -21,18 +21,7 @@ namespace Server.Gumps
         private int _Width;
         private int _X, _Y;
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
-                                   int param, int itemID, int hue, int width, int height, string name,
-                                   ButtonResponse callback, object callbackParam)
-            : this(
-                x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, -1, name, callback,
-                callbackParam)
-        {
-        }
-
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
-                                   int param, int itemID, int hue, int width, int height, int localizedTooltip,
-                                   string name, ButtonResponse callback, object callbackParam)
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip = -1, string name = "")
         {
             this._X = x;
             this._Y = y;
@@ -49,9 +38,9 @@ namespace Server.Gumps
 
             this._LocalizedTooltip = localizedTooltip;
 
-            this._Name = name;
             this._Callback = callback;
             this._CallbackParam = callbackParam;
+            this._Name = name;
         }
 
         public int X

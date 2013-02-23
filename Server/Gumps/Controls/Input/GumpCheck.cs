@@ -18,8 +18,7 @@ namespace Server.Gumps
         private int _SwitchID;
         private int _X, _Y;
 
-        public GumpCheck(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, string name,
-                         CheckResponse callback, object callbackParam)
+        public GumpCheck(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, CheckResponse callback, object callbackParam, string name = "")
         {
             this._X = x;
             this._Y = y;
@@ -86,18 +85,18 @@ namespace Server.Gumps
             set { this.Delta(ref this._CallbackParam, value); }
         }
 
-        public void Invoke(bool switched)
+        public void Invoke()
         {
             CheckResponse callback = this._Callback as CheckResponse;
 
             if (callback != null)
-                callback(switched);
+                callback(this.InitialState);
             else
             {
                 CheckParamResponse response = this._CallbackParam as CheckParamResponse;
 
                 if (response != null)
-                    response(switched, this._CallbackParam);
+                    response(this.InitialState, this._CallbackParam);
             }
         }
 

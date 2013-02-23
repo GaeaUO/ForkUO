@@ -11,11 +11,12 @@ namespace Server.Gumps
         string Name { get; set; }
         object Callback { get; set; }
         object CallbackParam { get; set; }
+        void Invoke();
     }
         
         
 
-    public class Gump
+    public partial class Gump
     {
         private static readonly byte[] _BeginLayout = StringToBuffer("{ ");
         private static readonly byte[] _EndLayout = StringToBuffer(" }");
@@ -128,30 +129,6 @@ namespace Server.Gumps
             }
         }
 
-        public List<Mobile> Users
-        {
-            get { return this._Users; }
-            set
-            {
-                if (this._Users == value) return;
-
-                this._Users = value;
-                this.Invalidate();
-            }
-        }
-
-        public List<Mobile> Viewers
-        {
-            get { return this._Viewers; }
-            set
-            {
-                if (this._Viewers == value) return;
-
-                this._Viewers = value;
-                this.Invalidate();
-            }
-        }
-
         public bool Disposable
         {
             get { return this._Disposable; }
@@ -255,58 +232,6 @@ namespace Server.Gumps
             return true;
         }
 
-        public bool RemoveUser(Mobile from)
-        {
-            this.Invalidate();
-
-            bool result = false;
-
-            if (this._Users.Contains(from))
-            {
-                this._Users.Remove(from);
-                result = true;
-
-                if (this._Users.FirstOrDefault() == null && this._Viewers.FirstOrDefault() == null)
-                    this.SharedGump = false;
-            }
-
-            return result;
-        }
-
-        public bool AddViewer(Mobile from)
-        {
-            this.Invalidate();
-
-            if (this._Viewers == null)
-                this._Viewers = new List<Mobile>();
-
-            if (this._Viewers.Contains(from))
-                return false;
-
-            this._Viewers.Add(from);
-
-            this._SharedGump = true;
-
-            return true;
-        }
-
-        public bool RemoveViewer(Mobile from)
-        {
-            this.Invalidate();
-
-            bool result = false;
-
-            if (this._Viewers.Remove(from))
-            {
-                result = true;
-
-                if (this._Viewers.FirstOrDefault() == null && this._Users.FirstOrDefault() == null)
-                    this.SharedGump = false;
-            }
-
-            return result;
-        }
-
         public void AddPage(int page)
         {
             this.Add(new GumpPage(page));
@@ -321,170 +246,6 @@ namespace Server.Gumps
         {
             this.Add(new GumpBackground(x, y, width, height, gumpID));
         }
-
-        #region AddButton(...)
-
-        // Full new method.
-        public void AddButton(int x, int y, int normalID, int pressedID, int buttonID, string name,
-                              ButtonResponse callback, object callbackParam, GumpButtonType type, int param)
-        {
-            this.Add(new GumpButton(x, y, normalID, pressedID, buttonID, name, callback, callbackParam, type, param));
-        }
-
-        // New method, no need to worry about buttonID.
-        // May randomize buttonID every time by setting MacroProtection to True.
-        // Close buttons shouldn't use this method, and should specify ID 0.
-        public void AddButton(int x, int y, int normalID, int pressedID, string name, ButtonResponse callback,
-                              object callbackParam, GumpButtonType type, int param)
-        {
-            this.Add(new GumpButton(x, y, normalID, pressedID, this.NewID(), name, callback, callbackParam, type, param));
-        }
-
-        // Legacy method.
-        public void AddButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param)
-        {
-            this.Add(new GumpButton(x, y, normalID, pressedID, buttonID, String.Format("Button:{0}", buttonID), null,
-                                    null, type, param));
-        }
-
-        #endregion
-        #region AddImageTiledButton(...)
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
-                                        int param, int itemID, int hue, int width, int height, string name,
-                                        ButtonResponse callback, object callbackParam)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
-                                             height, name, callback, callbackParam));
-        }
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param,
-                                        int itemID, int hue, int width, int height, string name, ButtonResponse callback,
-                                        object callbackParam)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, this.NewID(), type, param, itemID, hue, width,
-                                             height, name, callback, callbackParam));
-        }
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
-                                        int param, int itemID, int hue, int width, int height)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
-                                             height, String.Format("ImageTileButton:{0}", buttonID), null, null));
-        }
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
-                                        int param, int itemID, int hue, int width, int height, int localizedTooltip,
-                                        string name, ButtonResponse callback, object callbackParam)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
-                                             height, localizedTooltip, name, callback, callbackParam));
-        }
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param,
-                                        int itemID, int hue, int width, int height, int localizedTooltip, string name,
-                                        ButtonResponse callback, object callbackParam)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, this.NewID(), type, param, itemID, hue, width,
-                                             height, localizedTooltip, name, callback, callbackParam));
-        }
-
-        public void AddImageTiledButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type,
-                                        int param, int itemID, int hue, int width, int height, int localizedTooltip)
-        {
-            this.Add(new GumpImageTileButton(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width,
-                                             height, localizedTooltip, String.Format("ImageTileButton:{0}", buttonID),
-                                             null, null));
-        }
-
-        #endregion
-        #region AddCheck(...)
-
-        public void AddCheck(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, string name,
-                             CheckResponse callback, object callbackParam)
-        {
-            this.Add(new GumpCheck(x, y, inactiveID, activeID, initialState, switchID, name, callback, callbackParam));
-        }
-
-        public void AddCheck(int x, int y, int inactiveID, int activeID, bool initialState, string name,
-                             CheckResponse callback, object callbackParam)
-        {
-            this.Add(new GumpCheck(x, y, inactiveID, activeID, initialState, this.NewID(), name, callback, callbackParam));
-        }
-
-        public void AddCheck(int x, int y, int inactiveID, int activeID, bool initialState, int switchID)
-        {
-            this.Add(new GumpCheck(x, y, inactiveID, activeID, initialState, switchID, String.Format("Check:{0}", switchID), null, null));
-        }
-
-        #endregion
-        #region AddRadio(...)
-
-        public void AddRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, string name,
-                             RadioResponse callback, object callbackParam)
-        {
-            this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, switchID, name, callback, callbackParam));
-        }
-
-        public void AddRadio(int x, int y, int inactiveID, int activeID, bool initialState, string name,
-                             RadioResponse callback, object callbackParam)
-        {
-            this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, this.NewID(), name, callback, callbackParam));
-        }
-
-        public void AddRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID)
-        {
-            this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, switchID,
-                                   String.Format("Radio:{0}", switchID), null, null));
-        }
-
-        #endregion
-        #region AddTextentry(...)
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string name,
-                                 TextResponse callback, object callbackParam, string initialText)
-        {
-            this.Add(new GumpTextEntry(x, y, width, height, hue, entryID, name, callback, callbackParam, initialText));
-        }
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, string name, TextResponse callback,
-                                 object callbackParam, string initialText)
-        {
-            this.Add(new GumpTextEntry(x, y, width, height, hue, this.NewID(), name, callback, callbackParam,
-                                       initialText));
-        }
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText)
-        {
-            this.Add(new GumpTextEntry(x, y, width, height, hue, entryID, String.Format("TextEntry:{0}", entryID), null,
-                                       null, initialText));
-        }
-
-        #endregion
-        #region TextEntryLimited(...)
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string name,
-                                 TextResponse callback, object callbackParam, string initialText, int size)
-        {
-            this.Add(new GumpTextEntryLimited(x, y, width, height, hue, entryID, name, callback, callbackParam,
-                                              initialText, size));
-        }
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, string name, TextResponse callback,
-                                 object callbackParam, string initialText, int size)
-        {
-            this.Add(new GumpTextEntryLimited(x, y, width, height, hue, this.NewID(), name, callback, callbackParam,
-                                              initialText, size));
-        }
-
-        public void AddTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, int size)
-        {
-            this.Add(new GumpTextEntryLimited(x, y, width, height, hue, entryID,
-                                              String.Format("LimitedTextEntry:{0}", entryID), null, null, initialText,
-                                              size));
-        }
-
-        #endregion
 
         public void AddGroup(int group)
         {
@@ -644,23 +405,27 @@ namespace Server.Gumps
             int buttonID = info.ButtonID;
 
             foreach (GumpCheck entry in this._Entries.OfType<GumpCheck>())
-                entry.Invoke(info.IsSwitched(entry.SwitchID));
+            {
+                entry.InitialState = info.IsSwitched(entry.SwitchID);
+                entry.Invoke();
+            }
 
             foreach (GumpRadio entry in this.Entries.OfType<GumpRadio>())
-                entry.Invoke(info.IsSwitched(entry.SwitchID));
+            {
+                entry.InitialState = info.IsSwitched(entry.SwitchID);
+                entry.Invoke();
+            }
             
             foreach (GumpTextEntry entry in this._Entries.OfType<GumpTextEntry>())
             {
-                TextRelay relay = info.GetTextEntry(entry.EntryID);
-
-                entry.Invoke(relay != null ? relay.Text : String.Empty);
+                entry.InitialText = info.GetTextEntry(entry.EntryID).Text;
+                entry.Invoke();
             }
             
             foreach (GumpTextEntryLimited entry in this._Entries.OfType<GumpTextEntryLimited>())
             {
-                TextRelay relay = info.GetTextEntry(entry.EntryID);
-
-                entry.Invoke(relay != null ? relay.Text : String.Empty);
+                entry.InitialText = info.GetTextEntry(entry.EntryID).Text;
+                entry.Invoke();
             }
 
             foreach (
@@ -744,10 +509,7 @@ namespace Server.Gumps
                                 if (check != null)
                                     new GumpImage(check.X, check.Y,
                                                   check.InitialState ? check.ActiveID : check.InactiveID).AppendTo(disp);
-                                else
-                                {
-                                    // Process text fields
-                                }
+                                // Process text fields
                             }
                         }
                     }

@@ -20,8 +20,7 @@ namespace Server.Gumps
         private int _Width;
         private int _X, _Y;
 
-        public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string name,
-                             TextResponse callback, object callbackParam, string initialText)
+        public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, TextResponse callback, object callbackParam, string name = "")
         {
             this._X = x;
             this._Y = y;
@@ -29,10 +28,10 @@ namespace Server.Gumps
             this._Height = height;
             this._Hue = hue;
             this._EntryID = entryID;
-            this._Name = name;
+            this._InitialText = initialText;
             this._Callback = callback;
             this._CallbackParam = callbackParam;
-            this._InitialText = initialText;
+            this._Name = name;
         }
 
         public int X
@@ -95,18 +94,18 @@ namespace Server.Gumps
             set { this.Delta(ref this._CallbackParam, value); }
         }
 
-        public void Invoke(string input)
+        public void Invoke()
         {
             TextResponse callback = this._Callback as TextResponse;
 
             if (callback != null)
-                callback(input);
+                callback(this.InitialText);
             else
             {
                 TextParamResponse response = this._CallbackParam as TextParamResponse;
 
                 if (response != null)
-                    response(input, this._CallbackParam);
+                    response(this.InitialText, this._CallbackParam);
             }
         }
 

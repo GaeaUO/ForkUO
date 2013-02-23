@@ -18,8 +18,7 @@ namespace Server.Gumps
         private int _SwitchID;
         private int _X, _Y;
 
-        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, string name,
-                         RadioResponse callback, object callbackParam)
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback, object callbackParam, string name = "")
         {
             this._X = x;
             this._Y = y;
@@ -27,9 +26,9 @@ namespace Server.Gumps
             this._ID2 = activeID;
             this._InitialState = initialState;
             this._SwitchID = switchID;
-            this._Name = name;
             this._Callback = callback;
             this._CallbackParam = callbackParam;
+            this._Name = name;
         }
 
         public int X
@@ -86,18 +85,18 @@ namespace Server.Gumps
             set { this.Delta(ref this._CallbackParam, value); }
         }
 
-        public void Invoke(bool selected)
+        public void Invoke()
         {
             RadioResponse callback = this._Callback as RadioResponse;
 
             if (callback != null)
-                callback(selected);
+                callback(this.InitialState);
             else
             {
                 RadioParamResponse response = this._CallbackParam as RadioParamResponse;
 
                 if (response != null)
-                    response(selected, this._CallbackParam);
+                    response(this.InitialState, this._CallbackParam);
             }
         }
 
