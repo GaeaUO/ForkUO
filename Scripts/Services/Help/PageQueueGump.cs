@@ -83,10 +83,10 @@ namespace Server.Engines.Help
 
                     if (i >= 5 && (i % 5) == 0)
                     {
-                        this.Add(new GumpButton(368, 12, 0xFA5, 0xFA7, 0, GumpButtonType.Page, (i / 5) + 1));
+                        this.AddButton(368, 12, 0xFA5, 0xFA7, 0, GumpButtonType.Page, (i / 5) + 1);
                         this.Add(new GumpLabel(298, 12, 2100, "Next Page"));
                         this.Add(new GumpPage((i / 5) + 1));
-                        this.Add(new GumpButton(12, 12, 0xFAE, 0xFB0, 0, GumpButtonType.Page, (i / 5)));
+                        this.AddButton(12, 12, 0xFAE, 0xFB0, 0, GumpButtonType.Page, (i / 5));
                         this.Add(new GumpLabel(48, 12, 2100, "Previous Page"));
                     }
 
@@ -95,7 +95,7 @@ namespace Server.Engines.Help
                     string html = String.Format("[{0}] {1} <basefont color=#{2:X6}>[<u>{3}</u>]</basefont>", typeString, e.Message, e.Handler == null ? 0xFF0000 : 0xFF, e.Handler == null ? "Unhandled" : "Handling");
 
                     this.Add(new GumpHtml(12, 44 + ((i % 5) * 80), 350, 70, html, true, true));
-                    this.Add(new GumpButton(370, 44 + ((i % 5) * 80) + 24, 0xFA5, 0xFA7, i + 1, GumpButtonType.Reply, 0));
+                    this.AddButton(370, 44 + ((i % 5) * 80) + 24, 0xFA5, 0xFA7, i + 1, GumpButtonType.Reply, 0);
                 }
             }
             else
