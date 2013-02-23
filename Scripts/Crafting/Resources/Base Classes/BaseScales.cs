@@ -94,26 +94,7 @@ namespace Server.Items
 
                     break;
                 case 0:
-                    SetResource = "Red Scales";
-
-                    switch (reader.ReadInt())
-                    {
-                        case 202:
-                            SetResource = "Yellow Scales";
-                            break;
-                        case 203:
-                            SetResource = "Black Scales";
-                            break;
-                        case 204:
-                            SetResource = "Green Scales";
-                            break;
-                        case 205:
-                            SetResource = "White Scales";
-                            break;
-                        case 206:
-                            SetResource = "Blue Scales";
-                            break;
-                    }
+                    Info = Resources.ConvertResource(reader.ReadInt());
 
                     break;
             }

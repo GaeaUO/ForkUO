@@ -136,29 +136,7 @@ namespace Server.Items
                     break;
                 case 3:
                 case 2:
-                    SetResource = "Normal";
-
-                    switch (reader.ReadInt())
-                    {
-                        case 302:
-                            SetResource = "Oak";
-                            break;
-                        case 303:
-                            SetResource = "Ash";
-                            break;
-                        case 304:
-                            SetResource = "Yew";
-                            break;
-                        case 305:
-                            SetResource = "Heartwood";
-                            break;
-                        case 306:
-                            SetResource = "Bloodwood";
-                            break;
-                        case 307:
-                            SetResource = "Frostwood";
-                            break;
-                    }
+                    Info = Resources.ConvertResource(reader.ReadInt());
 
                     break;
                 case 1:

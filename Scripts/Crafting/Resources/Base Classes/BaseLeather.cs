@@ -97,36 +97,14 @@ namespace Server.Items
 
                     break;
                 case 1:
-                    SetResource = "Normal";
-
-                    switch (reader.ReadInt())
-                    {
-                        case 102:
-                            SetResource = "Spined";
-                            break;
-                        case 103:
-                            SetResource = "Horned";
-                            break;
-                        case 104:
-                            SetResource = "Barbed";
-                            break;
-                    }
+                    Info = Resources.ConvertResource(reader.ReadInt());
 
                     break;
 
                 case 0:
                     Int32 level = reader.ReadInt();
                     Int32 hue = reader.ReadInt();
-                    String oiName = reader.ReadString();
-
-                    SetResource = "Normal";
-
-                    if (oiName.IndexOf("Spined") >= 0)
-                        SetResource = "Spined";
-                    else if (oiName.IndexOf("Horned") >= 0)
-                        SetResource = "Horned";
-                    else if (oiName.IndexOf("Barbed") >= 0)
-                        SetResource = "Barbed";
+                    Info = Resources.ConvertOreInfo(reader.ReadString());
 
                     break;
             }

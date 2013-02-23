@@ -94,67 +94,11 @@ namespace Server.Items
 
                     break;
                 case 1:
-                    SetResource = "Iron";
-
-                    switch (reader.ReadInt())
-                    {
-                        case 2:
-                            SetResource = "Dull Copper";
-                            break;
-                        case 3:
-                            SetResource = "Shadow Iron";
-                            break;
-                        case 4:
-                            SetResource = "Copper";
-                            break;
-                        case 5:
-                            SetResource = "Bronze";
-                            break;
-                        case 6:
-                            SetResource = "Golden";
-                            break;
-                        case 7:
-                            SetResource = "Agapite";
-                            break;
-                        case 8:
-                            SetResource = "Verite";
-                            break;
-                        case 9:
-                            SetResource = "Valorite";
-                            break;
-                    }
+                    Info = Resources.ConvertResource(reader.ReadInt());
 
                     break;
                 case 0:
-                    SetResource = "Iron";
-
-                    switch (reader.ReadInt())
-                    {
-                        case 1:
-                            SetResource = "Dull Copper";
-                            break;
-                        case 2:
-                            SetResource = "Shadow Iron";
-                            break;
-                        case 3:
-                            SetResource = "Copper";
-                            break;
-                        case 4:
-                            SetResource = "Bronze";
-                            break;
-                        case 5:
-                            SetResource = "Golden";
-                            break;
-                        case 6:
-                            SetResource = "Agapite";
-                            break;
-                        case 7:
-                            SetResource = "Verite";
-                            break;
-                        case 8:
-                            SetResource = "Valorite";
-                            break;
-                    }
+                    Info = Resources.ConvertOreInfo(reader.ReadInt());
 
                     break;
             }

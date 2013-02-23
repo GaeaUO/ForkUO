@@ -115,6 +115,24 @@ namespace Server.Items
             }
         }
 
+        public void Resize(OreSize size)
+        {
+            _size = size;
+
+            switch (size)
+            {
+                case OreSize.Large:
+                    ItemID = 0x19B9;
+                    break;
+                case OreSize.Medium:
+                    ItemID = 0x19B8 + (Utility.RandomBool() ? 2 : 0);
+                    break;
+                case OreSize.Small:
+                    ItemID = 0x19B7;
+                    break;
+            }
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -137,84 +155,24 @@ namespace Server.Items
 
                     break;
                 case 1:
-                    SetResource = "Iron";
-
-                    switch (reader.ReadInt())
-                    {
-                        case 2:
-                            SetResource = "Dull Copper";
-                            break;
-                        case 3:
-                            SetResource = "Shadow Iron";
-                            break;
-                        case 4:
-                            SetResource = "Copper";
-                            break;
-                        case 5:
-                            SetResource = "Bronze";
-                            break;
-                        case 6:
-                            SetResource = "Golden";
-                            break;
-                        case 7:
-                            SetResource = "Agapite";
-                            break;
-                        case 8:
-                            SetResource = "Verite";
-                            break;
-                        case 9:
-                            SetResource = "Valorite";
-                            break;
-                    }
-
-                    if (ItemID == 0x19B9)
-                        _size = OreSize.Large;
-                    else if (ItemID == 0x19B7)
-                        _size = OreSize.Small;
-                    else
-                        _size = OreSize.Medium;
+                    Info = Resources.ConvertResource(reader.ReadInt());
 
                     break;
 
                 case 0:
-                    SetResource = "Iron";
-
-                    switch (reader.ReadInt())
-                    {
-                        case 1:
-                            SetResource = "Dull Copper";
-                            break;
-                        case 2:
-                            SetResource = "Shadow Iron";
-                            break;
-                        case 3:
-                            SetResource = "Copper";
-                            break;
-                        case 4:
-                            SetResource = "Bronze";
-                            break;
-                        case 5:
-                            SetResource = "Golden";
-                            break;
-                        case 6:
-                            SetResource = "Agapite";
-                            break;
-                        case 7:
-                            SetResource = "Verite";
-                            break;
-                        case 8:
-                            SetResource = "Valorite";
-                            break;
-                    }
-
-                    if (ItemID == 0x19B9)
-                        _size = OreSize.Large;
-                    else if (ItemID == 0x19B7)
-                        _size = OreSize.Small;
-                    else
-                        _size = OreSize.Medium;
+                    Info = Resources.ConvertOreInfo(reader.ReadInt());
 
                     break;
+            }
+
+            if (version < 2)
+            {
+                if (ItemID == 0x19B9)
+                    _size = OreSize.Large;
+                else if (ItemID == 0x19B7)
+                    _size = OreSize.Small;
+                else
+                    _size = OreSize.Medium;
             }
         }
 
