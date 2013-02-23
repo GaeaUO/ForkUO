@@ -327,6 +327,11 @@ namespace Server.Gumps
             }
         }
 
+        public void Add(Gumpling g)
+        {
+            g.AddToGump(this);
+        }
+
         protected int NewID()
         {
             int id;
@@ -359,6 +364,11 @@ namespace Server.Gumps
             this.Invalidate();
             this._Entries.Remove(entry);
             entry.Parent = null;
+        }
+
+        public void Remove(Gumpling gumpling)
+        {
+            gumpling.RemoveFromGump(this);
         }
 
         public int Intern(string value)
