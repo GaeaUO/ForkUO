@@ -22,6 +22,7 @@ namespace Server.Commands
         private static readonly Type typeofType = typeof(Type);
         private static readonly Type typeofChar = typeof(Char);
         private static readonly Type typeofString = typeof(String);
+        private static readonly Type typeofIDynamicEnum = typeof(IDynamicEnum);
         private static readonly Type typeofText = typeof(TextDefinition);
         private static readonly Type typeofTimeSpan = typeof(TimeSpan);
         private static readonly Type typeofParsable = typeof(ParsableAttribute);
@@ -412,7 +413,26 @@ namespace Server.Commands
         public static string InternalSetValue(Mobile from, object logobj, object o, PropertyInfo p, string pname, string value, bool shouldLog)
         {
             object toSet = null;
-            string result = ConstructFromString(p.PropertyType, o, value, ref toSet);
+            string result = null;
+
+            if (IsIDynamicEnum(p.PropertyType))
+            {
+                toSet = (IDynamicEnum)p.GetValue(o);
+
+                if (toSet is IDynamicEnum && toSet != null)
+                {
+                    ((IDynamicEnum)toSet).Value = value;
+
+                    if (!((IDynamicEnum)toSet).IsValid)
+                        result = "No type with that name was found.";
+                }
+                else
+                    result = "That is not properly formatted.";
+            }
+            else
+            {
+                result = ConstructFromString(p.PropertyType, o, value, ref toSet);
+            }
 
             if (result != null)
                 return result;
@@ -423,7 +443,26 @@ namespace Server.Commands
         public static string InternalSetValue(object o, PropertyInfo p, string value)
         {
             object toSet = null;
-            string result = ConstructFromString(p.PropertyType, o, value, ref toSet);
+            string result = null;
+
+            if (IsIDynamicEnum(p.PropertyType))
+            {
+                toSet = (IDynamicEnum)p.GetValue(o);
+
+                if (toSet is IDynamicEnum && toSet != null)
+                {
+                    ((IDynamicEnum)toSet).Value = value;
+
+                    if (!((IDynamicEnum)toSet).IsValid)
+                        result = "No type with that name was found.";
+                }
+                else
+                    result = "That is not properly formatted.";
+            }
+            else
+            {
+                result = ConstructFromString(p.PropertyType, o, value, ref toSet);
+            }
 
             if (result != null)
                 return result;
@@ -477,6 +516,8 @@ namespace Server.Commands
                 toString = String.Format("'{0}' ({1} [0x{1:X}])", value, (int)value);
             else if (IsString(type))
                 toString = ((string)value == "null" ? @"@""null""" : String.Format("\"{0}\"", value));
+            else if (IsIDynamicEnum(type))
+                toString = (((IDynamicEnum)value).Value == "null" ? @"@""null""" : String.Format("\"{0}\"", ((IDynamicEnum)value).Value));
             else if (IsText(type))
                 toString = ((TextDefinition)value).Format(false);
             else
@@ -516,6 +557,11 @@ namespace Server.Commands
         private static bool IsString(Type t)
         {
             return (t == typeofString);
+        }
+
+        private static bool IsIDynamicEnum(Type t)
+        {
+            return (typeofIDynamicEnum.IsAssignableFrom(t));
         }
 
         private static bool IsText(Type t)

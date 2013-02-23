@@ -60,6 +60,7 @@ namespace Server.Gumps
         private static readonly Type typeofPoint2D = typeof(Point2D);
         private static readonly Type typeofTimeSpan = typeof(TimeSpan);
         private static readonly Type typeofCustomEnum = typeof(CustomEnumAttribute);
+        private static readonly Type typeofIDynamicEnum = typeof(IDynamicEnum);
         private static readonly Type typeofEnum = typeof(Enum);
         private static readonly Type typeofBool = typeof(Boolean);
         private static readonly Type typeofString = typeof(String);
@@ -221,6 +222,10 @@ namespace Server.Gumps
             {
                 return ((TextDefinition)o).Format(true);
             }
+            else if (o is IDynamicEnum)
+            {
+                return ((IDynamicEnum)o).Value;
+            }
             else
             {
                 return o.ToString();
@@ -332,6 +337,8 @@ namespace Server.Gumps
                                 from.SendGump(new SetTimeSpanGump(prop, from, this.m_Object, this.m_Stack, this.m_Page, this.m_List));
                             else if (IsCustomEnum(type))
                                 from.SendGump(new SetCustomEnumGump(prop, from, this.m_Object, this.m_Stack, this.m_Page, this.m_List, GetCustomEnumNames(type)));
+                            else if (typeofIDynamicEnum.IsAssignableFrom(type))
+                                from.SendGump(new SetCustomEnumGump(prop, from, this.m_Object, this.m_Stack, this.m_Page, this.m_List, ((IDynamicEnum)prop.GetValue(this.m_Object)).Values));
                             else if (IsType(type, typeofEnum))
                                 from.SendGump(new SetListOptionGump(prop, from, this.m_Object, this.m_Stack, this.m_Page, this.m_List, Enum.GetNames(type), GetObjects(Enum.GetValues(type))));
                             else if (IsType(type, typeofBool))
