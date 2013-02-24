@@ -29,5 +29,21 @@ namespace Server.Gumps
         {
             this.Add(new GumpRadio(x, y, inactiveID, activeID, initialState, this.NewID(), callback, callbackParam, name));
         }
+
+        public bool GetCheck(int id)
+        {
+            foreach (GumpCheck entry in this._Entries.OfType<GumpCheck>().Where(entry => entry.EntryID == id))
+                return entry.InitialState;
+
+            return false;
+        }
+
+        public bool GetCheck(string name)
+        {
+            foreach (GumpCheck entry in this._Entries.OfType<GumpCheck>().Where(entry => entry.Name == name))
+                return entry.InitialState;
+
+            return false;
+        }
     }
 }

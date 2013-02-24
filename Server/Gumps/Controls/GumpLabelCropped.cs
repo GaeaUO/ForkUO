@@ -114,7 +114,7 @@ namespace Server.Gumps
         }
         public override string Compile()
         {
-            return String.Format("{{ croppedtext {0} {1} {2} {3} {4} {5} }}", this.m_X, this.m_Y, this.m_Width, this.m_Height, this.m_Hue, this.Parent.Intern(this.m_Text));
+            return String.Format("{{ croppedtext {0} {1} {2} {3} {4} {5} }}", this.m_X, this.m_Y, this.m_Width, this.m_Height, this.m_Hue, this.Parent.RootParent.Intern(this.m_Text));
         }
 
         public override void AppendTo(IGumpWriter disp)
@@ -125,7 +125,7 @@ namespace Server.Gumps
             disp.AppendLayout(this.m_Width);
             disp.AppendLayout(this.m_Height);
             disp.AppendLayout(this.m_Hue);
-            disp.AppendLayout(this.Parent.Intern(this.m_Text));
+            disp.AppendLayout(this.Parent.RootParent.Intern(this.m_Text));
         }
     }
 }

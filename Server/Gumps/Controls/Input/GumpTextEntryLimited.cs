@@ -17,7 +17,25 @@ namespace Server.Gumps
         private int _Width;
         private int _X, _Y;
 
-        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, TextResponse callback, object callbackParam, string name = "")
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, string initialText, int size, string name)
+            : this(x, y, width, height, hue, -1, initialText, size, null, null, name) { }
+
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, string initialText, int size, TextResponse callback, string name)
+            : this(x, y, width, height, hue, -1, initialText, size, callback, null, name) { }
+
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, string initialText, int size, TextResponse callback, object callbackParam, string name)
+            : this(x, y, width, height, hue, -1, initialText, size, callback, callbackParam, name) { }
+
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size)
+            : this(x, y, width, height, hue, entryID, initialText, size, null, null, "") { }
+
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, TextResponse callback)
+            : this(x, y, width, height, hue, entryID, initialText, size, callback, null, "") { }
+
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, TextResponse callback, object callbackParam)
+            : this(x, y, width, height, hue, entryID, initialText, size, callback, callbackParam, "") { }
+
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, TextResponse callback, object callbackParam, string name)
         {
             this._X = x;
             this._Y = y;
@@ -29,7 +47,7 @@ namespace Server.Gumps
             this._Size = size;
             this._Callback = callback;
             this._CallbackParam = callbackParam;
-            this._Name = name;
+            this._Name = (name != null ? name : "");
         }
 
         public int X
@@ -103,20 +121,13 @@ namespace Server.Gumps
             TextResponse callback = this._Callback as TextResponse;
 
             if (callback != null)
-                callback(this.InitialText);
-            else
-            {
-                TextParamResponse response = this._CallbackParam as TextParamResponse;
-
-                if (response != null)
-                    response(this.InitialText, this._CallbackParam);
-            }
+                callback(this, this.InitialText, this._CallbackParam);
         }
 
         public override string Compile()
         {
             return String.Format("{{ textentrylimited {0} {1} {2} {3} {4} {5} {6} {7} }}", this._X, this._Y, this._Width,
-                                 this._Height, this._Hue, this._EntryID, this.Parent.Intern(this._InitialText),
+                                 this._Height, this._Hue, this._EntryID, this.Parent.RootParent.Intern(this._InitialText),
                                  this._Size);
         }
 
@@ -129,7 +140,7 @@ namespace Server.Gumps
             disp.AppendLayout(this._Height);
             disp.AppendLayout(this._Hue);
             disp.AppendLayout(this._EntryID);
-            disp.AppendLayout(this.Parent.Intern(this._InitialText));
+            disp.AppendLayout(this.Parent.RootParent.Intern(this._InitialText));
             disp.AppendLayout(this._Size);
 
             disp.TextEntries++;

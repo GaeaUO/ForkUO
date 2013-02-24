@@ -3,11 +3,29 @@ using System.Collections.Generic;
 
 namespace Server.Gumps
 {
-    public abstract class Gumpling
+    public abstract class Gumpling : IGumpContainer, IGumpComponent
     {
         private int _X, _Y;
 
         private readonly List<GumpEntry> _Entries;
+
+        private IGumpContainer m_Parent;
+
+        public IGumpContainer Parent
+        {
+            get { return this.m_Parent; }
+            set
+            {
+                if (this.m_Parent != value)
+                {
+                    if (this.m_Parent != null)
+                        this.m_Parent.Remove(this);
+
+                    this.m_Parent = value;
+                    this.m_Parent.Add(this);
+                }
+            }
+        }
 
         public Gumpling(int x, int y)
         {
@@ -17,72 +35,42 @@ namespace Server.Gumps
             this._Entries = new List<GumpEntry>();
         }
 
-        public void Add(GumpEntry g)
+        public Gump RootParent { get { return Parent.RootParent; } }
+
+        public void Add(IGumpComponent g)
         {
-            if (!this._Entries.Contains(g))
-                this._Entries.Add(g);
+            if (g.Parent == null)
+                g.Parent = this;
+
+            if (g is GumpEntry)
+            {
+                if (!this._Entries.Contains((GumpEntry)g))
+                {
+                    this._Entries.Add((GumpEntry)g);
+                    this.Invalidate();
+                }
+            }
+        }
+
+        public void Remove(IGumpComponent g)
+        {
+            if (g is GumpEntry)
+            {
+                this._Entries.Remove((GumpEntry)g);
+                g.Parent = null;
+                this.Invalidate();
+            }
+        }
+
+        public virtual void Invalidate()
+        {
         }
 
         public void AddToGump(Gump gump)
         {
             foreach (GumpEntry g in _Entries)
-            {
-                if (g.Parent != gump)
-                {
-                    g.Parent = gump;
-                }
-                else if (!gump.Entries.Contains(g))
-                {
-                    if (g is GumpAlphaRegion)
-                    {
-                        ((GumpAlphaRegion)g).X += _X;
-                        ((GumpAlphaRegion)g).Y += _Y;
-                    }
-                    else if (g is GumpBackground)
-                    {
-                        ((GumpBackground)g).X += _X;
-                        ((GumpBackground)g).Y += _Y;
-                    }
-                    else if (g is GumpHtml)
-                    {
-                        ((GumpHtml)g).X += _X;
-                        ((GumpHtml)g).Y += _Y;
-                    }
-                    else if (g is GumpHtmlLocalized)
-                    {
-                        ((GumpHtmlLocalized)g).X += _X;
-                        ((GumpHtmlLocalized)g).Y += _Y;
-                    }
-                    else if (g is GumpImage)
-                    {
-                        ((GumpImage)g).X += _X;
-                        ((GumpImage)g).Y += _Y;
-                    }
-                    else if (g is GumpImageTiled)
-                    {
-                        ((GumpImageTiled)g).X += _X;
-                        ((GumpImageTiled)g).Y += _Y;
-                    }
-                    else if (g is GumpItem)
-                    {
-                        ((GumpItem)g).X += _X;
-                        ((GumpItem)g).Y += _Y;
-                    }
-                    else if (g is GumpLabel)
-                    {
-                        ((GumpLabel)g).X += _X;
-                        ((GumpLabel)g).Y += _Y;
-                    }
-                    else if (g is GumpLabelCropped)
-                    {
-                        ((GumpLabelCropped)g).X += _X;
-                        ((GumpLabelCropped)g).Y += _Y;
-                    }
-
-                    gump.Invalidate();
+                if (!gump.Entries.Contains(g))
                     gump.Add(g);
-                }
-            }
         }
 
         public void RemoveFromGump(Gump gump)
