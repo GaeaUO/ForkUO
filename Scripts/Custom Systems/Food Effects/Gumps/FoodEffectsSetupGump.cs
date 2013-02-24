@@ -47,21 +47,13 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private void Setup()
         {
-            AddPage(0);
-
-            AddBackground(0, 0, 260, 336, 5100);
-
-            AddLabel(66, 4, 2062, "Food Effect System");
-
-            AddLabel(10, 30, 1359, "Enabled");
-            Add(new GreyCheckbox(63, 25, "Core Enabled", _CoreEnabled));
-
-            AddImageTiled(2, 55, 254, 4, 5101);
-
-            AddLabel(64, 60, 62, "Food Buffs");
-
-            AddLabel(10, 310, 75, String.Format("v{0}", FoodEffectsCore.Core.Version));
-
+            Add(new StoneyBackground(260, 336));
+            Add(new GumpLabel(66, 4, 0x80E, "Food Effect System"));
+            Add(new GumpLabel(10, 30, 0x54F, "Enabled"));
+            Add(new GreyCheckbox(63, 25, "Core Enabled", _CoreEnabled, CoreEnableChanged));
+            Add(new GumpImageTiled(2, 55, 254, 4, 0x13ED));
+            Add(new GumpLabel(64, 60, 0x3E, "Food Buffs"));
+            Add(new GumpLabel(10, 310, 0x4B, String.Format("v{0}", FoodEffectsCore.Core.Version)));
             Add(new SaveCancelGumpling(90, 305, SaveButtonPressed, null));
 
             List<Type> foodTypes = new List<Type>();
@@ -92,7 +84,14 @@ namespace CustomsFramework.Systems.FoodEffects
             Int32 counter = _EffectIndex;
 
             for (Int32 i = 0; i < foodTypes.Count; i++)
-                Add(new FoodEntryGumpling(counter++, 10, 80 + (i * 22), (foodTypes[i] != null ? foodTypes[i].Name : ""), AddEffectPressed, RemoveEffectPressed));
+            {
+                FoodEntryGumpling g = new FoodEntryGumpling(counter++, 10, 80 + (i * 22), (foodTypes[i] != null ? foodTypes[i].Name : ""));
+
+                g.OnEdit += EditEffectPressed;
+                g.OnRemove += RemoveEffectPressed;
+
+                Add(g);
+            }
         }
 
         public override void OnAddressChange()
@@ -104,21 +103,27 @@ namespace CustomsFramework.Systems.FoodEffects
             }
         }
 
-        private void PreviousPagePressed(GumpEntry entry, object param)
+        private void CoreEnableChanged(IGumpComponent sender, object param)
         {
-            if (Address != null)
-                Address.SendGump(new FoodEffectsSetupGump(GetCheck("Core Enabled"), _FoodTypes, _FoodEffects, _EffectIndex - 10));
+            if (param is Boolean)
+                _CoreEnabled = (Boolean)param;
         }
 
-        private void NextPagePressed(GumpEntry entry, object param)
+        private void PreviousPagePressed(IGumpComponent sender, object param)
         {
             if (Address != null)
-                Address.SendGump(new FoodEffectsSetupGump(GetCheck("Core Enabled"), _FoodTypes, _FoodEffects, _EffectIndex + 10));
+                Address.SendGump(new FoodEffectsSetupGump(_CoreEnabled, _FoodTypes, _FoodEffects, _EffectIndex - 10));
         }
 
-        private void SaveButtonPressed(GumpEntry entry, object param)
+        private void NextPagePressed(IGumpComponent sender, object param)
         {
-            FoodEffectsCore.Core.Enabled = GetCheck("Core Enabled");
+            if (Address != null)
+                Address.SendGump(new FoodEffectsSetupGump(_CoreEnabled, _FoodTypes, _FoodEffects, _EffectIndex + 10));
+        }
+
+        private void SaveButtonPressed(IGumpComponent sender, object param)
+        {
+            FoodEffectsCore.Core.Enabled = _CoreEnabled;
 
             FoodEffectsCore.Core.FoodEffects.Clear();
 
@@ -132,22 +137,22 @@ namespace CustomsFramework.Systems.FoodEffects
             FoodEffectsCore.InvokeOnFoodEffectSystemUpdate(FoodEffectsCore.Core);
         }
 
-        private void AddEffectPressed(GumpEntry entry, object param)
+        private void EditEffectPressed(IGumpComponent sender, object param)
         {
-            if (entry.Parent is FoodEntryGumpling)
+            if (sender.Parent is FoodEntryGumpling)
             {
-                Int32 index = ((FoodEntryGumpling)entry.Parent).Index;
+                Int32 index = ((FoodEntryGumpling)sender.Parent).Index;
 
                 if (Address != null)
-                    Address.SendGump(new FoodEffectGump(GetCheck("Core Enabled"), _FoodTypes, _FoodEffects, index, null, false));
+                    Address.SendGump(new FoodEffectGump(_CoreEnabled, _FoodTypes, _FoodEffects, index, null, false));
             }
         }
 
-        private void RemoveEffectPressed(GumpEntry entry, object param)
+        private void RemoveEffectPressed(IGumpComponent sender, object param)
         {
-            if (entry.Parent is FoodEntryGumpling)
+            if (sender.Parent is FoodEntryGumpling)
             {
-                Int32 index = ((FoodEntryGumpling)entry.Parent).Index;
+                Int32 index = ((FoodEntryGumpling)sender.Parent).Index;
 
                 if (index < _FoodTypes.Count)
                 {

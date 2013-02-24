@@ -1,17 +1,4 @@
-﻿/*****************************************************************************************************************************
- * 
- * Slayer Title Core
- * Version 3.0
- * Designed for ForkUO 0.2
- * 
- * Authored by Dougan Ironfist
- * Last Updated on 2/11/2013
- * 
-* The purpose of these scripts is to allow shard administrators to create fun kill-based titles that players can earn. 
-  * 
- ****************************************************************************************************************************/
-
-using System;
+﻿using System;
 
 namespace CustomsFramework.Systems.SlayerTitleSystem
 {

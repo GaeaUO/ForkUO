@@ -6,12 +6,13 @@ using Server.Network;
 
 namespace Server.Gumps
 {
+    public delegate void GumpResponse(IGumpComponent sender, object param);
+
     public interface IInputEntry
     {
         int EntryID { get; set; }
         string Name { get; set; }
-        object Callback { get; set; }
-        object CallbackParam { get; set; }
+        GumpResponse Callback { get; set; }
         void Invoke();
     }
 

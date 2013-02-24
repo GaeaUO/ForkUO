@@ -5,9 +5,10 @@ namespace Server.Gumps
 {
     public class GumpTextEntryLimited : GumpEntry, IInputEntry
     {
+        public event GumpResponse OnGumpResponse;
+
         private static readonly byte[] _LayoutName = Gump.StringToBuffer("textentrylimited");
-        private object _Callback;
-        private object _CallbackParam;
+        private GumpResponse _Callback;
         private int _EntryID;
         private int _Height;
         private int _Hue;
@@ -18,24 +19,18 @@ namespace Server.Gumps
         private int _X, _Y;
 
         public GumpTextEntryLimited(int x, int y, int width, int height, int hue, string initialText, int size, string name)
-            : this(x, y, width, height, hue, -1, initialText, size, null, null, name) { }
+            : this(x, y, width, height, hue, -1, initialText, size, null, name) { }
 
-        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, string initialText, int size, TextResponse callback, string name)
-            : this(x, y, width, height, hue, -1, initialText, size, callback, null, name) { }
-
-        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, string initialText, int size, TextResponse callback, object callbackParam, string name)
-            : this(x, y, width, height, hue, -1, initialText, size, callback, callbackParam, name) { }
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, string initialText, int size, GumpResponse callback, string name)
+            : this(x, y, width, height, hue, -1, initialText, size, callback, name) { }
 
         public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size)
-            : this(x, y, width, height, hue, entryID, initialText, size, null, null, "") { }
+            : this(x, y, width, height, hue, entryID, initialText, size, null, "") { }
 
-        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, TextResponse callback)
-            : this(x, y, width, height, hue, entryID, initialText, size, callback, null, "") { }
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, GumpResponse callback)
+            : this(x, y, width, height, hue, entryID, initialText, size, callback, "") { }
 
-        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, TextResponse callback, object callbackParam)
-            : this(x, y, width, height, hue, entryID, initialText, size, callback, callbackParam, "") { }
-
-        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, TextResponse callback, object callbackParam, string name)
+        public GumpTextEntryLimited(int x, int y, int width, int height, int hue, int entryID, string initialText, int size, GumpResponse callback, string name)
         {
             this._X = x;
             this._Y = y;
@@ -46,7 +41,6 @@ namespace Server.Gumps
             this._InitialText = initialText;
             this._Size = size;
             this._Callback = callback;
-            this._CallbackParam = callbackParam;
             this._Name = (name != null ? name : "");
         }
 
@@ -104,24 +98,19 @@ namespace Server.Gumps
             set { this.Delta(ref this._Name, value); }
         }
 
-        public object Callback
+        public GumpResponse Callback
         {
             get { return this._Callback; }
             set { this.Delta(ref this._Callback, value); }
         }
 
-        public object CallbackParam
-        {
-            get { return this._CallbackParam; }
-            set { this.Delta(ref this._CallbackParam, value); }
-        }
-
         public void Invoke()
         {
-            TextResponse callback = this._Callback as TextResponse;
+            if (Callback != null)
+                Callback(this, InitialText);
 
-            if (callback != null)
-                callback(this, this.InitialText, this._CallbackParam);
+            if (OnGumpResponse != null)
+                OnGumpResponse(this, InitialText);
         }
 
         public override string Compile()

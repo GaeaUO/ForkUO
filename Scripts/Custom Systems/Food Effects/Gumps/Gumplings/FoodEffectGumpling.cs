@@ -6,8 +6,7 @@ namespace CustomsFramework.Systems.FoodEffects
 {
     public class FoodEffectGumpling : Gumpling
     {
-        public FoodEffectGumpling(Int32 x, Int32 y, Int32 width, String name, Int32 textEntryHue, String defaultValue)
-            : base(x, y)
+        public FoodEffectGumpling(Int32 x, Int32 y, Int32 width, String name, Int32 textEntryHue, String defaultValue) : base(x, y)
         {
             Add(new GumpLabel(x, y + 3, 0x0, name));
             Add(new GumpImageTiled(x + 100, y, width, 23, 0xA40));

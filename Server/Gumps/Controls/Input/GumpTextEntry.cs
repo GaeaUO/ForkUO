@@ -3,13 +3,12 @@ using Server.Network;
 
 namespace Server.Gumps
 {
-    public delegate void TextResponse(GumpEntry entry, string text, object param);
-
     public class GumpTextEntry : GumpEntry, IInputEntry
     {
+        public event GumpResponse OnGumpResponse;
+
         private static readonly byte[] _LayoutName = Gump.StringToBuffer("textentry");
-        private object _Callback;
-        private object _CallbackParam;
+        private GumpResponse _Callback;
         private int _EntryID;
         private int _Height;
         private int _Hue;
@@ -19,24 +18,18 @@ namespace Server.Gumps
         private int _X, _Y;
 
         public GumpTextEntry(int x, int y, int width, int height, int hue, string initialText, string name)
-            : this(x, y, width, height, hue, -1, initialText, null, null, name) { }
+            : this(x, y, width, height, hue, -1, initialText, null, name) { }
 
-        public GumpTextEntry(int x, int y, int width, int height, int hue, string initialText, TextResponse callback, string name)
-            : this(x, y, width, height, hue, -1, initialText, callback, null, name) { }
-
-        public GumpTextEntry(int x, int y, int width, int height, int hue, string initialText, TextResponse callback, object callbackParam, string name)
-            : this(x, y, width, height, hue, -1, initialText, callback, callbackParam, name) { }
+        public GumpTextEntry(int x, int y, int width, int height, int hue, string initialText, GumpResponse callback, string name)
+            : this(x, y, width, height, hue, -1, initialText, callback, name) { }
 
         public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText)
-            : this(x, y, width, height, hue, entryID, initialText, null, null, "") { }
+            : this(x, y, width, height, hue, entryID, initialText, null, "") { }
 
-        public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, TextResponse callback)
-            : this(x, y, width, height, hue, entryID, initialText, callback, null, "") { }
+        public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, GumpResponse callback)
+            : this(x, y, width, height, hue, entryID, initialText, callback, "") { }
 
-        public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, TextResponse callback, object callbackParam)
-            : this(x, y, width, height, hue, entryID, initialText, callback, callbackParam, "") { }
-
-        public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, TextResponse callback, object callbackParam, string name)
+        public GumpTextEntry(int x, int y, int width, int height, int hue, int entryID, string initialText, GumpResponse callback, string name)
         {
             this._X = x;
             this._Y = y;
@@ -46,7 +39,6 @@ namespace Server.Gumps
             this._EntryID = entryID;
             this._InitialText = initialText;
             this._Callback = callback;
-            this._CallbackParam = callbackParam;
             this._Name = (name != null ? name : "");
         }
 
@@ -98,24 +90,19 @@ namespace Server.Gumps
             set { this.Delta(ref this._Name, value); }
         }
 
-        public object Callback
+        public GumpResponse Callback
         {
             get { return this._Callback; }
             set { this.Delta(ref this._Callback, value); }
         }
 
-        public object CallbackParam
-        {
-            get { return this._CallbackParam; }
-            set { this.Delta(ref this._CallbackParam, value); }
-        }
-
         public void Invoke()
         {
-            TextResponse callback = this._Callback as TextResponse;
+            if (Callback != null)
+                Callback(this, InitialText);
 
-            if (callback != null)
-                callback(this, this.InitialText, this._CallbackParam);
+            if (OnGumpResponse != null)
+                OnGumpResponse(this, InitialText);
         }
 
         public override string Compile()

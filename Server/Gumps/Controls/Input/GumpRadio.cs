@@ -3,13 +3,12 @@ using Server.Network;
 
 namespace Server.Gumps
 {
-    public delegate void RadioResponse(GumpEntry entry, bool switched, object param);
-
     public class GumpRadio : GumpEntry, IInputEntry
     {
+        public event GumpResponse OnGumpResponse;
+
         private static readonly byte[] _LayoutName = Gump.StringToBuffer("radio");
-        private object _Callback;
-        private object _CallbackParam;
+        private GumpResponse _Callback;
         private int _ID1, _ID2;
         private bool _InitialState;
         private string _Name;
@@ -17,24 +16,18 @@ namespace Server.Gumps
         private int _X, _Y;
 
         public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, string name)
-            : this(x, y, inactiveID, activeID, initialState, -1, null, null, name) { }
+            : this(x, y, inactiveID, activeID, initialState, -1, null, name) { }
 
-        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, RadioResponse callback, string name)
-            : this(x, y, inactiveID, activeID, initialState, -1, callback, null, name) { }
-
-        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, RadioResponse callback, object callbackParam, string name)
-            : this(x, y, inactiveID, activeID, initialState, -1, callback, callbackParam, name) { }
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, GumpResponse callback, string name)
+            : this(x, y, inactiveID, activeID, initialState, -1, callback, name) { }
 
         public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID)
-            : this(x, y, inactiveID, activeID, initialState, switchID, null, null, "") { }
+            : this(x, y, inactiveID, activeID, initialState, switchID, null, "") { }
 
-        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback)
-            : this(x, y, inactiveID, activeID, initialState, switchID, callback, null, "") { }
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, GumpResponse callback)
+            : this(x, y, inactiveID, activeID, initialState, switchID, callback, "") { }
 
-        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback, object callbackParam)
-            : this(x, y, inactiveID, activeID, initialState, switchID, callback, callbackParam, "") { }
-
-        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback, object callbackParam, string name)
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, GumpResponse callback, string name)
         {
             this._X = x;
             this._Y = y;
@@ -43,7 +36,6 @@ namespace Server.Gumps
             this._InitialState = initialState;
             this._EntryID = switchID;
             this._Callback = callback;
-            this._CallbackParam = callbackParam;
             this._Name = (name != null ? name : "");
         }
 
@@ -89,24 +81,19 @@ namespace Server.Gumps
             set { this.Delta(ref this._Name, value); }
         }
 
-        public object Callback
+        public GumpResponse Callback
         {
             get { return this._Callback; }
             set { this.Delta(ref this._Callback, value); }
         }
 
-        public object CallbackParam
-        {
-            get { return this._CallbackParam; }
-            set { this.Delta(ref this._CallbackParam, value); }
-        }
-
         public void Invoke()
         {
-            RadioResponse callback = this._Callback as RadioResponse;
+            if (Callback != null)
+                Callback(this, InitialState);
 
-            if (callback != null)
-                callback(this, this.InitialState, this._CallbackParam);
+            if (OnGumpResponse != null)
+                OnGumpResponse(this, InitialState);
         }
 
         public override string Compile()

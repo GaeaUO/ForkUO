@@ -1,17 +1,4 @@
-﻿/*****************************************************************************************************************************
- * 
- * Slayer Title Core
- * Version 3.0
- * Designed for ForkUO 0.2
- * 
- * Authored by Dougan Ironfist
- * Last Updated on 2/11/2013
- * 
- *
- * The purpose of these scripts is to allow shard administrators to create fun kill-based titles that players can earn. 
- ****************************************************************************************************************************/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using Server;
@@ -35,7 +22,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
 
         private Dictionary<Type, List<Int32>> m_CrossReference = new Dictionary<Type, List<int>>();
 
-        public const String SystemVersion = "3.0";
+        public const String SystemVersion = "3.1";
 
         private static SlayerTitleCore m_Core;
         public static SlayerTitleCore Core { get { return m_Core; } }
@@ -86,7 +73,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
             if (SlayerTitleCore.Core == null)
                 return;
 
-            e.Mobile.SendGump(new SlayerTitleSetupGump(e.Mobile));
+            e.Mobile.SendGump(new SlayerTitleSetupGump());
         }
 
         public void CrossReferenceDefinitions()

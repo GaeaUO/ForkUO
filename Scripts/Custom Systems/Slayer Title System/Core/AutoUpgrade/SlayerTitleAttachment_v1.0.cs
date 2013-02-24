@@ -1,15 +1,4 @@
-﻿/*
- * 
- * Slayer Title System [DEFUNCT]
- * Beta Version 1.0
- * Designed for SVN 663 + ML
- * 
- * Authored by Dougan Ironfist
- * Last Updated on 2/11/2013
- *
- * The purpose of these scripts is to allow shard administrators to create fun kill-based titles that players can earn. 
- * 
- */
+﻿// Provided for backward compatability
 
 using System;
 using System.Collections.Generic;
