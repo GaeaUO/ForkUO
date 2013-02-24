@@ -1,17 +1,4 @@
-﻿/*****************************************************************************************************************************
- * 
- * Slayer Title Core - Initial Definitions
- * Version 3.0
- * Designed for ForkUO 0.2
- * 
- * Authored by Dougan Ironfist
- * Last Updated on 2/11/2013
- * 
- * Slayer Title System Sample Definitions
- * 
- ****************************************************************************************************************************/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using Server;

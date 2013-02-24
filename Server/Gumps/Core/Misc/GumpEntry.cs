@@ -79,5 +79,17 @@ namespace Server.Gumps
                 this.m_Parent.Invalidate();
             }
         }
+
+        protected void Delta(ref GumpResponse var, GumpResponse val)
+        {
+            if (var == val) return;
+
+            var = val;
+
+            if (this.m_Parent != null)
+            {
+                this.m_Parent.Invalidate();
+            }
+        }
     }
 }

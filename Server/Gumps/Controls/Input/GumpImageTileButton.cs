@@ -5,11 +5,12 @@ namespace Server.Gumps
 {
     public class GumpImageTileButton : GumpEntry, IInputEntry
     {
+        public event GumpResponse OnGumpResponse;
+
         private static readonly byte[] _LayoutName = Gump.StringToBuffer("buttontileart");
         private static readonly byte[] _LayoutTooltip = Gump.StringToBuffer(" }{ tooltip");
         private int _EntryID;
-        private object _Callback;
-        private object _CallbackParam;
+        private GumpResponse _Callback;
         private int _Height;
         private int _Hue;
         private int _ID1, _ID2;
@@ -22,30 +23,24 @@ namespace Server.Gumps
         private int _X, _Y;
 
         public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, string name)
-            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, null, null, -1, name) { }
+            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, null, -1, name) { }
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, string name)
-            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, null, -1, name) { }
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, GumpResponse callback, string name)
+            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, -1, name) { }
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, string name)
-            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, callbackParam, -1, name) { }
-
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip, string name)
-            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, callbackParam, localizedTooltip, name) { }
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, GumpResponse callback, int localizedTooltip, string name)
+            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, localizedTooltip, name) { }
 
         public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height)
-            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, null, null, -1, "") { }
+            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, null, -1, "") { }
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback)
-            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, null, -1, "") { }
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, GumpResponse callback)
+            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, -1, "") { }
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam)
-            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, callbackParam, -1, "") { }
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, GumpResponse callback, int localizedTooltip)
+            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, localizedTooltip, "") { }
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip)
-            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, callbackParam, localizedTooltip, "") { }
-
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip, string name)
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, GumpResponse callback, int localizedTooltip, string name)
         {
             this._X = x;
             this._Y = y;
@@ -63,7 +58,6 @@ namespace Server.Gumps
             this._LocalizedTooltip = localizedTooltip;
 
             this._Callback = callback;
-            this._CallbackParam = callbackParam;
             this._Name = (name != null ? name : "");
         }
 
@@ -156,24 +150,19 @@ namespace Server.Gumps
             set { this.Delta(ref this._Name, value); }
         }
 
-        public object Callback
+        public GumpResponse Callback
         {
             get { return this._Callback; }
             set { this.Delta(ref this._Callback, value); }
         }
 
-        public object CallbackParam
-        {
-            get { return this._CallbackParam; }
-            set { this.Delta(ref this._CallbackParam, value); }
-        }
-
         public void Invoke()
         {
-            ButtonResponse callback = this._Callback as ButtonResponse;
+            if (Callback != null)
+                Callback(this, null);
 
-            if (callback != null)
-                callback(this, this._CallbackParam);
+            if (OnGumpResponse != null)
+                OnGumpResponse(this, null);
         }
 
         public override string Compile()

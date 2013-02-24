@@ -10,7 +10,7 @@ namespace CustomsFramework.Systems.FoodEffects
     public class FoodEffectGump : Gump
     {
         private const Int32 HUE_ValidEntry = 0;
-        private const Int32 HUE_InvalidEntry = 34;
+        private const Int32 HUE_InvalidEntry = 0x22;
 
         private Boolean _CoreEnabled;
         private Int32 _EffectIndex;
@@ -46,10 +46,7 @@ namespace CustomsFramework.Systems.FoodEffects
                 }
             }
 
-            AddPage(0);
-
-            AddBackground(0, 0, 360, 220, 5100);
-
+            Add(new StoneyBackground(360, 220));
             Add(new FoodEffectGumpling(10, 6, 240, "Food Type", (validate || IsFoodType(_Values[0]) ? HUE_ValidEntry : HUE_InvalidEntry), _Values[0]));
             Add(new FoodEffectGumpling(10, 28, 50, "Hit Point Regen", (validate || IsValidNumber(_Values[1], true) ? HUE_ValidEntry : HUE_InvalidEntry), _Values[1]));
             Add(new FoodEffectGumpling(10, 50, 50, "Stamina Regen", (validate || IsValidNumber(_Values[2], true) ? HUE_ValidEntry : HUE_InvalidEntry), _Values[2]));
@@ -58,14 +55,13 @@ namespace CustomsFramework.Systems.FoodEffects
             Add(new FoodEffectGumpling(10, 116, 50, "DEX Bonus", (validate || IsValidNumber(_Values[5], true) ? HUE_ValidEntry : HUE_InvalidEntry), _Values[5]));
             Add(new FoodEffectGumpling(10, 138, 50, "INT Bonus", (validate || IsValidNumber(_Values[6], true) ? HUE_ValidEntry : HUE_InvalidEntry), _Values[6]));
             Add(new FoodEffectGumpling(10, 160, 50, "Duration", (validate || IsValidNumber(_Values[7], true) ? HUE_ValidEntry : HUE_InvalidEntry), _Values[7]));
-
-            AddLabel(170, 53, 0, "1 Regen = 0.1 / Sec");
-            AddLabel(165, 163, 0, "Minutes");
+            Add(new GumpLabel(170, 53, 0x0, "1 Regen = 0.1 / Sec"));
+            Add(new GumpLabel(165, 163, 0x0, "Minutes"));
 
             if (validate)
             {
                 if (!IsFoodType(_Values[0]))
-                    AddLabel(165, 31, HUE_InvalidEntry, "Food Type must be a valid Food");
+                    Add(new GumpLabel(165, 31, HUE_InvalidEntry, "Food Type must be a valid Food"));
 
                 Boolean valid = true;
 
@@ -73,7 +69,7 @@ namespace CustomsFramework.Systems.FoodEffects
                     valid &= IsValidNumber(_Values[7], (i < 7));
 
                 if (!valid)
-                    AddLabel(165, 119, HUE_InvalidEntry, "Invalid value(s) entered");
+                    Add(new GumpLabel(165, 119, HUE_InvalidEntry, "Invalid value(s) entered"));
             }
 
             Add(new ApplyCancelGumpling(190, 190, ApplyButtonPressed, CancelButtonPressed));
@@ -88,7 +84,7 @@ namespace CustomsFramework.Systems.FoodEffects
             }
         }
 
-        public void ApplyButtonPressed(GumpEntry entry, object param)
+        public void ApplyButtonPressed(IGumpComponent sender, object param)
         {
             String[] values = new String[]
             {
@@ -138,7 +134,7 @@ namespace CustomsFramework.Systems.FoodEffects
                 Address.SendGump(new FoodEffectGump(_CoreEnabled, _FoodTypes, _FoodEffects, _EffectIndex, values, true));
         }
 
-        public void CancelButtonPressed(GumpEntry entry, object param)
+        public void CancelButtonPressed(IGumpComponent sender, object param)
         {
             if (Address != null)
                 Address.SendGump(new FoodEffectsSetupGump(_CoreEnabled, _FoodTypes, _FoodEffects, (_EffectIndex / 10) * 10));

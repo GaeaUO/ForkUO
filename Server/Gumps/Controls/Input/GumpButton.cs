@@ -3,8 +3,6 @@ using Server.Network;
 
 namespace Server.Gumps
 {
-    public delegate void ButtonResponse(GumpEntry entry, object param);
-
     public enum GumpButtonType
     {
         Page = 0,
@@ -13,10 +11,11 @@ namespace Server.Gumps
 
     public class GumpButton : GumpEntry, IInputEntry
     {
+        public event GumpResponse OnGumpResponse;
+
         private static readonly byte[] _LayoutName = Gump.StringToBuffer("button");
         private int _EntryID;
-        private object _Callback;
-        private object _CallbackParam;
+        private GumpResponse _Callback;
         private int _ID1, _ID2;
         private string _Name;
         private int _Param;
@@ -24,24 +23,18 @@ namespace Server.Gumps
         private int _X, _Y;
 
         public GumpButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, string name)
-            : this(x, y, normalID, pressedID, -1, type, param, null, null, name) { }
+            : this(x, y, normalID, pressedID, -1, type, param, null, name) { }
 
-        public GumpButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, ButtonResponse callback, string name)
-            : this(x, y, normalID, pressedID, -1, type, param, callback, null, name) { }
-
-        public GumpButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, ButtonResponse callback, object callbackParam, string name)
-            : this(x, y, normalID, pressedID, -1, type, param, callback, callbackParam, name) { }
+        public GumpButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, GumpResponse callback, string name)
+            : this(x, y, normalID, pressedID, -1, type, param, callback, name) { }
 
         public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param)
-            : this(x, y, normalID, pressedID, buttonID, type, param, null, null, "") { }
+            : this(x, y, normalID, pressedID, buttonID, type, param, null, "") { }
 
-        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, ButtonResponse callback)
-            : this(x, y, normalID, pressedID, buttonID, type, param, callback, null, "") { }
+        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, GumpResponse callback)
+            : this(x, y, normalID, pressedID, buttonID, type, param, callback, "") { }
 
-        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, ButtonResponse callback, object callbackParam)
-            : this(x, y, normalID, pressedID, buttonID, type, param, callback, callbackParam, "") { }
-
-        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, ButtonResponse callback, object callbackParam, string name)
+        public GumpButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, GumpResponse callback, string name)
         {
             this._X = x;
             this._Y = y;
@@ -51,7 +44,6 @@ namespace Server.Gumps
             this._Type = type;
             this._Param = param;
             this._Callback = callback;
-            this._CallbackParam = callbackParam;
             this._Name = (name != null ? name : "");
         }
 
@@ -112,24 +104,19 @@ namespace Server.Gumps
             set { this.Delta(ref this._Name, value); }
         }
 
-        public object Callback
+        public GumpResponse Callback
         {
             get { return this._Callback; }
             set { this.Delta(ref this._Callback, value); }
         }
 
-        public object CallbackParam
-        {
-            get { return this._CallbackParam; }
-            set { this.Delta(ref this._CallbackParam, value); }
-        }
-
         public void Invoke()
         {
-            ButtonResponse callback = this._Callback as ButtonResponse;
+            if (Callback != null)
+                Callback(this, null);
 
-            if (callback != null)
-                callback(this, this._CallbackParam);
+            if (OnGumpResponse != null)
+                OnGumpResponse(this, null);
         }
 
         public override string Compile()
