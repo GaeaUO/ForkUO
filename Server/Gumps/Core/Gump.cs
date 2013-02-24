@@ -8,15 +8,27 @@ namespace Server.Gumps
 {
     public interface IInputEntry
     {
+        int EntryID { get; set; }
         string Name { get; set; }
         object Callback { get; set; }
         object CallbackParam { get; set; }
         void Invoke();
     }
-        
-        
 
-    public partial class Gump
+    public interface IGumpContainer
+    {
+        void Add(IGumpComponent g);
+        void Remove(IGumpComponent g);
+        Gump RootParent { get; }
+        void Invalidate();
+    }
+
+    public interface IGumpComponent
+    {
+        IGumpContainer Parent { get; set; }
+    }
+
+    public partial class Gump : IGumpContainer
     {
         private static readonly byte[] _BeginLayout = StringToBuffer("{ ");
         private static readonly byte[] _EndLayout = StringToBuffer(" }");
@@ -75,7 +87,7 @@ namespace Server.Gumps
             get { return this._TypeID; }
         }
 
-        public List<GumpEntry> Entries
+        protected internal List<GumpEntry> Entries
         {
             get { return this._Entries; }
         }
@@ -126,6 +138,7 @@ namespace Server.Gumps
 
                 this._Address = value;
                 this.Invalidate();
+                this.OnAddressChange();
             }
         }
 
@@ -211,7 +224,13 @@ namespace Server.Gumps
             return Encoding.ASCII.GetBytes(str);
         }
 
-        public void Invalidate()
+        public Gump RootParent { get { return this; } }
+
+        public virtual void Invalidate()
+        {
+        }
+
+        public virtual void OnAddressChange()
         {
         }
 
@@ -314,25 +333,27 @@ namespace Server.Gumps
             this.Add(new GumpLabelCropped(x, y, width, height, hue, text));
         }
 
-        public void Add(GumpEntry g)
+        public void Add(IGumpComponent g)
         {
-            if (g.Parent != this)
-            {
+            if (g.Parent == null)
                 g.Parent = this;
-            }
-            else if (!this._Entries.Contains(g))
+
+            if (g is GumpEntry)
             {
-                this.Invalidate();
-                this._Entries.Add(g);
+                if (!this._Entries.Contains((GumpEntry)g))
+                {
+                    ((GumpEntry)g).AssignID();
+                    this._Entries.Add((GumpEntry)g);
+                    this.Invalidate();
+                }
+            }
+            else if (g is Gumpling)
+            {
+                ((Gumpling)g).AddToGump(this);
             }
         }
 
-        public void Add(Gumpling g)
-        {
-            g.AddToGump(this);
-        }
-
-        protected int NewID()
+        protected internal int NewID()
         {
             int id;
 
@@ -359,16 +380,19 @@ namespace Server.Gumps
             return id;
         }
 
-        public void Remove(GumpEntry entry)
+        public void Remove(IGumpComponent g)
         {
-            this.Invalidate();
-            this._Entries.Remove(entry);
-            entry.Parent = null;
-        }
-
-        public void Remove(Gumpling gumpling)
-        {
-            gumpling.RemoveFromGump(this);
+            if (g is GumpEntry)
+            {
+                this._Entries.Remove((GumpEntry)g);
+                g.Parent = null;
+                this.Invalidate();
+            }
+            else if (g is Gumpling)
+            {
+                ((Gumpling)g).RemoveFromGump(this);
+                this.Invalidate();
+            }
         }
 
         public int Intern(string value)
@@ -387,7 +411,7 @@ namespace Server.Gumps
 
         public void SendTo(NetState state)
         {
-            this._Address = state.Mobile;
+            this.Address = state.Mobile;
 
             if (!this._SharedGump)
             {
@@ -416,13 +440,13 @@ namespace Server.Gumps
 
             foreach (GumpCheck entry in this._Entries.OfType<GumpCheck>())
             {
-                entry.InitialState = info.IsSwitched(entry.SwitchID);
+                entry.InitialState = info.IsSwitched(entry.EntryID);
                 entry.Invoke();
             }
 
             foreach (GumpRadio entry in this.Entries.OfType<GumpRadio>())
             {
-                entry.InitialState = info.IsSwitched(entry.SwitchID);
+                entry.InitialState = info.IsSwitched(entry.EntryID);
                 entry.Invoke();
             }
             
@@ -440,13 +464,13 @@ namespace Server.Gumps
 
             foreach (
                 GumpImageTileButton button in
-                    this._Entries.OfType<GumpImageTileButton>().Where(button => button.ButtonID == buttonID))
+                    this._Entries.OfType<GumpImageTileButton>().Where(button => button.EntryID == buttonID))
             {
                 button.Invoke();
             }
 
             foreach (
-                GumpButton button in this._Entries.OfType<GumpButton>().Where(button => button.ButtonID == buttonID))
+                GumpButton button in this._Entries.OfType<GumpButton>().Where(button => button.EntryID == buttonID))
             {
                 button.Invoke();
             }

@@ -126,7 +126,7 @@ namespace Server.Gumps
         }
         public override string Compile()
         {
-            return String.Format("{{ htmlgump {0} {1} {2} {3} {4} {5} {6} }}", this.m_X, this.m_Y, this.m_Width, this.m_Height, this.Parent.Intern(this.m_Text), this.m_Background ? 1 : 0, this.m_Scrollbar ? 1 : 0);
+            return String.Format("{{ htmlgump {0} {1} {2} {3} {4} {5} {6} }}", this.m_X, this.m_Y, this.m_Width, this.m_Height, this.Parent.RootParent.Intern(this.m_Text), this.m_Background ? 1 : 0, this.m_Scrollbar ? 1 : 0);
         }
 
         public override void AppendTo(IGumpWriter disp)
@@ -136,7 +136,7 @@ namespace Server.Gumps
             disp.AppendLayout(this.m_Y);
             disp.AppendLayout(this.m_Width);
             disp.AppendLayout(this.m_Height);
-            disp.AppendLayout(this.Parent.Intern(this.m_Text));
+            disp.AppendLayout(this.Parent.RootParent.Intern(this.m_Text));
             disp.AppendLayout(this.m_Background);
             disp.AppendLayout(this.m_Scrollbar);
         }

@@ -3,9 +3,7 @@ using Server.Network;
 
 namespace Server.Gumps
 {
-    public delegate void RadioResponse(bool switched);
-
-    public delegate void RadioParamResponse(bool switched, object obj);
+    public delegate void RadioResponse(GumpEntry entry, bool switched, object param);
 
     public class GumpRadio : GumpEntry, IInputEntry
     {
@@ -15,20 +13,38 @@ namespace Server.Gumps
         private int _ID1, _ID2;
         private bool _InitialState;
         private string _Name;
-        private int _SwitchID;
+        private int _EntryID;
         private int _X, _Y;
 
-        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback, object callbackParam, string name = "")
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, string name)
+            : this(x, y, inactiveID, activeID, initialState, -1, null, null, name) { }
+
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, RadioResponse callback, string name)
+            : this(x, y, inactiveID, activeID, initialState, -1, callback, null, name) { }
+
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, RadioResponse callback, object callbackParam, string name)
+            : this(x, y, inactiveID, activeID, initialState, -1, callback, callbackParam, name) { }
+
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID)
+            : this(x, y, inactiveID, activeID, initialState, switchID, null, null, "") { }
+
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback)
+            : this(x, y, inactiveID, activeID, initialState, switchID, callback, null, "") { }
+
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback, object callbackParam)
+            : this(x, y, inactiveID, activeID, initialState, switchID, callback, callbackParam, "") { }
+
+        public GumpRadio(int x, int y, int inactiveID, int activeID, bool initialState, int switchID, RadioResponse callback, object callbackParam, string name)
         {
             this._X = x;
             this._Y = y;
             this._ID1 = inactiveID;
             this._ID2 = activeID;
             this._InitialState = initialState;
-            this._SwitchID = switchID;
+            this._EntryID = switchID;
             this._Callback = callback;
             this._CallbackParam = callbackParam;
-            this._Name = name;
+            this._Name = (name != null ? name : "");
         }
 
         public int X
@@ -61,10 +77,10 @@ namespace Server.Gumps
             set { this.Delta(ref this._InitialState, value); }
         }
 
-        public int SwitchID
+        public int EntryID
         {
-            get { return this._SwitchID; }
-            set { this.Delta(ref this._SwitchID, value); }
+            get { return this._EntryID; }
+            set { this.Delta(ref this._EntryID, value); }
         }
 
         public string Name
@@ -90,20 +106,13 @@ namespace Server.Gumps
             RadioResponse callback = this._Callback as RadioResponse;
 
             if (callback != null)
-                callback(this.InitialState);
-            else
-            {
-                RadioParamResponse response = this._CallbackParam as RadioParamResponse;
-
-                if (response != null)
-                    response(this.InitialState, this._CallbackParam);
-            }
+                callback(this, this.InitialState, this._CallbackParam);
         }
 
         public override string Compile()
         {
             return String.Format("{{ radio {0} {1} {2} {3} {4} {5} }}", this._X, this._Y, this._ID1, this._ID2,
-                                 this._InitialState ? 1 : 0, this._SwitchID);
+                                 this._InitialState ? 1 : 0, this._EntryID);
         }
 
         public override void AppendTo(IGumpWriter disp)
@@ -114,7 +123,7 @@ namespace Server.Gumps
             disp.AppendLayout(this._ID1);
             disp.AppendLayout(this._ID2);
             disp.AppendLayout(this._InitialState);
-            disp.AppendLayout(this._SwitchID);
+            disp.AppendLayout(this._EntryID);
 
             disp.Switches++;
         }

@@ -2,31 +2,35 @@ using Server.Network;
 
 namespace Server.Gumps
 {
-    public abstract class GumpEntry
+    public abstract class GumpEntry : IGumpComponent
     {
-        private Gump m_Parent;
+        private IGumpContainer m_Parent;
 
-        public Gump Parent
+        public IGumpContainer Parent
         {
             get { return this.m_Parent; }
             set
             {
-                if (this.m_Parent == value) return;
-
-                if (this.m_Parent != null)
+                if (this.m_Parent != value)
                 {
-                    this.m_Parent.Remove(this);
+                    if (this.m_Parent != null)
+                        this.m_Parent.Remove(this);
+
+                    this.m_Parent = value;
+                    this.m_Parent.Add(this);
                 }
-
-                this.m_Parent = value;
-
-                this.m_Parent.Add(this);
             }
         }
 
         public abstract string Compile();
 
         public abstract void AppendTo(IGumpWriter disp);
+
+        protected internal void AssignID()
+        {
+            if (this is IInputEntry && ((IInputEntry)this).EntryID < 0 && m_Parent != null && m_Parent.RootParent != null)
+                ((IInputEntry)this).EntryID = m_Parent.RootParent.NewID();
+        }
 
         protected void Delta(ref int var, int val)
         {

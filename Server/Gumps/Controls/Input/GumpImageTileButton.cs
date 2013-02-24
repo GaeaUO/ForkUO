@@ -7,7 +7,7 @@ namespace Server.Gumps
     {
         private static readonly byte[] _LayoutName = Gump.StringToBuffer("buttontileart");
         private static readonly byte[] _LayoutTooltip = Gump.StringToBuffer(" }{ tooltip");
-        private int _ButtonID;
+        private int _EntryID;
         private object _Callback;
         private object _CallbackParam;
         private int _Height;
@@ -21,13 +21,37 @@ namespace Server.Gumps
         private int _Width;
         private int _X, _Y;
 
-        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip = -1, string name = "")
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, string name)
+            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, null, null, -1, name) { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, string name)
+            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, null, -1, name) { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, string name)
+            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, callbackParam, -1, name) { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip, string name)
+            : this(x, y, normalID, pressedID, -1, type, param, itemID, hue, width, height, callback, callbackParam, localizedTooltip, name) { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height)
+            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, null, null, -1, "") { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback)
+            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, null, -1, "") { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam)
+            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, callbackParam, -1, "") { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip)
+            : this(x, y, normalID, pressedID, buttonID, type, param, itemID, hue, width, height, callback, callbackParam, localizedTooltip, "") { }
+
+        public GumpImageTileButton(int x, int y, int normalID, int pressedID, int buttonID, GumpButtonType type, int param, int itemID, int hue, int width, int height, ButtonResponse callback, object callbackParam, int localizedTooltip, string name)
         {
             this._X = x;
             this._Y = y;
             this._ID1 = normalID;
             this._ID2 = pressedID;
-            this._ButtonID = buttonID;
+            this._EntryID = buttonID;
             this._Type = type;
             this._Param = param;
 
@@ -40,7 +64,7 @@ namespace Server.Gumps
 
             this._Callback = callback;
             this._CallbackParam = callbackParam;
-            this._Name = name;
+            this._Name = (name != null ? name : "");
         }
 
         public int X
@@ -67,10 +91,10 @@ namespace Server.Gumps
             set { this.Delta(ref this._ID2, value); }
         }
 
-        public int ButtonID
+        public int EntryID
         {
-            get { return this._ButtonID; }
-            set { this.Delta(ref this._ButtonID, value); }
+            get { return this._EntryID; }
+            set { this.Delta(ref this._EntryID, value); }
         }
 
         public GumpButtonType Type
@@ -82,12 +106,10 @@ namespace Server.Gumps
                 {
                     this._Type = value;
 
-                    Gump parent = this.Parent;
+                    IGumpContainer parent = this.Parent;
 
                     if (parent != null)
-                    {
                         parent.Invalidate();
-                    }
                 }
             }
         }
@@ -151,14 +173,7 @@ namespace Server.Gumps
             ButtonResponse callback = this._Callback as ButtonResponse;
 
             if (callback != null)
-                callback();
-            else
-            {
-                ButtonParamResponse response = this._CallbackParam as ButtonParamResponse;
-
-                if (response != null)
-                    response(this._CallbackParam);
-            }
+                callback(this, this._CallbackParam);
         }
 
         public override string Compile()
@@ -166,11 +181,11 @@ namespace Server.Gumps
             return this._LocalizedTooltip > 0
                        ? String.Format(
                            "{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}{{ tooltip {11} }}",
-                           this._X, this._Y, this._ID1, this._ID2, (int) this._Type, this._Param, this._ButtonID,
+                           this._X, this._Y, this._ID1, this._ID2, (int) this._Type, this._Param, this._EntryID,
                            this._ItemID, this._Hue, this._Width, this._Height, this._LocalizedTooltip)
                        : String.Format("{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}", this._X,
                                        this._Y, this._ID1, this._ID2, (int) this._Type, this._Param,
-                                       this._ButtonID, this._ItemID, this._Hue, this._Width, this._Height);
+                                       this._EntryID, this._ItemID, this._Hue, this._Width, this._Height);
         }
 
         public override void AppendTo(IGumpWriter disp)
@@ -182,7 +197,7 @@ namespace Server.Gumps
             disp.AppendLayout(this._ID2);
             disp.AppendLayout((int) this._Type);
             disp.AppendLayout(this._Param);
-            disp.AppendLayout(this._ButtonID);
+            disp.AppendLayout(this._EntryID);
 
             disp.AppendLayout(this._ItemID);
             disp.AppendLayout(this._Hue);

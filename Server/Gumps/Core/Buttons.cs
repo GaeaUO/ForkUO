@@ -25,7 +25,7 @@
         }
 
         public void AddButton(int x, int y, int normalID, int pressedID, GumpButtonType type, ButtonResponse callback,
-                              ButtonParamResponse callbackParam, int param = 0, string name = "")
+                              object callbackParam, int param = 0, string name = "")
         {
             this.Add(new GumpButton(x, y, normalID, pressedID, this.NewID(), type, param, callback, callbackParam, name));
         }
