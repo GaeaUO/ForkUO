@@ -16,15 +16,15 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
         {
             _index = index;
 
-            Add(new GumpImageTiled(x, y, 285, 23, 0xA40));
-            Add(new GumpImageTiled(x + 1, y + 1, 283, 21, 0xBBC));
-            Add(new GumpLabelCropped(x + 5, y + 1, 275, 16, entryHue, entryName));
+            Add(new GumpImageTiled(0, 0, 285, 23, 0xA40));
+            Add(new GumpImageTiled(1, 1, 283, 21, 0xBBC));
+            Add(new GumpLabelCropped(5, 1, 275, 16, entryHue, entryName));
 
-            GumpButton editButton = new GumpButton(x + 286, y, 0xFBD, 0xFBF, -1, GumpButtonType.Reply, 0);
+            GumpButton editButton = new GumpButton(286, 0, 0xFBD, 0xFBF, -1, GumpButtonType.Reply, 0);
             editButton.OnGumpResponse += editButton_OnGumpResponse;
             Add(editButton);
 
-            GumpButton removeButton = new GumpButton(x + 317, y, 0xFB4, 0xFB6, -1, GumpButtonType.Reply, 0);
+            GumpButton removeButton = new GumpButton(317, 0, 0xFB4, 0xFB6, -1, GumpButtonType.Reply, 0);
             removeButton.OnGumpResponse += removeButton_OnGumpResponse;
             Add(removeButton);
         }

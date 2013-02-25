@@ -11,11 +11,11 @@ namespace Server.Gumps
 
         public ApplyCancelGumpling(Int32 x, Int32 y, GumpResponse applyCallback, GumpResponse cancelCallback) : base(x, y)
         {
-            GumpButton button = new GumpButton(x, y, 0x1454, 0x1455, -1, GumpButtonType.Reply, 0, applyCallback);
+            GumpButton button = new GumpButton(0, 0, 0x1454, 0x1455, -1, GumpButtonType.Reply, 0, applyCallback);
             button.OnGumpResponse += button_OnApply;
             Add(button);
 
-            button = new GumpButton(x + 85, y, 0x1450, 0x1451, 0, GumpButtonType.Reply, 0, cancelCallback);
+            button = new GumpButton(85, 0, 0x1450, 0x1451, 0, GumpButtonType.Reply, 0, cancelCallback);
             button.OnGumpResponse += button_OnCancel;
             Add(button);
         }

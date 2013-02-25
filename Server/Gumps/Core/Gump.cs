@@ -27,6 +27,8 @@ namespace Server.Gumps
     public interface IGumpComponent
     {
         IGumpContainer Parent { get; set; }
+        Int32 X { get; set; }
+        Int32 Y { get; set; }
     }
 
     public partial class Gump : IGumpContainer

@@ -16,15 +16,15 @@ namespace CustomsFramework.Systems.FoodEffects
         {
             _index = index;
 
-            Add(new GumpImageTiled(x, y, 180, 23, 0xA40));
-            Add(new GumpImageTiled(x + 1, y + 1, 178, 21, 0xBBC));
-            Add(new GumpLabelCropped(x + 5, y + 1, 175, 16, 0, entryName));
+            Add(new GumpImageTiled(0, 0, 180, 23, 0xA40));
+            Add(new GumpImageTiled(1, 1, 178, 21, 0xBBC));
+            Add(new GumpLabelCropped(5, 1, 175, 16, 0, entryName));
 
-            GumpButton editButton = new GumpButton(x + 185, y, 0xFBD, 0xFBF, -1, GumpButtonType.Reply, 0);
+            GumpButton editButton = new GumpButton(185, 0, 0xFBD, 0xFBF, -1, GumpButtonType.Reply, 0);
             editButton.OnGumpResponse += editButton_OnGumpResponse;
             Add(editButton);
 
-            GumpButton removeButton = new GumpButton(x + 215, y, 0xFB4, 0xFB6, -1, GumpButtonType.Reply, 0);
+            GumpButton removeButton = new GumpButton(215, 0, 0xFB4, 0xFB6, -1, GumpButtonType.Reply, 0);
             removeButton.OnGumpResponse += removeButton_OnGumpResponse;
             Add(removeButton);
         }
