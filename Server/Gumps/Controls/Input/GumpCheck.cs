@@ -39,13 +39,13 @@ namespace Server.Gumps
             this._Callback = callback;
         }
 
-        public int X
+        public override int X
         {
             get { return this._X; }
             set { this.Delta(ref this._X, value); }
         }
 
-        public int Y
+        public override int Y
         {
             get { return this._Y; }
             set { this.Delta(ref this._Y, value); }

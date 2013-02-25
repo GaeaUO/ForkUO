@@ -5,7 +5,34 @@ namespace Server.Gumps
 {
     public abstract class Gumpling : IGumpContainer, IGumpComponent
     {
-        private int _X, _Y;
+        private int _X = 0;
+        private int _Y = 0;
+
+        public int X
+        {
+            get { return _X; }
+            set
+            {
+                int offset = value - X;
+                _X = value;
+
+                foreach (GumpEntry g in _Entries)
+                    g.X += offset;
+            }
+        }
+
+        public int Y
+        {
+            get { return _Y; }
+            set
+            {
+                int offset = value - Y;
+                _Y = value;
+
+                foreach (GumpEntry g in _Entries)
+                    g.Y += offset;
+            }
+        }
 
         private readonly List<GumpEntry> _Entries;
 
@@ -22,7 +49,9 @@ namespace Server.Gumps
                         this.m_Parent.Remove(this);
 
                     this.m_Parent = value;
-                    this.m_Parent.Add(this);
+
+                    if (this.m_Parent != null)
+                        this.m_Parent.Add(this);
                 }
             }
         }
@@ -46,6 +75,9 @@ namespace Server.Gumps
             {
                 if (!this._Entries.Contains((GumpEntry)g))
                 {
+                    g.X += _X;
+                    g.Y += _Y;
+
                     this._Entries.Add((GumpEntry)g);
                     this.Invalidate();
                 }

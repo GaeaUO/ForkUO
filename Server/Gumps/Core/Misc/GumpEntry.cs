@@ -1,3 +1,4 @@
+using System;
 using Server.Network;
 
 namespace Server.Gumps
@@ -17,10 +18,18 @@ namespace Server.Gumps
                         this.m_Parent.Remove(this);
 
                     this.m_Parent = value;
-                    this.m_Parent.Add(this);
+
+                    if (this.m_Parent != null)
+                        this.m_Parent.Add(this);
                 }
             }
         }
+
+        private Int32 _X = 0;
+        private Int32 _Y = 0;
+
+        public virtual Int32 X { get { return _X; } set { _X = value; } }
+        public virtual Int32 Y { get { return _Y; } set { _Y = value; } }
 
         public abstract string Compile();
 

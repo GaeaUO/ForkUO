@@ -43,7 +43,7 @@ namespace Server.Gumps
             this.m_Text = text;
         }
 
-        public int X
+        public override int X
         {
             get
             {
@@ -54,7 +54,7 @@ namespace Server.Gumps
                 this.Delta(ref this.m_X, value);
             }
         }
-        public int Y
+        public override int Y
         {
             get
             {
