@@ -356,6 +356,21 @@ namespace Server.Gumps
             }
         }
 
+        public void Remove(IGumpComponent g)
+        {
+            if (g is GumpEntry)
+            {
+                this._Entries.Remove((GumpEntry)g);
+                g.Parent = null;
+                this.Invalidate();
+            }
+            else if (g is Gumpling)
+            {
+                ((Gumpling)g).RemoveFromGump(this);
+                this.Invalidate();
+            }
+        }
+
         protected internal int NewID()
         {
             int id;
@@ -381,21 +396,6 @@ namespace Server.Gumps
             _UsedIDs.Add(id);
 
             return id;
-        }
-
-        public void Remove(IGumpComponent g)
-        {
-            if (g is GumpEntry)
-            {
-                this._Entries.Remove((GumpEntry)g);
-                g.Parent = null;
-                this.Invalidate();
-            }
-            else if (g is Gumpling)
-            {
-                ((Gumpling)g).RemoveFromGump(this);
-                this.Invalidate();
-            }
         }
 
         public int Intern(string value)
