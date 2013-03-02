@@ -47,14 +47,8 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private void Setup()
         {
-            Add(new StoneyBackground(260, 336));
-            Add(new GumpLabel(66, 4, 0x80E, "Food Effect System"));
-            Add(new GumpLabel(10, 30, 0x54F, "Enabled"));
-            Add(new GreyCheckbox(63, 25, "Core Enabled", _CoreEnabled, CoreEnableChanged));
-            Add(new GumpImageTiled(2, 55, 254, 4, 0x13ED));
+            Add(new CustomCoreGumpling(260, 336, 0x80E, "Food Effect System", _CoreEnabled, CoreEnableChanged, FoodEffectsCore.Core.Version, SaveButtonPressed));
             Add(new GumpLabel(64, 60, 0x3E, "Food Buffs"));
-            Add(new GumpLabel(10, 310, 0x4B, String.Format("v{0}", FoodEffectsCore.Core.Version)));
-            Add(new SaveCancelGumpling(90, 305, SaveButtonPressed, null));
 
             List<Type> foodTypes = new List<Type>();
 
@@ -85,7 +79,7 @@ namespace CustomsFramework.Systems.FoodEffects
 
             for (Int32 i = 0; i < foodTypes.Count; i++)
             {
-                FoodEntryGumpling g = new FoodEntryGumpling(counter++, 10, 80 + (i * 22), (foodTypes[i] != null ? foodTypes[i].Name : ""));
+                LabelAddRemoveGumpling g = new LabelAddRemoveGumpling(counter++, 10, 80 + (i * 22), 180, (foodTypes[i] != null ? foodTypes[i].Name : ""));
 
                 g.OnEdit += EditEffectPressed;
                 g.OnRemove += RemoveEffectPressed;
@@ -139,9 +133,9 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private void EditEffectPressed(IGumpComponent sender, object param)
         {
-            if (sender.Parent is FoodEntryGumpling)
+            if (sender.Parent is LabelAddRemoveGumpling)
             {
-                Int32 index = ((FoodEntryGumpling)sender.Parent).Index;
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
 
                 if (Address != null)
                     Address.SendGump(new FoodEffectGump(_CoreEnabled, _FoodTypes, _FoodEffects, index, null, false));
@@ -150,9 +144,9 @@ namespace CustomsFramework.Systems.FoodEffects
 
         private void RemoveEffectPressed(IGumpComponent sender, object param)
         {
-            if (sender.Parent is FoodEntryGumpling)
+            if (sender.Parent is LabelAddRemoveGumpling)
             {
-                Int32 index = ((FoodEntryGumpling)sender.Parent).Index;
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
 
                 if (index < _FoodTypes.Count)
                 {

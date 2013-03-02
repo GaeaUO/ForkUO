@@ -34,7 +34,7 @@ namespace Server.Gumps
             }
         }
 
-        private readonly List<GumpEntry> _Entries;
+        private readonly List<IGumpComponent> _Entries;
 
         private IGumpContainer m_Parent;
 
@@ -61,7 +61,7 @@ namespace Server.Gumps
             _X = x;
             _Y = y;
 
-            this._Entries = new List<GumpEntry>();
+            this._Entries = new List<IGumpComponent>();
         }
 
         public Gump RootParent { get { return Parent.RootParent; } }
@@ -71,27 +71,21 @@ namespace Server.Gumps
             if (g.Parent == null)
                 g.Parent = this;
 
-            if (g is GumpEntry)
+            if (!this._Entries.Contains((IGumpComponent)g))
             {
-                if (!this._Entries.Contains((GumpEntry)g))
-                {
-                    g.X += _X;
-                    g.Y += _Y;
+                g.X += _X;
+                g.Y += _Y;
 
-                    this._Entries.Add((GumpEntry)g);
-                    this.Invalidate();
-                }
+                this._Entries.Add((IGumpComponent)g);
+                this.Invalidate();
             }
         }
 
         public void Remove(IGumpComponent g)
         {
-            if (g is GumpEntry)
-            {
-                this._Entries.Remove((GumpEntry)g);
-                g.Parent = null;
-                this.Invalidate();
-            }
+            this._Entries.Remove(g);
+            g.Parent = null;
+            this.Invalidate();
         }
 
         public virtual void Invalidate()
@@ -100,14 +94,13 @@ namespace Server.Gumps
 
         public void AddToGump(Gump gump)
         {
-            foreach (GumpEntry g in _Entries)
-                if (!gump.Entries.Contains(g))
-                    gump.Add(g);
+            foreach (IGumpComponent g in _Entries)
+                gump.Add(g);
         }
 
         public void RemoveFromGump(Gump gump)
         {
-            foreach (GumpEntry g in _Entries)
+            foreach (IGumpComponent g in _Entries)
                 gump.Remove(g);
         }
     }

@@ -41,14 +41,8 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
 
         private void Setup()
         {
-            Add(new StoneyBackground(365, 335));
-            Add(new GumpLabel(115, 4, 0x80E, "Slayer Title System"));
-            Add(new GumpLabel(10, 30, 0x54F, "Enabled"));
-            Add(new GreyCheckbox(63, 25, "Core Enabled", _CoreEnabled, CoreEnableChanged));
-            Add(new GumpImageTiled(2, 55, 356, 4, 0x13ED));
+            Add(new CustomCoreGumpling(365, 335, 0x80E, "Slayer Title System", _CoreEnabled, CoreEnableChanged, SlayerTitleCore.Core.Version, SaveButtonPressed));
             Add(new GumpLabel(94, 60, 0x3E, "Registered Title Definitions"));
-            Add(new GumpLabel(10, 310, 0x4B, String.Format("v{0}", SlayerTitleCore.Core.Version)));
-            Add(new SaveCancelGumpling(195, 305, SaveButtonPressed, null));
 
             List<TitleDefinition> titles = new List<TitleDefinition>();
 
@@ -81,7 +75,7 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
             {
                 TitleDefinition def = titles[i];
 
-                SlayerEntryGumpling g = new SlayerEntryGumpling(counter++, 10, 80 + (i * 22), def.DefinitionName, (def.Enabled ? HUE_Enabled : HUE_Disabled));
+                LabelAddRemoveGumpling g = new LabelAddRemoveGumpling(counter++, 10, 80 + (i * 22), 285, def.DefinitionName, (def.Enabled ? HUE_Enabled : HUE_Disabled));
 
                 g.OnEdit += EditDefinitionPressed;
                 g.OnRemove += RemoveDefinitionPressed;
@@ -134,9 +128,9 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
 
         private void EditDefinitionPressed(IGumpComponent sender, object param)
         {
-            if (sender.Parent is SlayerEntryGumpling)
+            if (sender.Parent is LabelAddRemoveGumpling)
             {
-                Int32 index = ((SlayerEntryGumpling)sender.Parent).Index;
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
 
                 if (Address != null)
                     Address.SendGump(new TitleDefinitionGump(_CoreEnabled, _TitleDefinitions, index, null, false, null, null, null, false));
@@ -145,9 +139,9 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
 
         private void RemoveDefinitionPressed(IGumpComponent sender, object param)
         {
-            if (sender.Parent is SlayerEntryGumpling)
+            if (sender.Parent is LabelAddRemoveGumpling)
             {
-                Int32 index = ((SlayerEntryGumpling)sender.Parent).Index;
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
 
                 if (index < _TitleDefinitions.Count)
                     _TitleDefinitions.RemoveAt(index);
