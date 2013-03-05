@@ -4,24 +4,30 @@ namespace Server.Items
 {
     public class FaeryDust : Item
     {
+
         [Constructable]
-        public FaeryDust()
-            : base(0x5745)
+        public FaeryDust() : this( 1 )
         {
         }
 
-        public FaeryDust(Serial serial)
-            : base(serial)
+        [Constructable]
+        public FaeryDust( int amountFrom, int amountTo ) : this( Utility.RandomMinMax( amountFrom, amountTo ) )
+        {
+        }   
+
+        [Constructable]
+        public FaeryDust( int amount ): base(0x5745)
+        {
+            Stackable = true;
+            Amount = amount;           
+        }
+
+        public FaeryDust(Serial serial): base(serial)
         {
         }
 
-        public override int LabelNumber
-        {
-            get
-            {
-                return 1113358;
-            }
-        }// faery dust
+        public override int LabelNumber{get { return 1113358; } }// faery dust
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

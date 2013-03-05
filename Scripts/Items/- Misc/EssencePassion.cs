@@ -16,7 +16,7 @@ namespace Server.Items
         {
             this.Stackable = true;
             this.Amount = amount;
-            this.Hue = 150;
+            this.Hue = 1161;
         }
 
         public EssencePassion(Serial serial)

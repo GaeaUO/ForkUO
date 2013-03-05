@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -55,19 +56,17 @@ namespace Server.Mobiles
             //AddLoot( LootPack.Parrot );
         }
 
-        /*
-        // TODO: uncomment once added
         public override void OnDeath( Container c )
         {
-        base.OnDeath( c );
+            base.OnDeath( c );
 
-        if ( Utility.RandomDouble() < 0.75 )
-        c.DropItem( new CrystallineFragments() );
+            if ( Utility.RandomDouble() < 0.75 )
+            c.DropItem( new CrystallineFragments() );
 
-        if ( Utility.RandomDouble() < 0.06 )
-        c.DropItem( new JaggedCrystals() );
+            if ( Utility.RandomDouble() < 0.06 )
+            c.DropItem( new JaggedCrystals() );
         }
-        */
+
         public override int GetAngerSound()
         {
             return 0x15;

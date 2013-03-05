@@ -16,7 +16,7 @@ namespace Server.Items
         {
             this.Stackable = true;
             this.Amount = amount;
-            this.Hue = 731;
+            this.Hue = 1109;
         }
 
         public EssenceSingularity(Serial serial)

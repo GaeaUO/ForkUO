@@ -2433,9 +2433,9 @@ namespace Server.Items
                     attacker.PlaySound(0x44D);
             }
 
-            if (this.m_MaxHits > 0 && ((this.MaxRange <= 1 && (defender is Slime || defender is ToxicElemental)) || Utility.Random(25) == 0)) // Stratics says 50% chance, seems more like 4%..
+            if (this.m_MaxHits > 0 && ((this.MaxRange <= 1 && (defender is Slime || defender is ToxicElemental || defender is CorrosiveSlime)) || Utility.Random(25) == 0)) // Stratics says 50% chance, seems more like 4%..
             {
-                if (this.MaxRange <= 1 && (defender is Slime || defender is ToxicElemental))
+                if (this.MaxRange <= 1 && (defender is Slime || defender is ToxicElemental || defender is CorrosiveSlime))
                     attacker.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500263); // *Acid blood scars your weapon!*
 
                 if (Core.AOS && this.m_AosWeaponAttributes.SelfRepair + (this.IsSetItem && this.m_SetEquipped ? this.m_SetSelfRepair : 0) > Utility.Random(10))

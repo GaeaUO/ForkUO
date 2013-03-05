@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -30,22 +31,33 @@ namespace Server.Mobiles
             this.SetResistance(ResistanceType.Energy, 60, 80);
         }
 
-        /*
-        // TODO: uncomment once added
         public override void OnDeath( Container c )
         {
         base.OnDeath( c );
 
-        if ( Utility.RandomDouble() < 0.05 )
-        c.DropItem( new CrushedCrystals() );
+            if ( Utility.RandomDouble() < 0.05 )
+            c.DropItem( new CrushedCrystals() );
 
-        if ( Utility.RandomDouble() < 0.1 )
-        c.DropItem( new IcyHeart() );
+            if ( Utility.RandomDouble() < 0.1 )
+            c.DropItem( new IcyHeart() );
 
-        if ( Utility.RandomDouble() < 0.1 )
-        c.DropItem( new LuckyDagger() );
+            if ( Utility.RandomDouble() < 0.1 )
+            c.DropItem( new LuckyDagger() );
         }
-        */
+
+        public override bool HasBreath{ get{ return true; } }
+        public override int BreathEnergyDamage{ get{ return 50; } } 
+        public override int BreathColdDamage{ get{ return 50; } }
+        public override int BreathFireDamage{ get{ return 0; } }
+        public override int BreathEffectHue{ get{ return 0x1ED; } }
+        public override double BreathDamageScalar{ get{ return 0.55; } }
+        //public override int TreasureMapLevel{ get{ return 3; } } //Can't get conformation as to if this is true, commented out for now.
+        public override int Meat{ get{ return 10; } }
+        public override int Hides{ get{ return 11; } }
+        public override HideType HideType{ get{ return HideType.Horned; } }
+        public override int Scales{ get{ return 8; } }
+        public override ScaleType ScaleType{ get{ return ScaleType.Blue; } } 
+
         public CrystalSeaSerpent(Serial serial)
             : base(serial)
         {

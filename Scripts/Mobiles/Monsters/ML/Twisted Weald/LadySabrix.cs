@@ -47,28 +47,26 @@ namespace Server.Mobiles
         {
         }
 
-        /*
-        // TODO: uncomment once added
         public override void OnDeath( Container c )
         {
-        base.OnDeath( c );
+            base.OnDeath( c );
 
-        if ( Utility.RandomDouble() < 0.2 )
-        c.DropItem( new SabrixsEye() );
+            if ( Utility.RandomDouble() < 0.2 )
+            c.DropItem( new SabrixsEye() );
 
-        if ( Utility.RandomDouble() < 0.25 )
-        {
-        switch ( Utility.Random( 2 ) )
-        {
-        case 0: AddToBackpack( new PaladinArms() ); break;
-        case 1: AddToBackpack( new HunterLegs() ); break;
-        }
+            if ( Utility.RandomDouble() < 0.25 )
+            {
+                switch ( Utility.Random( 2 ) )
+                {
+                    case 0: AddToBackpack( new PaladinArms() ); break;
+                    case 1: AddToBackpack( new HunterLegs() ); break;
+                }
+            }
+
+            if ( Utility.RandomDouble() < 0.1 )
+            c.DropItem( new ParrotItem() );
         }
 
-        if ( Utility.RandomDouble() < 0.1 )
-        c.DropItem( new ParrotItem() );
-        }
-        */
         public override bool GivesMLMinorArtifact
         {
             get

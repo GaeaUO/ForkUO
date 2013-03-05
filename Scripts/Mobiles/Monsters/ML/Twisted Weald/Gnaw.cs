@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -39,16 +40,14 @@ namespace Server.Mobiles
             this.Karma = -17500;
         }
 
-        /*
-        // TODO: uncomment once added
         public override void OnDeath( Container c )
         {
-        base.OnDeath( c );
+            base.OnDeath( c );
 
-        if ( Utility.RandomDouble() < 0.3 )
-        c.DropItem( new GnawsFang() );
+            if ( Utility.RandomDouble() < 0.3 )
+                c.DropItem( new GnawsFang() );
         }
-        */
+        
         public Gnaw(Serial serial)
             : base(serial)
         {

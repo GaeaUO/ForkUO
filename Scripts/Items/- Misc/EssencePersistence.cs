@@ -16,7 +16,7 @@ namespace Server.Items
         {
             this.Stackable = true;
             this.Amount = amount;
-            this.Hue = 883;
+            this.Hue = 37;
         }
 
         public EssencePersistence(Serial serial)

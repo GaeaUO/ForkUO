@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -44,7 +45,26 @@ namespace Server.Mobiles
             this.MinTameSkill = 23.1;
         }
 
-        //TODO: Damage weapon via acid
+        public override void OnDeath( Container c )
+        {
+            if ( Utility.Random( 10 ) == 0 )
+            {
+                Item item;
+                 
+                switch ( Utility.Random( 3 ))
+                {
+                    default:
+                    case 0: item = new GelatanousSkull(); break;
+                    case 1: item = new CoagulatedLegs(); break;
+                    case 2: item = new PartiallyDigestedTorso(); break;
+                }
+                 
+                c.DropItem( item );
+            }
+             
+            base.OnDeath( c );
+        }
+        
         public CorrosiveSlime(Serial serial)
             : base(serial)
         {

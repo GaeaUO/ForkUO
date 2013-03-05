@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -55,19 +56,17 @@ namespace Server.Mobiles
         {
         }
 
-        /*
-        // TODO: uncomment once added
         public override void OnDeath( Container c )
         {
-        base.OnDeath( c );
+            base.OnDeath( c );
 
-        if ( Utility.RandomDouble() < 0.05 )
-        c.DropItem( new ParrotItem() );
+            if ( Utility.RandomDouble() < 0.05 )
+            c.DropItem( new ParrotItem() );
 
-        if ( Utility.RandomDouble() < 0.15 )
-        c.DropItem( new DisintegratingThesisNotes() );
+            if ( Utility.RandomDouble() < 0.15 )
+            c.DropItem( new DisintegratingThesisNotes() );
         }
-        */
+
         public override bool GivesMLMinorArtifact
         {
             get

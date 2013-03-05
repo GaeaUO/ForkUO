@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -53,18 +54,16 @@ namespace Server.Mobiles
         {
         }
 
-        /*
-        // TODO: uncomment once added
         public override void OnDeath( Container c )
         {
-        base.OnDeath( c );
+            base.OnDeath( c );
 
-        c.DropItem( new SpleenOfThePutrefier() );
+            c.DropItem( new SpleenOfThePutrefier() );
 
-        if ( Utility.RandomDouble() < 0.6 )
-        c.DropItem( new ParrotItem() );
+            if ( Utility.RandomDouble() < 0.6 )
+            c.DropItem( new ParrotItem() );
         }
-        */
+
         public override bool GivesMLMinorArtifact
         {
             get
@@ -86,6 +85,9 @@ namespace Server.Mobiles
                 return 5;
             }
         }
+        //TO DO
+        //Poison attack similar to Yamandon, not sure if it is identical or if it doesn't hit area but single targets.
+        //Needs to be double checked
         public override void GenerateLoot()
         {
             this.AddLoot(LootPack.UltraRich, 3);

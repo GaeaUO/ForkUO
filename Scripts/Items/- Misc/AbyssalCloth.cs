@@ -15,7 +15,8 @@ namespace Server.Items
             : base(0x3183)
         {
             this.Stackable = true;
-            this.Amount = amount;
+            this.Amount = amount;			
+			this.Hue = 2075;
         }
 
         public AbyssalCloth(Serial serial)

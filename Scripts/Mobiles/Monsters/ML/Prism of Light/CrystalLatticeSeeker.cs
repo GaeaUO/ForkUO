@@ -1,4 +1,5 @@
 using System;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -48,19 +49,17 @@ namespace Server.Mobiles
         {
         }
 
-        /*
-        // TODO: uncomment once added
         public override void OnDeath( Container c )
         {
-        base.OnDeath( c );
+            base.OnDeath( c );
 
-        if ( Utility.RandomDouble() < 0.75 )
-        c.DropItem( new CrystallineFragments() );
+            if ( Utility.RandomDouble() < 0.75 )
+            c.DropItem( new CrystallineFragments() );
 
-        if ( Utility.RandomDouble() < 0.07 )
-        c.DropItem( new PiecesOfCrystal() );
+            if ( Utility.RandomDouble() < 0.07 )
+            c.DropItem( new PiecesOfCrystal() );
         }
-        */
+
         public override int Feathers
         {
             get
