@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Grobu()
         {
-            this.IsParagon = true;
 
             this.Name = "Grobu";
             this.Hue = 0x455;

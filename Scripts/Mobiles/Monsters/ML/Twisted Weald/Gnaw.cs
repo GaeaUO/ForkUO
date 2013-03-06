@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Gnaw()
         {
-            this.IsParagon = true;
 
             this.Name = "Gnaw";
             this.Hue = 0x130;

@@ -8,7 +8,6 @@ namespace Server.Mobiles
         [Constructable]
         public Spite()
         {
-            this.IsParagon = true;
 
             this.Hue = this.DefaultHue;
 

@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Putrefier()
         {
-            this.IsParagon = true;
 
             this.Name = "Putrefier";
             this.Hue = 63;
@@ -62,6 +61,9 @@ namespace Server.Mobiles
 
             if ( Utility.RandomDouble() < 0.6 )
             c.DropItem( new ParrotItem() );
+
+            if ( Paragon.ChestChance > Utility.RandomDouble() )
+            c.DropItem( new ParagonChest( Name, TreasureMapLevel ) );
         }
 
         public override bool GivesMLMinorArtifact

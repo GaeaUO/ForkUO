@@ -11,7 +11,6 @@ namespace Server.Mobiles
         [Constructable]
         public Swoop()
         {
-            this.IsParagon = true;
 
             this.Name = "Swoop";
             this.Hue = 0xE0;

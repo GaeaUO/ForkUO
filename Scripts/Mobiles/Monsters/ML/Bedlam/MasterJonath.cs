@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public MasterJonath()
         {
-            this.IsParagon = true;
 
             this.Name = "Master Jonath";
             this.Hue = 0x455;
@@ -65,6 +64,10 @@ namespace Server.Mobiles
 
             if ( Utility.RandomDouble() < 0.15 )
             c.DropItem( new DisintegratingThesisNotes() );
+
+            if ( Paragon.ChestChance > Utility.RandomDouble() )
+            c.DropItem( new ParagonChest( Name, TreasureMapLevel ) );
+
         }
 
         public override bool GivesMLMinorArtifact

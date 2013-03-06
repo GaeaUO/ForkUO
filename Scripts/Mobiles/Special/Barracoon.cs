@@ -81,7 +81,7 @@ namespace Server.Mobiles
                     typeof(EmbroideredOakLeafCloak),
                     typeof(DjinnisRing),
                     typeof(DetectiveBoots),
-                    typeof(GuantletsOfAnger)
+                    typeof(GauntletsOfAnger)
                 };
             }
         }

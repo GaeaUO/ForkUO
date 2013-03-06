@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public MasterTheophilus()
         {
-            this.IsParagon = true;
 
             this.Name = "Master Theophilus";
             this.Title = "the necromancer";
@@ -70,6 +69,10 @@ namespace Server.Mobiles
 
             if ( Utility.RandomDouble() < 0.15 )
             c.DropItem( new DisintegratingThesisNotes() );
+
+            if ( Paragon.ChestChance > Utility.RandomDouble() )
+            c.DropItem( new ParagonChest( Name, TreasureMapLevel ) );
+
 
         }
 

@@ -68,6 +68,13 @@ namespace Server.Items
                 return 255;
             }
         }
+        public override bool CanBeWornByGargoyles
+        {
+            get
+            {
+                return true;
+            }
+        }
         public override Race RequiredRace
         {
             get

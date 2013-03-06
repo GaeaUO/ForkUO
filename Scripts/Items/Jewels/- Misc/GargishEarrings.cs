@@ -6,7 +6,7 @@ namespace Server.Items
     {
         [Constructable]
         public GargishEarrings()
-            : base(0x4212)
+            : base(0x4213)
         {
             //Weight = 0.1;
         }

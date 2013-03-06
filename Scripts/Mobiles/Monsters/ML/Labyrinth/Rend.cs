@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Rend()
         {
-            this.IsParagon = true;
 
             this.Name = "Rend";
             this.Hue = 0x455;

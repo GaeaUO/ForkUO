@@ -88,6 +88,13 @@ namespace Server.Items
                 return true;
             }
         }
+        public override Race RequiredRace
+        {
+            get
+            {
+                return Race.Gargoyle;
+            }
+        }
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);

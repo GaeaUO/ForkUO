@@ -9,7 +9,7 @@ namespace Server.Mobiles
         [Constructable]
         public Lurg()
         {
-            this.IsParagon = true;
+
 
             this.Name = "Lurg";
             this.Hue = 0x455;

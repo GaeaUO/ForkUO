@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public LadySabrix()
         {
-            this.IsParagon = true;
 
             this.Name = "Lady Sabrix";
             this.Hue = 0x497;

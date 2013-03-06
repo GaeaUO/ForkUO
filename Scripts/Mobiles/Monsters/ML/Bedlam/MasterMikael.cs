@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public MasterMikael()
         {
-            this.IsParagon = true;
 
             this.Name = "Master Mikael";
             this.Hue = 0x8FD;

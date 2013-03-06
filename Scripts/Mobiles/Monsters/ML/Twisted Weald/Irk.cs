@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Irk()
         {
-            this.IsParagon = true;
 
             this.Hue = this.DefaultHue;
 

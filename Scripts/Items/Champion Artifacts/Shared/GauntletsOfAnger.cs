@@ -2,10 +2,10 @@ using System;
 
 namespace Server.Items
 {
-    public class GuantletsOfAnger : PlateGloves
+    public class GauntletsOfAnger : PlateGloves
     {
         [Constructable]
-        public GuantletsOfAnger()
+        public GauntletsOfAnger()
         {
             this.Hue = 0x29b;
 
@@ -14,7 +14,7 @@ namespace Server.Items
             this.Attributes.DefendChance = 10;
         }
 
-        public GuantletsOfAnger(Serial serial)
+        public GauntletsOfAnger(Serial serial)
             : base(serial)
         {
         }

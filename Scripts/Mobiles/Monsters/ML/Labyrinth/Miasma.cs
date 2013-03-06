@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Miasma()
         {
-            this.IsParagon = true;
 
             this.Name = "Miasma";
             this.Hue = 0x8FD;
@@ -49,6 +48,9 @@ namespace Server.Mobiles
         public override void OnDeath( Container c )
         {
             base.OnDeath( c );
+
+            if ( Paragon.ChestChance > Utility.RandomDouble() )
+            c.DropItem( new ParagonChest( Name, TreasureMapLevel ) );
 
             if ( Utility.RandomDouble() < 0.025 )
             {

@@ -30,7 +30,7 @@ namespace Server.Items
             typeof(DetectiveBoots),
             typeof(DjinnisRing),
             typeof(EmbroideredOakLeafCloak),
-            typeof(GuantletsOfAnger),
+            typeof(GauntletsOfAnger),
             typeof(LieutenantOfTheBritannianRoyalGuard),
             typeof(OblivionsNeedle),
             typeof(RoyalGuardSurvivalKnife),

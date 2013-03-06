@@ -2,10 +2,10 @@ using System;
 
 namespace Server.Items
 {
-    public class MyrmidonCloseHelm : CloseHelm
+    public class MyrmidonBascinet : Bascinet
     {
         [Constructable]
-        public MyrmidonCloseHelm()
+        public MyrmidonBascinet()
             : base()
         {
             this.SetHue = 0x331;
@@ -25,7 +25,7 @@ namespace Server.Items
             this.SetEnergyBonus = 3;
         }
 
-        public MyrmidonCloseHelm(Serial serial)
+        public MyrmidonBascinet(Serial serial)
             : base(serial)
         {
         }

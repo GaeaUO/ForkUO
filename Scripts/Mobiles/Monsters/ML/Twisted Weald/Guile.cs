@@ -8,7 +8,7 @@ namespace Server.Mobiles
         [Constructable]
         public Guile()
         {
-            this.IsParagon = true;
+
 
             this.Hue = this.DefaultHue;
 

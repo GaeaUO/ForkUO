@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Silk()
         {
-            this.IsParagon = true;
 
             this.Name = "Silk";
             this.Hue = 0x47E;

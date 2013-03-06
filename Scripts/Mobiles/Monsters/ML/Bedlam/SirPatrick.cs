@@ -10,7 +10,6 @@ namespace Server.Mobiles
         [Constructable]
         public SirPatrick()
         {
-            this.IsParagon = true;
 
             this.Name = "Sir Patrick";
             this.Hue = 0x47E;

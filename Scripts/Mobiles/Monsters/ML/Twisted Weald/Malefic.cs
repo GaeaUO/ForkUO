@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Malefic()
         {
-            this.IsParagon = true;
 
             this.Name = "Malefic";
             this.Hue = 0x455;

@@ -10,7 +10,7 @@ namespace Server.Mobiles
         public RedDeath()
             : base("Red Death")
         {
-            this.IsParagon = true;
+
 
             this.Hue = 0x21;
             this.BaseSoundID = 0x1C3;

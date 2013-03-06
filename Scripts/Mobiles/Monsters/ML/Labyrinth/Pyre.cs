@@ -9,7 +9,6 @@ namespace Server.Mobiles
         [Constructable]
         public Pyre()
         {
-            this.IsParagon = true;
 
             this.Name = "Pyre";
             this.Hue = 0x489;
@@ -47,6 +46,15 @@ namespace Server.Mobiles
         public Pyre(Serial serial)
             : base(serial)
         {
+        }
+
+        public override void OnDeath( Container c )
+        {
+            base.OnDeath( c );
+
+            if ( Paragon.ChestChance > Utility.RandomDouble() )
+            c.DropItem( new ParagonChest( Name, TreasureMapLevel ) );
+
         }
 
         public override bool GivesMLMinorArtifact

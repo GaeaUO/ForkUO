@@ -88,6 +88,13 @@ namespace Server.Items
                 return true;
             }
         }
+        public override Race RequiredRace
+        {
+            get
+            {
+                return Race.Gargoyle;
+            }
+        }
         public bool Dye(Mobile from, DyeTub sender)
         {
             if (this.Deleted)
