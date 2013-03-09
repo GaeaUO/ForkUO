@@ -12,7 +12,7 @@ namespace Server.Items
         Wood
     }
 
-    public class CraftAttributeInfo
+    /*public class CraftAttributeInfo
     {
         private int m_WeaponFireDamage;
         private int m_WeaponColdDamage;
@@ -852,7 +852,7 @@ namespace Server.Items
             #endregion
         }
     }
-
+    */
     public class CraftResourceInfo
     {
         private readonly int m_Hue;

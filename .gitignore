@@ -171,3 +171,4 @@ Scripts/Output/
 Logs/
 *.log
 Scripts.dll
+ForkUO.vshost.exe.manifest
