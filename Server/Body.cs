@@ -87,7 +87,7 @@ namespace Server
                         this.m_BodyID != 403 &&
                         this.m_BodyID != 607 &&
                         this.m_BodyID != 608 &&
-                        this.m_BodyID != 970) || this.m_BodyID == 666 || this.m_BodyID == 667;
+                        this.m_BodyID != 970) || this.m_BodyID == 694 || this.m_BodyID == 695;
                 #endregion
             }
         }
@@ -136,6 +136,8 @@ namespace Server
                        this.m_BodyID == 403 ||
                        this.m_BodyID == 607 ||
                        this.m_BodyID == 608 ||
+                       this.m_BodyID == 694 ||
+                       this.m_BodyID == 695 ||
                        this.m_BodyID == 970;
             }
         }

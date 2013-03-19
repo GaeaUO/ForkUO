@@ -105,6 +105,8 @@ namespace Server.Items
         }
         public override void OnDoubleClick(Mobile from)
         {
+            if ((from.Weapon is Boomerang || from.Weapon is Cyclone || from.Weapon is BaseThrown) && from.InRange(this.GetWorldLocation(), 1))
+                this.Fire(from);            
             if ((this.m_Arrows > 0 || this.m_Bolts > 0) && from.InRange(this.GetWorldLocation(), 1))
                 this.Gather(from);
             else
@@ -130,8 +132,9 @@ namespace Server.Items
         public void Fire(Mobile from)
         {
             BaseRanged bow = from.Weapon as BaseRanged;
+            BaseThrown trow = from.Weapon as BaseThrown;
 
-            if (bow == null)
+            if (bow == null || trow == null)
             {
                 this.SendLocalizedMessageTo(from, 500593); // You must practice with ranged weapons on this.
                 return;
@@ -172,7 +175,7 @@ namespace Server.Items
             bool isBolt = (ammoType == typeof(Bolt));
             bool isKnown = (isArrow || isBolt);
 
-            if (pack == null || !pack.ConsumeTotal(ammoType, 1))
+            if (from.Weapon != trow && (pack == null || !pack.ConsumeTotal(ammoType, 1)))
             {
                 if (isArrow)
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500594); // You do not have any arrows with which to practice.
@@ -186,9 +189,19 @@ namespace Server.Items
 
             this.m_LastUse = DateTime.Now;
 
-            from.Direction = from.GetDirectionTo(this.GetWorldLocation());
-            bow.PlaySwingAnimation(from);
-            from.MovingEffect(this, bow.EffectID, 18, 1, false, false);
+            if (from.Weapon == trow)
+            {
+                from.MovingEffect(this, trow.EffectID, 18, 1, false, false);
+                from.Direction = from.GetDirectionTo(this.GetWorldLocation());
+                trow.PlaySwingAnimation(from);
+            }
+
+            else
+            {
+                from.Direction = from.GetDirectionTo(this.GetWorldLocation());
+                bow.PlaySwingAnimation(from);
+                from.MovingEffect(this, bow.EffectID, 18, 1, false, false);
+            }
 
             ScoreEntry se = this.GetEntryFor(from);
 
@@ -207,7 +220,22 @@ namespace Server.Items
 
                 return;
             }
-
+            
+            else if (!from.CheckSkill(trow.Skill, this.m_MinSkill, this.m_MaxSkill))
+            {
+                from.PlaySound(trow.MissSound);
+ 
+                this.PublicOverheadMessage(MessageType.Regular, 0x3B2, 500604, from.Name); // You miss the target altogether.
+ 
+                se.Record(0);
+ 
+                if (se.Count == 1)
+                    this.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1062719, se.Total.ToString());
+                else
+                    this.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1042683, String.Format("{0}\t{1}", se.Total, se.Count));
+ 
+                return;
+            }
             Effects.PlaySound(this.Location, this.Map, 0x2B1);
 
             double rand = Utility.RandomDouble();

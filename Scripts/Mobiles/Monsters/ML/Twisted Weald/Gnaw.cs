@@ -37,6 +37,8 @@ namespace Server.Mobiles
 
             this.Fame = 17500;
             this.Karma = -17500;
+
+            Tamable = false; 
         }
 
         public override void OnDeath( Container c )

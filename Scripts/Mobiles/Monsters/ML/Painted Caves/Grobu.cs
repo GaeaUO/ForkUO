@@ -40,6 +40,8 @@ namespace Server.Mobiles
 
             this.Fame = 1000;
             this.Karma = 1000;
+
+            Tamable = false; 
         }
 
         public Grobu(Serial serial)

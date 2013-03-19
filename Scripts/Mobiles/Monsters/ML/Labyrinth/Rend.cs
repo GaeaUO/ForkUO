@@ -38,6 +38,8 @@ namespace Server.Mobiles
 
             this.Fame = 21000;
             this.Karma = -21000;
+
+            Tamable = false;            
         }
 
         public Rend(Serial serial)

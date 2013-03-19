@@ -42,6 +42,8 @@ namespace Server.Mobiles
 
             this.PackReg(4);
             this.PackArcaneScroll(0, 1);
+
+            Tamable = false; 
         }
 
         
