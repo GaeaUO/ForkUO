@@ -49,7 +49,7 @@ namespace CustomsFramework.Systems.FoodEffects
         private Dictionary<Type, FoodEffect> m_FoodEffects = new Dictionary<Type, FoodEffect>();
         public Dictionary<Type, FoodEffect> FoodEffects { get { return m_FoodEffects; } }
 
-        public const String SystemVersion = "1.5";
+        public const String SystemVersion = "1.6";
 
         private static FoodEffectsCore m_Core;
         public static FoodEffectsCore Core { get { return m_Core; } }
@@ -138,7 +138,7 @@ namespace CustomsFramework.Systems.FoodEffects
             if (m_Core == null)
                 return;
 
-            e.Mobile.SendGump(new FoodEffectsSetupGump(e.Mobile));
+            e.Mobile.SendGump(new FoodEffectsSetupGump());
         }
 
         private void EventSink_OnConsume(OnConsumeEventArgs e)

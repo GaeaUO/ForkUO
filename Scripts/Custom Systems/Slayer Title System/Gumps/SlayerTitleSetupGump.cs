@@ -1,17 +1,4 @@
-﻿/*****************************************************************************************************************************
- * 
- * Slayer Title Configuration Gump
- * Version 3.0
- * Designed for ForkUO 0.2
- * 
- * Authored by Dougan Ironfist
- * Last Updated on 2/11/2013
- * 
- *
- * The purpose of these scripts is to allow shard administrators to create fun kill-based titles that players can earn. 
- ****************************************************************************************************************************/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using Server;
@@ -21,88 +8,51 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
 {
     public class SlayerTitleSetupGump : Gump
     {
-        private const Int32 ID_Cancel_Button = 0;
-        private const Int32 ID_Core_Enabled = 100;
-        private const Int32 ID_Save_Button = 200;
-        private const Int32 ID_TitlesAdd = 300;
-        private const Int32 ID_TitlesRemove = 400;
-        private const Int32 ID_LastPage = 500;
-        private const Int32 ID_NextPage = 501;
-
         private const Int32 HUE_Enabled = 0;
-        private const Int32 HUE_Disabled = 34;
+        private const Int32 HUE_Disabled = 0x22;
 
-        private Mobile m_From;
-        private Boolean m_CoreEnabled;
-        private Int32 m_TitleIndex;
+        private Boolean _CoreEnabled;
+        private Int32 _TitleIndex;
 
-        private List<TitleDefinition> m_TitleDefinitions = new List<TitleDefinition>();
+        private List<TitleDefinition> _TitleDefinitions = new List<TitleDefinition>();
 
-        public SlayerTitleSetupGump()
-            : this(null)
-        {
-        }
-
-        public SlayerTitleSetupGump(Mobile from) : base(150, 100)
+        public SlayerTitleSetupGump() : base(150, 100)
         {
             if (SlayerTitleCore.Core == null)
                 return;
 
-            m_From = from;
-            m_CoreEnabled = SlayerTitleCore.Core.Enabled;
-            m_TitleIndex = 0;
+            _CoreEnabled = SlayerTitleCore.Core.Enabled;
+            _TitleIndex = 0;
 
             foreach (TitleDefinition def in SlayerTitleCore.Core.TitleDefinitions)
-                m_TitleDefinitions.Add(new TitleDefinition(def.DefinitionName, def.Enabled, def.CreatureRegistry, def.TitleRegistry));
+                _TitleDefinitions.Add(new TitleDefinition(def.DefinitionName, def.Enabled, def.CreatureRegistry, def.TitleRegistry));
 
             Setup();
         }
 
-        public SlayerTitleSetupGump(Mobile from, Boolean coreEnabled, List<TitleDefinition> titleDefinitions, Int32 titleIndex) : base(150, 100)
+        public SlayerTitleSetupGump(Boolean coreEnabled, List<TitleDefinition> titleDefinitions, Int32 titleIndex) : base(150, 100)
         {
-            m_From = from;
-            m_CoreEnabled = coreEnabled;
-            m_TitleIndex = titleIndex;
-            m_TitleDefinitions = titleDefinitions;
+            _CoreEnabled = coreEnabled;
+            _TitleIndex = titleIndex;
+            _TitleDefinitions = titleDefinitions;
 
             Setup();
         }
 
         private void Setup()
         {
-            if (m_From != null)
-            {
-                m_From.CloseGump(typeof(SlayerTitleSetupGump));
-                m_From.CloseGump(typeof(TitleDefinitionGump));
-            }
-
-            this.AddPage(0);
-
-            this.AddBackground(0, 0, 365, 335, 5100);
-
-            this.AddLabel(115, 4, 2062, "Slayer Title System");
-
-            this.AddLabel(10, 30, 1359, "Enabled");
-            this.AddCheck(63, 25, 9720, 9724, m_CoreEnabled, ID_Core_Enabled);
-
-            this.AddImageTiled(2, 55, 356, 4, 5101);
-
-            this.AddLabel(94, 60, 62, "Registered Title Definitions");
-
-            this.AddLabel(10, 310, 75, String.Format("v{0}", SlayerTitleCore.Core.Version));
-
-            this.AddButton(195, 305, 5202, 5203, ID_Save_Button, GumpButtonType.Reply, 0);
-            this.AddButton(280, 305, 5200, 5201, ID_Cancel_Button, GumpButtonType.Reply, 0);
+            Add(new CustomCoreGumpling(365, 335, 0x80E, "Slayer Title System", _CoreEnabled, CoreEnableChanged, SlayerTitleCore.Core.Version, SaveButtonPressed));
+            Add(new GumpLabel(94, 60, 0x3E, "Registered Title Definitions"));
 
             List<TitleDefinition> titles = new List<TitleDefinition>();
 
             Boolean lastEntryBlank = false;
 
-            for (int i = m_TitleIndex; i < m_TitleDefinitions.Count && i < m_TitleIndex + 10; i++)
+            for (int i = _TitleIndex; i < _TitleDefinitions.Count && i < _TitleIndex + 10; i++)
             {
-                titles.Add(m_TitleDefinitions[i]);
+                titles.Add(_TitleDefinitions[i]);
 
-                if (m_TitleDefinitions[i].DefinitionName == "")
+                if (_TitleDefinitions[i].DefinitionName == "")
                     lastEntryBlank = true;
             }
 
@@ -113,69 +63,91 @@ namespace CustomsFramework.Systems.SlayerTitleSystem
             else if (!lastEntryBlank)
                 titles.Add(new TitleDefinition("", false, new List<Type>(), new List<TitleEntry>()));
 
-            if (m_TitleIndex > 0)
-                this.AddButton(10, 63, 9706, 9707, ID_LastPage, GumpButtonType.Reply, 0);
+            if (_TitleIndex > 0)
+                Add(new GreyLeftArrow(10, 63, PreviousPagePressed));
 
             if (anotherPage)
-                this.AddButton(277, 63, 9702, 9703, ID_NextPage, GumpButtonType.Reply, 0);
+                Add(new GreyRightArrow(277, 63, NextPagePressed));
 
-            int titleCounter = m_TitleIndex;
+            Int32 counter = _TitleIndex;
 
             for (int i = 0; i < titles.Count; i++)
             {
                 TitleDefinition def = titles[i];
 
-                this.AddImageTiled(10, 80 + (i * 22), 285, 23, 2624);
-                this.AddImageTiled(11, 81 + (i * 22), 283, 21, 3004);
+                LabelAddRemoveGumpling g = new LabelAddRemoveGumpling(counter++, 10, 80 + (i * 22), 285, def.DefinitionName, (def.Enabled ? HUE_Enabled : HUE_Disabled));
 
-                this.AddLabelCropped(15, 81 + (i * 22), 275, 16, (def.Enabled ? HUE_Enabled : HUE_Disabled), def.DefinitionName);
+                g.OnEdit += EditDefinitionPressed;
+                g.OnRemove += RemoveDefinitionPressed;
 
-                this.AddButton(296, 80 + (i * 22), 4029, 4031, ID_TitlesAdd + titleCounter, GumpButtonType.Reply, 0);
-                this.AddButton(327, 80 + (i * 22), 4020, 4022, ID_TitlesRemove + titleCounter++, GumpButtonType.Reply, 0);
+                Add(g);
             }
         }
 
-        public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
+        public override void OnAddressChange()
         {
-            m_CoreEnabled = info.IsSwitched(ID_Core_Enabled);
-
-            if (info.ButtonID >= ID_TitlesAdd && info.ButtonID < ID_TitlesRemove)
+            if (Address != null)
             {
-                sender.Mobile.SendGump(new TitleDefinitionGump(sender.Mobile, m_CoreEnabled, m_TitleDefinitions, info.ButtonID - ID_TitlesAdd, null, null, null, false));
+                Address.CloseGump(typeof(SlayerTitleSetupGump));
+                Address.CloseGump(typeof(TitleDefinitionGump));
             }
-            else if (info.ButtonID >= ID_TitlesRemove && info.ButtonID < ID_LastPage)
+        }
+
+        private void CoreEnableChanged(IGumpComponent sender, object param)
+        {
+            if (param is Boolean)
+                _CoreEnabled = (Boolean)param;
+        }
+
+        private void PreviousPagePressed(IGumpComponent sender, object param)
+        {
+            if (Address != null)
+                Address.SendGump(new SlayerTitleSetupGump(_CoreEnabled, _TitleDefinitions, _TitleIndex - 10));
+        }
+
+        private void NextPagePressed(IGumpComponent sender, object param)
+        {
+            if (Address != null)
+                Address.SendGump(new SlayerTitleSetupGump(_CoreEnabled, _TitleDefinitions, _TitleIndex + 10));
+        }
+
+        private void SaveButtonPressed(IGumpComponent sender, object param)
+        {
+            SlayerTitleCore.Core.Enabled = _CoreEnabled;
+
+            SlayerTitleCore.Core.TitleDefinitions.Clear();
+
+            foreach (TitleDefinition def in _TitleDefinitions)
+                SlayerTitleCore.Core.TitleDefinitions.Add(def);
+
+            SlayerTitleCore.Core.CrossReferenceDefinitions();
+
+            if (Address != null)
+                Address.SendMessage("Slayer Title System is {0}!  System contains {1} title definitions.", (SlayerTitleCore.Core.Enabled ? "enabled" : "disabled"), SlayerTitleCore.Core.TitleDefinitions.Count);
+        }
+
+        private void EditDefinitionPressed(IGumpComponent sender, object param)
+        {
+            if (sender.Parent is LabelAddRemoveGumpling)
             {
-                int idx = info.ButtonID - ID_TitlesRemove;
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
 
-                if (idx < m_TitleDefinitions.Count)
-                    m_TitleDefinitions.RemoveAt(idx);
-
-                sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_CoreEnabled, m_TitleDefinitions, m_TitleIndex));
+                if (Address != null)
+                    Address.SendGump(new TitleDefinitionGump(_CoreEnabled, _TitleDefinitions, index, null, false, null, null, null, false));
             }
-            else
+        }
+
+        private void RemoveDefinitionPressed(IGumpComponent sender, object param)
+        {
+            if (sender.Parent is LabelAddRemoveGumpling)
             {
-                switch (info.ButtonID)
-                {
-                    case ID_Save_Button:
-                        SlayerTitleCore.Core.Enabled = m_CoreEnabled;
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
 
-                        SlayerTitleCore.Core.TitleDefinitions.Clear();
+                if (index < _TitleDefinitions.Count)
+                    _TitleDefinitions.RemoveAt(index);
 
-                        foreach (TitleDefinition def in m_TitleDefinitions)
-                            SlayerTitleCore.Core.TitleDefinitions.Add(def);
-
-                        SlayerTitleCore.Core.CrossReferenceDefinitions();
-
-                        sender.Mobile.SendMessage("Slayer Title System is {0}!  System contains {1} title definitions.", (SlayerTitleCore.Core.Enabled ? "enabled" : "disabled"), SlayerTitleCore.Core.TitleDefinitions.Count);
-
-                        break;
-                    case ID_LastPage:
-                        sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile, m_CoreEnabled, m_TitleDefinitions, m_TitleIndex - 10));
-                        break;
-                    case ID_NextPage:
-                        sender.Mobile.SendGump(new SlayerTitleSetupGump(sender.Mobile,m_CoreEnabled, m_TitleDefinitions, m_TitleIndex + 10));
-                        break;
-                }
+                if (Address != null)
+                    Address.SendGump(new SlayerTitleSetupGump(_CoreEnabled, _TitleDefinitions, _TitleIndex));
             }
         }
     }

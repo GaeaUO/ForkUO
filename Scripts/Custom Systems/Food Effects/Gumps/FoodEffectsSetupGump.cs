@@ -8,91 +8,57 @@ namespace CustomsFramework.Systems.FoodEffects
 {
     public class FoodEffectsSetupGump : Gump
     {
-        private const Int32 ID_Cancel_Button = 0;
-        private const Int32 ID_Core_Enabled = 100;
-        private const Int32 ID_Save_Button = 200;
-        private const Int32 ID_EffectAdd = 300;
-        private const Int32 ID_EffectRemove = 400;
-        private const Int32 ID_LastPage = 500;
-        private const Int32 ID_NextPage = 501;
+        private Boolean _CoreEnabled;
+        private Int32 _EffectIndex;
 
-        private Mobile m_From;
-        private Boolean m_CoreEnabled;
-        private Int32 m_EffectIndex;
+        private List<Type> _FoodTypes = new List<Type>();
+        private List<FoodEffect> _FoodEffects = new List<FoodEffect>();
 
-        private List<Type> m_FoodTypes = new List<Type>();
-        private List<FoodEffect> m_FoodEffects = new List<FoodEffect>();
-
-        public FoodEffectsSetupGump() : this(null)
-        {
-        }
-
-        public FoodEffectsSetupGump(Mobile from) : base(150, 100)
+        public FoodEffectsSetupGump()
+            : base(150, 100)
         {
             if (FoodEffectsCore.Core == null)
                 return;
 
-            m_From = from;
-            m_CoreEnabled = FoodEffectsCore.Core.Enabled;
-            m_EffectIndex = 0;
+            _CoreEnabled = FoodEffectsCore.Core.Enabled;
+            _EffectIndex = 0;
 
             foreach (KeyValuePair<Type, FoodEffect> pair in FoodEffectsCore.Core.FoodEffects)
-                m_FoodTypes.Add(pair.Key);
+                _FoodTypes.Add(pair.Key);
 
-            m_FoodTypes.Sort(new TypeSorter());
+            _FoodTypes.Sort(new TypeSorter());
 
-            for (Int32 i = 0; i < m_FoodTypes.Count; i++)
-                m_FoodEffects.Add(FoodEffectsCore.Core.FoodEffects[m_FoodTypes[i]]);
+            for (Int32 i = 0; i < _FoodTypes.Count; i++)
+                _FoodEffects.Add(FoodEffectsCore.Core.FoodEffects[_FoodTypes[i]]);
 
             Setup();
         }
 
-        public FoodEffectsSetupGump(Mobile from, Boolean coreEnabled, List<Type> foodTypes, List<FoodEffect> foodEffects, Int32 effectIndex) : base(150, 100)
+        public FoodEffectsSetupGump(Boolean coreEnabled, List<Type> foodTypes, List<FoodEffect> foodEffects, Int32 effectIndex)
+            : base(150, 100)
         {
-            m_From = from;
-            m_CoreEnabled = coreEnabled;
-            m_EffectIndex = effectIndex;
-            m_FoodTypes = foodTypes;
-            m_FoodEffects = foodEffects;
+            _CoreEnabled = coreEnabled;
+            _EffectIndex = effectIndex;
+            _FoodTypes = foodTypes;
+            _FoodEffects = foodEffects;
 
             Setup();
         }
 
         private void Setup()
         {
-            if (m_From != null)
-            {
-                m_From.CloseGump(typeof(FoodEffectsSetupGump));
-                m_From.CloseGump(typeof(FoodEffectGump));
-            }
-
-            this.AddPage(0);
-
-            this.AddBackground(0, 0, 260, 336, 5100);
-
-            this.AddLabel(66, 4, 2062, "Food Effect System");
-
-            this.AddLabel(10, 30, 1359, "Enabled");
-            this.AddCheck(63, 25, 9720, 9724, m_CoreEnabled, ID_Core_Enabled);
-
-            this.AddImageTiled(2, 55, 254, 4, 5101);
-
-            this.AddLabel(64, 60, 62, "Food Buffs");
-
-            this.AddLabel(10, 310, 75, String.Format("v{0}", FoodEffectsCore.Core.Version));
-
-            this.AddButton(90, 305, 5202, 5203, ID_Save_Button, GumpButtonType.Reply, 0);
-            this.AddButton(175, 305, 5200, 5201, ID_Cancel_Button, GumpButtonType.Reply, 0);
+            Add(new CustomCoreGumpling(260, 336, 0x80E, "Food Effect System", _CoreEnabled, CoreEnableChanged, FoodEffectsCore.Core.Version, SaveButtonPressed));
+            Add(new GumpLabel(64, 60, 0x3E, "Food Buffs"));
 
             List<Type> foodTypes = new List<Type>();
 
             Boolean lastEntryBlank = false;
 
-            for (Int32 i = m_EffectIndex; i < m_FoodTypes.Count && i < m_EffectIndex + 10; i++)
+            for (Int32 i = _EffectIndex; i < _FoodTypes.Count && i < _EffectIndex + 10; i++)
             {
-                foodTypes.Add(m_FoodTypes[i]);
+                foodTypes.Add(_FoodTypes[i]);
 
-                if (m_FoodTypes[i] == null)
+                if (_FoodTypes[i] == null)
                     lastEntryBlank = true;
             }
 
@@ -103,72 +69,93 @@ namespace CustomsFramework.Systems.FoodEffects
             else if (!lastEntryBlank)
                 foodTypes.Add(null);
 
-            if (m_EffectIndex > 0)
-                this.AddButton(10, 63, 9706, 9707, ID_LastPage, GumpButtonType.Reply, 0);
+            if (_EffectIndex > 0)
+                Add(new GreyLeftArrow(10, 63, PreviousPagePressed));
 
             if (anotherPage)
-                this.AddButton(172, 63, 9702, 9703, ID_NextPage, GumpButtonType.Reply, 0);
+                Add(new GreyRightArrow(172, 63, NextPagePressed));
 
-            Int32 counter = m_EffectIndex;
+            Int32 counter = _EffectIndex;
 
             for (Int32 i = 0; i < foodTypes.Count; i++)
             {
-                this.AddImageTiled(10, 80 + (i * 22), 180, 23, 2624);
-                this.AddImageTiled(11, 81 + (i * 22), 178, 21, 3004);
+                LabelAddRemoveGumpling g = new LabelAddRemoveGumpling(counter++, 10, 80 + (i * 22), 180, (foodTypes[i] != null ? foodTypes[i].Name : ""));
 
-                this.AddLabelCropped(15, 81 + (i * 22), 175, 16, 0, (foodTypes[i] != null ? foodTypes[i].Name : ""));
+                g.OnEdit += EditEffectPressed;
+                g.OnRemove += RemoveEffectPressed;
 
-                this.AddButton(195, 80 + (i * 22), 4029, 4031, ID_EffectAdd + counter, GumpButtonType.Reply, 0);
-                this.AddButton(225, 80 + (i * 22), 4020, 4022, ID_EffectRemove + counter++, GumpButtonType.Reply, 0);
+                Add(g);
             }
         }
 
-        public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
+        public override void OnAddressChange()
         {
-            m_CoreEnabled = info.IsSwitched(ID_Core_Enabled);
-
-
-            if (info.ButtonID >= ID_EffectAdd && info.ButtonID < ID_EffectRemove)
+            if (Address != null)
             {
-                sender.Mobile.SendGump(new FoodEffectGump(sender.Mobile, m_CoreEnabled, m_FoodTypes, m_FoodEffects, info.ButtonID - ID_EffectAdd, null, false));
+                Address.CloseGump(typeof(FoodEffectsSetupGump));
+                Address.CloseGump(typeof(FoodEffectGump));
             }
-            else if (info.ButtonID >= ID_EffectRemove && info.ButtonID < ID_LastPage)
-            {
-                Int32 idx = info.ButtonID - ID_EffectRemove;
+        }
 
-                if (idx < m_FoodTypes.Count)
+        private void CoreEnableChanged(IGumpComponent sender, object param)
+        {
+            if (param is Boolean)
+                _CoreEnabled = (Boolean)param;
+        }
+
+        private void PreviousPagePressed(IGumpComponent sender, object param)
+        {
+            if (Address != null)
+                Address.SendGump(new FoodEffectsSetupGump(_CoreEnabled, _FoodTypes, _FoodEffects, _EffectIndex - 10));
+        }
+
+        private void NextPagePressed(IGumpComponent sender, object param)
+        {
+            if (Address != null)
+                Address.SendGump(new FoodEffectsSetupGump(_CoreEnabled, _FoodTypes, _FoodEffects, _EffectIndex + 10));
+        }
+
+        private void SaveButtonPressed(IGumpComponent sender, object param)
+        {
+            FoodEffectsCore.Core.Enabled = _CoreEnabled;
+
+            FoodEffectsCore.Core.FoodEffects.Clear();
+
+            for (Int32 i = 0; i < _FoodTypes.Count; i++)
+                if (_FoodTypes[i] != null)
+                    FoodEffectsCore.Core.FoodEffects[_FoodTypes[i]] = _FoodEffects[i];
+
+            if (Address != null)
+                Address.SendMessage("Food effect System is {0}!  System contains {1} foods defined.", (FoodEffectsCore.Core.Enabled ? "enabled" : "disabled"), FoodEffectsCore.Core.FoodEffects.Keys.Count);
+
+            FoodEffectsCore.InvokeOnFoodEffectSystemUpdate(FoodEffectsCore.Core);
+        }
+
+        private void EditEffectPressed(IGumpComponent sender, object param)
+        {
+            if (sender.Parent is LabelAddRemoveGumpling)
+            {
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
+
+                if (Address != null)
+                    Address.SendGump(new FoodEffectGump(_CoreEnabled, _FoodTypes, _FoodEffects, index, null, false));
+            }
+        }
+
+        private void RemoveEffectPressed(IGumpComponent sender, object param)
+        {
+            if (sender.Parent is LabelAddRemoveGumpling)
+            {
+                Int32 index = ((LabelAddRemoveGumpling)sender.Parent).Index;
+
+                if (index < _FoodTypes.Count)
                 {
-                    m_FoodTypes.RemoveAt(idx);
-                    m_FoodEffects.RemoveAt(idx);
+                    _FoodTypes.RemoveAt(index);
+                    _FoodEffects.RemoveAt(index);
                 }
 
-                sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_CoreEnabled, m_FoodTypes, m_FoodEffects, m_EffectIndex));
-            }
-            else
-            {
-                switch (info.ButtonID)
-                {
-                    case ID_Save_Button:
-                        FoodEffectsCore.Core.Enabled = m_CoreEnabled;
-
-                        FoodEffectsCore.Core.FoodEffects.Clear();
-
-                        for (Int32 i = 0; i < m_FoodTypes.Count; i++)
-                            if (m_FoodTypes[i] != null)
-                                FoodEffectsCore.Core.FoodEffects[m_FoodTypes[i]] = m_FoodEffects[i];
-
-                        sender.Mobile.SendMessage("Food effect System is {0}!  System contains {1} foods defined.", (FoodEffectsCore.Core.Enabled ? "enabled" : "disabled"), FoodEffectsCore.Core.FoodEffects.Keys.Count);
-
-                        FoodEffectsCore.InvokeOnFoodEffectSystemUpdate(FoodEffectsCore.Core);
-
-                        break;
-                    case ID_LastPage:
-                        sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_CoreEnabled, m_FoodTypes, m_FoodEffects, m_EffectIndex - 10));
-                        break;
-                    case ID_NextPage:
-                        sender.Mobile.SendGump(new FoodEffectsSetupGump(sender.Mobile, m_CoreEnabled, m_FoodTypes, m_FoodEffects, m_EffectIndex + 10));
-                        break;
-                }
+                if (Address != null)
+                    Address.SendGump(new FoodEffectsSetupGump(_CoreEnabled, _FoodTypes, _FoodEffects, _EffectIndex));
             }
         }
 

@@ -8,6 +8,8 @@ namespace Server.Gumps
 {
     public class SetCustomEnumGump : SetListOptionGump
     {
+        private static readonly Type typeofIDynamicEnum = typeof(IDynamicEnum);
+
         private readonly string[] m_Names;
         public SetCustomEnumGump(PropertyInfo prop, Mobile mobile, object o, Stack stack, int propspage, ArrayList list, string[] names)
             : base(prop, mobile, o, stack, propspage, list, names, null)
@@ -31,6 +33,15 @@ namespace Server.Gumps
                         result = Properties.SetDirect(this.m_Mobile, this.m_Object, this.m_Object, this.m_Property, this.m_Property.Name, info.Invoke(null, new object[] { this.m_Names[index] }), true);
                     else if (this.m_Property.PropertyType == typeof(Enum) || this.m_Property.PropertyType.IsSubclassOf(typeof(Enum)))
                         result = Properties.SetDirect(this.m_Mobile, this.m_Object, this.m_Object, this.m_Property, this.m_Property.Name, Enum.Parse(this.m_Property.PropertyType, this.m_Names[index], false), true);
+                    else if (typeofIDynamicEnum.IsAssignableFrom(this.m_Property.PropertyType))
+                    {
+                        IDynamicEnum ienum = (IDynamicEnum)this.m_Property.GetValue(this.m_Object);
+
+                        if (ienum != null)
+                            ienum.Value = this.m_Names[index];
+
+                        result = Properties.SetDirect(this.m_Mobile, this.m_Object, this.m_Object, this.m_Property, this.m_Property.Name, ienum, true);
+                    }
 
                     this.m_Mobile.SendMessage(result);
 
