@@ -2522,8 +2522,8 @@ namespace Server.Mobiles
                         continue;
 
                     // Xmlspawner faction check
-                    if (!Server.Engines.XmlSpawner2.XmlMobFactions.CheckAcquire(this.m_Mobile, m))
-                        continue;
+                    //if (!Server.Engines.XmlSpawner2.XmlMobFactions.CheckAcquire(this.m_Mobile, m))
+                        //continue;
 
                     if (this.m_Mobile.Summoned && this.m_Mobile.SummonMaster != null)
                     {

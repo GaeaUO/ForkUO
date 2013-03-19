@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Emergency Backup")]
-[assembly: AssemblyDescription("Emergency Backup, for ForkUO. With 7zip compression.")]
+[assembly: AssemblyDescription("Emergency Backup, for ServUO. With 7zip compression.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ForkUO")]
+[assembly: AssemblyCompany("ServUO")]
 [assembly: AssemblyProduct("EmergencyBackup")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]

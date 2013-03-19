@@ -7,8 +7,8 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Server</RootNamespace>
-    <AssemblyName>ForkUO</AssemblyName>
-    <ApplicationIcon>forkuo.ico</ApplicationIcon>
+    <AssemblyName>ServUO</AssemblyName>
+    <ApplicationIcon>servuo.ico</ApplicationIcon>
     <StartupObject>Server.Core</StartupObject>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />

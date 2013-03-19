@@ -70,18 +70,20 @@ namespace Server.Spells.Mystic
 
             if (p == null)
                 return;
-
-            Point3D point = new Point3D(p);
-
-            // Can you stack multiple hail sotrms on OSI?
-            if (!IsHailStorming(point))
+            else if (this.CheckSequence())
             {
-                HailStormArea.Add(point);
-                new HailStormTimer(this, this.Caster, point).Start();
-                this.Caster.PlaySound(0x649);
+                Point3D point = new Point3D(p);
+
+                // Can you stack multiple hail sotrms on OSI?
+                if (!IsHailStorming(point))
+                {
+                    HailStormArea.Add(point);
+                    new HailStormTimer(this, this.Caster, point).Start();
+                    this.Caster.PlaySound(0x649);
+                }
+                else
+                    this.Caster.SendMessage("It is already hailing there.");
             }
-            else
-                this.Caster.SendMessage("It is already hailing there.");
 
             this.FinishSequence();
         }

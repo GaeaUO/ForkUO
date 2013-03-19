@@ -20,7 +20,7 @@ namespace Server.Items
         {
             get
             {
-                return Poison.Greater;
+                return Poison.Parasitic;
             }
         }/* public override Poison Poison{ get{ return Poison.Darkglow; } }  MUST be restored when prerequisites are done */
         public override double MinPoisoningSkill

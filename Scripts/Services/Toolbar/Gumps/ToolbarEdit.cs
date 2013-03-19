@@ -11,7 +11,7 @@ namespace Services.Toolbar.Gumps
 {
 	public class ToolbarEdit : Gump
 	{
-		public static string HTML = String.Format("<center><u>Command Toolbar v{0}</u><br>Made by Joeku AKA Demortris<br>{1}<br>- Customized for ForkUO -</center><br>   This toolbar is extremely versatile. You can switch skins and increase or decrease columns or rows. The toolbar operates like a spreadsheet; you can use the navigation menu to scroll through different commands and bind them. Enjoy!<br><p>If you have questions, concerns, or bug reports, please <A HREF=\"mailto:demortris@adelphia.net\">e-mail me</A>.", ToolbarCore.SystemVersion, ToolbarCore.ReleaseDate);
+		public static string HTML = String.Format("<center><u>Command Toolbar v{0}</u><br>Made by Joeku AKA Demortris<br>{1}<br>- Customized for ServUO -</center><br>   This toolbar is extremely versatile. You can switch skins and increase or decrease columns or rows. The toolbar operates like a spreadsheet; you can use the navigation menu to scroll through different commands and bind them. Enjoy!<br><p>If you have questions, concerns, or bug reports, please <A HREF=\"mailto:demortris@adelphia.net\">e-mail me</A>.", ToolbarCore.SystemVersion, ToolbarCore.ReleaseDate);
 		private bool p_Expanded;
 		private int p_ExpandedInt;
 

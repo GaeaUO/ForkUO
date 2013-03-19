@@ -1075,7 +1075,12 @@ namespace Server.Network
 						// User pressed escape
 						t.Cancel(from, TargetCancelType.Canceled);
 					}
-					else
+                    else if (t.TargetID != targetID)
+                    {
+                        // Prevent fake target, reported by AssistUO Team!
+                        return;
+                    }
+                    else
 					{
 						object toTarget;
 

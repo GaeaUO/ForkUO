@@ -35,7 +35,7 @@ namespace Server.Spells.Mystic
         }
         public override void OnCast()
         {
-            if (this.Caster.Backpack != null)
+            if (this.Caster.Backpack != null && this.CheckSequence())
             {
                 Item[] stones = this.Caster.Backpack.FindItemsByType(typeof(HealingStone));
 

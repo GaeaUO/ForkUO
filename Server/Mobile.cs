@@ -3694,7 +3694,7 @@ namespace Server
 							{
 								Mobile m = oldSector.Mobiles[i];
 
-								if (m != this && m.X == oldX && m.Y == oldY && (m.Z + 15) > oldZ && (oldZ + 15) > m.Z && !m.OnMoveOff(this))
+								if (m != this && m.X == oldX && m.Y == oldY && (m.Z + 15) >= oldZ && (oldZ + 15) >= m.Z && !m.OnMoveOff(this))
 									return false;
 							}
 
@@ -3702,7 +3702,7 @@ namespace Server
 							{
 								Item item = oldSector.Items[i];
 
-								if (item.AtWorldPoint(oldX, oldY) && (item.Z == oldZ || ((item.Z + item.ItemData.Height) > oldZ && (oldZ + 15) > item.Z)) && !item.OnMoveOff(this))
+								if (item.AtWorldPoint(oldX, oldY) && (item.Z == oldZ || ((item.Z + item.ItemData.Height) >= oldZ && (oldZ + 15) >= item.Z)) && !item.OnMoveOff(this))
 									return false;
 							}
 
@@ -3710,7 +3710,7 @@ namespace Server
 							{
 								Mobile m = newSector.Mobiles[i];
 
-								if (m.X == x && m.Y == y && (m.Z + 15) > newZ && (newZ + 15) > m.Z && !m.OnMoveOver(this))
+								if (m.X == x && m.Y == y && (m.Z + 15) >= newZ && (newZ + 15) >= m.Z && !m.OnMoveOver(this))
 									return false;
 							}
 
@@ -3718,7 +3718,7 @@ namespace Server
 							{
 								Item item = newSector.Items[i];
 
-								if (item.AtWorldPoint(x, y) && (item.Z == newZ || ((item.Z + item.ItemData.Height) > newZ && (newZ + 15) > item.Z)) && !item.OnMoveOver(this))
+								if (item.AtWorldPoint(x, y) && (item.Z == newZ || ((item.Z + item.ItemData.Height) >= newZ && (newZ + 15) >= item.Z)) && !item.OnMoveOver(this))
 									return false;
 							}
 						}
@@ -3728,9 +3728,9 @@ namespace Server
 							{
 								Mobile m = oldSector.Mobiles[i];
 
-								if (m != this && m.X == oldX && m.Y == oldY && (m.Z + 15) > oldZ && (oldZ + 15) > m.Z && !m.OnMoveOff(this))
+								if (m != this && m.X == oldX && m.Y == oldY && (m.Z + 15) >= oldZ && (oldZ + 15) >= m.Z && !m.OnMoveOff(this))
 									return false;
-								else if (m.X == x && m.Y == y && (m.Z + 15) > newZ && (newZ + 15) > m.Z && !m.OnMoveOver(this))
+								else if (m.X == x && m.Y == y && (m.Z + 15) >= newZ && (newZ + 15) >= m.Z && !m.OnMoveOver(this))
 									return false;
 							}
 
@@ -3738,9 +3738,9 @@ namespace Server
 							{
 								Item item = oldSector.Items[i];
 
-								if (item.AtWorldPoint(oldX, oldY) && (item.Z == oldZ || ((item.Z + item.ItemData.Height) > oldZ && (oldZ + 15) > item.Z)) && !item.OnMoveOff(this))
+								if (item.AtWorldPoint(oldX, oldY) && (item.Z == oldZ || ((item.Z + item.ItemData.Height) >= oldZ && (oldZ + 15) >= item.Z)) && !item.OnMoveOff(this))
 									return false;
-								else if (item.AtWorldPoint(x, y) && (item.Z == newZ || ((item.Z + item.ItemData.Height) > newZ && (newZ + 15) > item.Z)) && !item.OnMoveOver(this))
+								else if (item.AtWorldPoint(x, y) && (item.Z == newZ || ((item.Z + item.ItemData.Height) >= newZ && (newZ + 15) >= item.Z)) && !item.OnMoveOver(this))
 									return false;
 							}
 						}
@@ -5870,7 +5870,9 @@ namespace Server
 				if (this.Asleep)
 				{
 					this.Asleep = false;
-					from.Send(SpeedControl.Disable);
+
+                    if (from != null)
+                        from.Send(SpeedControl.Disable);
 				}
 				
 				switch( m_VisibleDamageType )

@@ -49,66 +49,68 @@ namespace Server.Spells.Mystic
 
             if (p == null)
                 return;
-
-            List<Mobile> targets = new List<Mobile>();
-            StatMod mod;
-
-            foreach (Mobile mob in this.Caster.Map.GetMobilesInRange(new Point3D(p), 3))
+            else if (this.CheckSequence())
             {
-                if (mob == null)
-                    continue;
+                List<Mobile> targets = new List<Mobile>();
+                StatMod mod;
 
-                if (this.Caster is PlayerMobile)
-                    if (this.Caster.CanBeBeneficial(mob, false))
-                        targets.Add(mob);
-            }
+                foreach (Mobile mob in this.Caster.Map.GetMobilesInRange(new Point3D(p), 3))
+                {
+                    if (mob == null)
+                        continue;
 
-            Mobile m;
-            int toheal = (int)(this.Caster.Skills[SkillName.Mysticism].Value * 0.1);
-            this.Caster.PlaySound(0x64D);
+                    if (this.Caster is PlayerMobile)
+                        if (this.Caster.CanBeBeneficial(mob, false))
+                            targets.Add(mob);
+                }
 
-            for (int i = 0; i < targets.Count; i++)
-            {
-                m = targets[i];
+                Mobile m;
+                int toheal = (int)(this.Caster.Skills[SkillName.Mysticism].Value * 0.1);
+                this.Caster.PlaySound(0x64D);
 
-                if (!m.Alive)
-                    continue;
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    m = targets[i];
 
-                m.Heal(toheal + Utility.RandomMinMax(1, 5));
+                    if (!m.Alive)
+                        continue;
 
-                mod = m.GetStatMod("[Magic] Str Offset");
-                if (mod != null && mod.Offset < 0)
-                    m.RemoveStatMod("[Magic] Str Offset");
+                    m.Heal(toheal + Utility.RandomMinMax(1, 5));
 
-                mod = m.GetStatMod("[Magic] Dex Offset");
-                if (mod != null && mod.Offset < 0)
-                    m.RemoveStatMod("[Magic] Dex Offset");
+                    mod = m.GetStatMod("[Magic] Str Offset");
+                    if (mod != null && mod.Offset < 0)
+                        m.RemoveStatMod("[Magic] Str Offset");
 
-                mod = m.GetStatMod("[Magic] Int Offset");
-                if (mod != null && mod.Offset < 0)
-                    m.RemoveStatMod("[Magic] Int Offset");
+                    mod = m.GetStatMod("[Magic] Dex Offset");
+                    if (mod != null && mod.Offset < 0)
+                        m.RemoveStatMod("[Magic] Dex Offset");
 
-                m.Paralyzed = false;
-                m.Asleep = false; // SA Mysticism Edit
-                m.CurePoison(this.Caster);
-                EvilOmenSpell.TryEndEffect(m);
-                StrangleSpell.RemoveCurse(m);
-                CorpseSkinSpell.RemoveCurse(m);
-                CurseSpell.RemoveEffect(m);
-                MortalStrike.EndWound(m);
+                    mod = m.GetStatMod("[Magic] Int Offset");
+                    if (mod != null && mod.Offset < 0)
+                        m.RemoveStatMod("[Magic] Int Offset");
 
-                if (Core.ML)
-                    BloodOathSpell.RemoveCurse(m);
+                    m.Paralyzed = false;
+                    m.Asleep = false; // SA Mysticism Edit
+                    m.CurePoison(this.Caster);
+                    EvilOmenSpell.TryEndEffect(m);
+                    StrangleSpell.RemoveCurse(m);
+                    CorpseSkinSpell.RemoveCurse(m);
+                    CurseSpell.RemoveEffect(m);
+                    MortalStrike.EndWound(m);
 
-                MindRotSpell.ClearMindRotScalar(m);
+                    if (Core.ML)
+                        BloodOathSpell.RemoveCurse(m);
 
-                BuffInfo.RemoveBuff(m, BuffIcon.Clumsy);
-                BuffInfo.RemoveBuff(m, BuffIcon.FeebleMind);
-                BuffInfo.RemoveBuff(m, BuffIcon.Weaken);
-                BuffInfo.RemoveBuff(m, BuffIcon.Curse);
-                BuffInfo.RemoveBuff(m, BuffIcon.MassCurse);
-                BuffInfo.RemoveBuff(m, BuffIcon.MortalStrike);
-                BuffInfo.RemoveBuff(m, BuffIcon.Mindrot);
+                    MindRotSpell.ClearMindRotScalar(m);
+
+                    BuffInfo.RemoveBuff(m, BuffIcon.Clumsy);
+                    BuffInfo.RemoveBuff(m, BuffIcon.FeebleMind);
+                    BuffInfo.RemoveBuff(m, BuffIcon.Weaken);
+                    BuffInfo.RemoveBuff(m, BuffIcon.Curse);
+                    BuffInfo.RemoveBuff(m, BuffIcon.MassCurse);
+                    BuffInfo.RemoveBuff(m, BuffIcon.MortalStrike);
+                    BuffInfo.RemoveBuff(m, BuffIcon.Mindrot);
+                }
             }
         }
     }

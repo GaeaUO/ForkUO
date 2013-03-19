@@ -115,55 +115,60 @@ namespace CustomsFramework
 
         public bool LinkMobile(Mobile from)
         {
-            if (this._LinkedMobile != null)
-                return false;
-            else if (this._LinkedMobile == from)
+            if (_LinkedMobile != null || _LinkedMobile == from)
                 return false;
             else
             {
                 if (!from.Modules.Contains(this))
                     from.Modules.Add(this);
 
-                this._LinkedMobile = from;
-                this.Update();
+                _LinkedMobile = from;
+                Update();
                 return true;
             }
         }
 
         public bool LinkItem(Item item)
         {
-            if (this._LinkedItem == null)
-                return false;
-            else if (this._LinkedItem == item)
+            if (_LinkedItem != null || _LinkedItem == item)
                 return false;
             else
             {
-                this._LinkedItem = item;
-                this.Update();
+                if (!item.Modules.Contains(this))
+                    item.Modules.Add(this);
+
+                _LinkedItem = item;
+                Update();
                 return true;
             }
         }
 
         public bool UnlinkMobile()
         {
-            if (this._LinkedMobile == null)
+            if (_LinkedMobile == null)
                 return false;
             else
             {
-                this._LinkedMobile = null;
-                this.Update();
+                if (_LinkedMobile.Modules.Contains(this))
+                    _LinkedMobile.Modules.Remove(this);
+
+                _LinkedMobile = null;
+                Update();
                 return true;
             }
         }
 
         public bool UnlinkItem()
         {
-            if (this._LinkedItem == null)
+            if (_LinkedItem == null)
                 return false;
             else
             {
-                this._LinkedItem = null;
-                this.Update();
+                if (_LinkedItem.Modules.Contains(this))
+                    _LinkedItem.Modules.Remove(this);
+
+                _LinkedItem = null;
+                Update();
                 return true;
             }
         }

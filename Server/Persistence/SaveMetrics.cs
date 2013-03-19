@@ -5,8 +5,8 @@ namespace Server
 {
     public sealed class SaveMetrics : IDisposable
     {
-        private const string PerformanceCategoryName = "ForkUO 0.2";
-        private const string PerformanceCategoryDesc = "Performance counters for ForkUO 0.2";
+        private const string PerformanceCategoryName = "ServUO 0.4";
+        private const string PerformanceCategoryDesc = "Performance counters for ServUO 0.4";
 
         private readonly PerformanceCounter numberOfWorldSaves;
 

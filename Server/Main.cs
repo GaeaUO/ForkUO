@@ -555,13 +555,30 @@ namespace Server
 
 			Version ver = m_Assembly.GetName().Version;
 
+            String publishNumber = "";
+
+            if (File.Exists("publish.txt"))
+            {
+                try
+                {
+                    FileStream fs = new FileStream("publish.txt", FileMode.Open, FileAccess.Read, FileShare.Read);
+                    StreamReader sr = new StreamReader(fs);
+
+                    publishNumber = sr.ReadLine();
+
+                    sr.Close();
+                    fs.Close();
+                }
+                catch { }
+            }
+
 			// Added to help future code support on forums, as a 'check' people can ask for to it see if they recompiled core or not
 			Utility.PushColor(ConsoleColor.DarkGreen);
 			Console.WriteLine(@"----------------------------------------------------------------------------");
 			Utility.PopColor();
 			Utility.PushColor(ConsoleColor.Cyan);
-			Console.WriteLine("ForkUO - [http://www.forkuo.craftuo.com] Version {0}.{1}, Build {2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
-			Console.WriteLine("Core: Running on .NET Framework Version {0}.{1}.{2}", Environment.Version.Major, Environment.Version.Minor, Environment.Version.Build);
+			Console.WriteLine("ServUO - [http://www.servuo.com] Version {0}.{1}, Build {2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
+            Console.WriteLine("Publish {0}", publishNumber);
 			Utility.PopColor();
 
 			string s = Arguments;

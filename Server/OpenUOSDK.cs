@@ -13,7 +13,7 @@ namespace Server
     public partial class OpenUOSDK
     {
         //! You should point this to a directory containing a COPY of your client
-        //! files if you are having conflict issues with ForkUO using the same files
+        //! files if you are having conflict issues with ServUO using the same files
         //! that your client is using.
         //!+ Example: private static string _ClientData = @"C:\Server Files";
         private static string _ClientData = @"C:\Server";

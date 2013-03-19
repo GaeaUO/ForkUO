@@ -63,14 +63,17 @@ namespace Server.Spells.Mystic
             }
             else
             {
-                if (this.Caster.HasGump(typeof(EnchantGump)))
-                    this.Caster.CloseGump(typeof(EnchantGump));
+                if (this.CheckSequence())
+                {
+                    if (this.Caster.HasGump(typeof(EnchantGump)))
+                        this.Caster.CloseGump(typeof(EnchantGump));
 
-                this.Caster.SendGump(new EnchantGump());
+                    this.Caster.SendGump(new EnchantGump());
 
-                this.Caster.PlaySound(0x387);
-                this.Caster.FixedParticles(0x3779, 1, 15, 9905, 32, 2, EffectLayer.Head);
-                this.Caster.FixedParticles(0x37B9, 1, 14, 9502, 32, 5, (EffectLayer)255);
+                    this.Caster.PlaySound(0x387);
+                    this.Caster.FixedParticles(0x3779, 1, 15, 9905, 32, 2, EffectLayer.Head);
+                    this.Caster.FixedParticles(0x37B9, 1, 14, 9502, 32, 5, (EffectLayer)255);
+                }
             }
         }
     }

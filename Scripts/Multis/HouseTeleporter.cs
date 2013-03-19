@@ -170,7 +170,7 @@ namespace Server.Items
                 {
                     Mobile m = this.m_Mobile;
 
-                    if (m.Location == this.m_Teleporter.Location && m.Map == this.m_Teleporter.Map)
+                    if (m.X == this.m_Teleporter.X && m.Y == this.m_Teleporter.Y && Math.Abs(m.Z - this.m_Teleporter.Z) <= 1 && m.Map == this.m_Teleporter.Map)
                     {
                         Point3D p = target.GetWorldTop();
                         Map map = target.Map;

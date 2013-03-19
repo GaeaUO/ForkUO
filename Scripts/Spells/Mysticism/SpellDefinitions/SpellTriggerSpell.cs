@@ -34,10 +34,13 @@ namespace Server.Spells.Mystic
         }
         public override void OnCast()
         {
-            if (this.Caster.HasGump(typeof(SpellTriggerGump)))
-                this.Caster.CloseGump(typeof(SpellTriggerGump));
+            if (this.CheckSequence())
+            {
+                if (this.Caster.HasGump(typeof(SpellTriggerGump)))
+                    this.Caster.CloseGump(typeof(SpellTriggerGump));
 
-            this.Caster.SendGump(new SpellTriggerGump(this.Caster));
+                this.Caster.SendGump(new SpellTriggerGump(this.Caster));
+            }
         }
     }
 }

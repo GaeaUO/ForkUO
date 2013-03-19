@@ -40,7 +40,11 @@ namespace Server.Spells.Mystic
 
         public override void OnTarget(Object o)
         {
-            this.Caster.PlaySound(0x656);
+            if (this.CheckSequence())
+            {
+                // WHAT THE HECK IS THIS SUPPOSED TO DO?!?!?!?!?!?!?!!?!?!?!?!?
+                this.Caster.PlaySound(0x656);
+            }
         }
     }
 }
