@@ -3,6 +3,40 @@ using System.Collections;
 
 namespace Server.Items
 {
+    public enum CraftResource
+    {
+        None = 0,
+        Iron = 1,
+        DullCopper,
+        ShadowIron,
+        Copper,
+        Bronze,
+        Gold,
+        Agapite,
+        Verite,
+        Valorite,
+
+        RegularLeather = 101,
+        SpinedLeather,
+        HornedLeather,
+        BarbedLeather,
+
+        RedScales = 201,
+        YellowScales,
+        BlackScales,
+        GreenScales,
+        WhiteScales,
+        BlueScales,
+
+        RegularWood = 301,
+        OakWood,
+        AshWood,
+        YewWood,
+        Heartwood,
+        Bloodwood,
+        Frostwood
+    }
+
     public enum CraftResourceType
     {
         None,
@@ -12,7 +46,7 @@ namespace Server.Items
         Wood
     }
 
-    /*public class CraftAttributeInfo
+    public class CraftAttributeInfo
     {
         private int m_WeaponFireDamage;
         private int m_WeaponColdDamage;
@@ -852,7 +886,7 @@ namespace Server.Items
             #endregion
         }
     }
-    */
+
     public class CraftResourceInfo
     {
         private readonly int m_Hue;
@@ -1015,7 +1049,7 @@ namespace Server.Items
         {
             CraftResourceInfo[] list = null;
 
-            switch ( GetType(resource) )
+            switch (GetType(resource))
             {
                 case CraftResourceType.Metal:
                     list = m_MetalInfo;
@@ -1067,7 +1101,7 @@ namespace Server.Items
         /// </summary>
         public static CraftResource GetStart(CraftResource resource)
         {
-            switch ( GetType(resource) )
+            switch (GetType(resource))
             {
                 case CraftResourceType.Metal:
                     return CraftResource.Iron;
