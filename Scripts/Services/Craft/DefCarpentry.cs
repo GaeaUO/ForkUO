@@ -220,6 +220,14 @@ namespace Server.Engines.Craft
                 this.ForceNonExceptional(index);
                 this.SetNeededExpansion(index, Expansion.ML);
             }
+
+            if (Core.SA)
+            {
+                index = this.AddCraft(typeof(GargishBanner), 1044294, 1095312, 94.7, 115.0, typeof(Board), 1044041, 50, 1044351);
+                this.AddSkill(index, SkillName.Tailoring, 75.0, 105.0);
+                this.AddRes(index, typeof(Cloth), 1044286, 50, 1044287);
+                this.SetNeededExpansion(index, Expansion.SA);
+            }            
             #endregion
 
             // Furniture
@@ -278,6 +286,21 @@ namespace Server.Engines.Craft
                 index = this.AddCraft(typeof(ElvenReadingChair), 1044291, 1072873, 80.0, 105.0, typeof(Log), 1044041, 30, 1044351);
                 this.SetNeededExpansion(index, Expansion.ML);
             }
+
+            if (Core.SA)
+            {
+                index = this.AddCraft(typeof(GargishCouchEastDeed), 1044291, 1111776, 90.0, 115.0, typeof(Board), 1044041, 75, 1044351);           
+                this.SetNeededExpansion(index, Expansion.SA);
+ 
+                index = this.AddCraft(typeof(GargishCouchSouthDeed), 1044291, 1111775, 90.0, 115.0, typeof(Board), 1044041, 75, 1044351);
+                this.SetNeededExpansion(index, Expansion.SA);
+ 
+                index = this.AddCraft(typeof(TerMurDresserEastDeed), 1044291, 1111784, 90.0, 115.0, typeof(Board), 1044041, 60, 1044351);
+                this.SetNeededExpansion(index, Expansion.SA);
+ 
+                index = this.AddCraft(typeof(TerMurDresserSouthDeed), 1044291, 1111783, 90.0, 115.0, typeof(Board), 1044041, 60, 1044351);
+                this.SetNeededExpansion(index, Expansion.SA);
+            }            
             #endregion
 
             // Containers

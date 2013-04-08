@@ -17,7 +17,11 @@ namespace Server
         Myrmidon,
         Necromancer,
         Paladin,
-        Virtue
+        Virtue,
+        Luck,
+        Knights,
+        Scout,
+        Sorcerer
     }
 
     public interface ISetItem

@@ -366,6 +366,16 @@ namespace Server.Engines.Craft
                 this.AddCraft(typeof(ChaosShield), 1011080, 1027107, 85.0, 135.0, typeof(IronIngot), 1044036, 25, 1044037);
                 this.AddCraft(typeof(OrderShield), 1011080, 1027108, 85.0, 135.0, typeof(IronIngot), 1044036, 25, 1044037);
             }
+            
+            if ( Core.SA)
+            {
+                this.AddCraft(typeof(SmallPlateShield), 1011080, 1095770, -15.2, 34.8, typeof(IronIngot), 1044036, 12, 1044037);
+                this.AddCraft(typeof(MediumPlateShield), 1011080, 1095771, -10.2, 39.8, typeof(IronIngot), 1044036, 14, 1044037);
+                this.AddCraft(typeof(LargePlateShield), 1011080, 1095772, 24.3, 74.3, typeof(IronIngot), 1044036, 18, 1044037);
+                this.AddCraft(typeof(GargishKiteShield), 1011080, 1095774, 4.6, 54.6, typeof(IronIngot), 1044036, 16, 1044037);
+                this.AddCraft(typeof(GargishChaosShield), 1011080, 1095808, 85.0, 135.0, typeof(IronIngot), 1044036, 25, 1044037);
+                this.AddCraft(typeof(GargishOrderShield), 1011080, 1095810, 85.0, 135.0, typeof(IronIngot), 1044036, 25, 1044037);
+            }            
             #endregion
 
             #region Bladed
@@ -568,6 +578,22 @@ namespace Server.Engines.Craft
                 }
                 */
             }
+
+            if ( Core.SA )
+            {   
+                #region SA
+                index = this.AddCraft( typeof( BloodBlade ), 1011081, 1095370, 44.1, 125.0, typeof( IronIngot ), 1044036, 8, 1044037 );
+                this.SetNeededExpansion( index, Expansion.SA );
+                index = this.AddCraft( typeof( DreadSword ), 1011081, 1095372, 75.0, 125.0, typeof( IronIngot ), 1044036, 14, 1044037 );
+                this.SetNeededExpansion( index, Expansion.SA );
+                index = this.AddCraft( typeof( GargishDagger ), 1011081, 1095362, 0.0, 100.0, typeof( IronIngot ), 1044036, 3, 1044037 );
+                this.SetNeededExpansion( index, Expansion.SA );
+                index = this.AddCraft( typeof( GargishTalwar ), 1011081, 1095373, 75.0, 150.0, typeof( IronIngot ), 1044036, 18, 1044037 );
+                this.SetNeededExpansion( index, Expansion.SA );
+                index = this.AddCraft( typeof( Shortblade ), 1011081, 1095374, 28.0, 100.0, typeof( IronIngot ), 1044036, 12, 1044037 );
+                this.SetNeededExpansion( index, Expansion.SA );
+                #endregion
+            }    
             #endregion
 
             #region Axes
@@ -578,6 +604,14 @@ namespace Server.Engines.Craft
             this.AddCraft(typeof(LargeBattleAxe), 1011082, 1025115, 28.0, 78.0, typeof(IronIngot), 1044036, 12, 1044037);
             this.AddCraft(typeof(TwoHandedAxe), 1011082, 1025187, 33.0, 83.0, typeof(IronIngot), 1044036, 16, 1044037);
             this.AddCraft(typeof(WarAxe), 1011082, 1025040, 39.1, 89.1, typeof(IronIngot), 1044036, 16, 1044037);
+
+            if ( Core.SA )
+            {   
+                #region SA
+                index = this.AddCraft( typeof( DualShortAxes ), 1011082, 1095360, 75.0, 125.0, typeof( IronIngot ), 1044036, 24, 1044037 );
+                this.SetNeededExpansion( index, Expansion.SA );
+                #endregion
+            }
             /*
             if( Core.ML )
             {
@@ -633,6 +667,13 @@ namespace Server.Engines.Craft
             this.AddCraft(typeof(Spear), 1011083, 1023938, 49.0, 99.0, typeof(IronIngot), 1044036, 12, 1044037);
             this.AddCraft(typeof(WarFork), 1011083, 1025125, 42.9, 92.9, typeof(IronIngot), 1044036, 12, 1044037);
 
+            if ( Core.SA )
+            {   
+                #region SA
+                index = this.AddCraft( typeof( DualPointedSpear ), 1011083, 1095365, 45.0, 100.0, typeof( IronIngot ), 1044036, 16, 1044037 );
+                this.SetNeededExpansion( index, Expansion.SA );
+                #endregion
+            }
             // Not craftable (is this an AOS change ??)
             //AddCraft( typeof( Pitchfork ), 1011083, 1023720, 36.1, 86.1, typeof( IronIngot ), 1044036, 12, 1044037 );
             #endregion
@@ -655,6 +696,13 @@ namespace Server.Engines.Craft
                 this.AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
                 this.SetNeededExpansion(index, Expansion.SE);
             }
+            if ( Core.SA )
+            {   
+                #region SA
+                index = this.AddCraft(typeof(DiscMace), 1011084, 1095366, 70.0, 100.0, typeof(IronIngot), 1044036, 20, 1044037);
+                this.SetNeededExpansion( index, Expansion.SA );
+                #endregion
+            }            
             /*
             if( Core.ML )
             {

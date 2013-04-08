@@ -176,6 +176,23 @@ namespace Server.Engines.Craft
 
             index = this.AddCraft(typeof(GoldBracelet), 1044049, 1044221 + offset, 40.0, 90.0, typeof(IronIngot), 1044036, 2, 1044037);
             this.AddRes(index, itemType, 1044231 + offset, 1, 1044240);
+
+            if (Core.SA)
+            index = this.AddCraft(typeof(GargishBracelet), 1095785, 1095785, 65.0, 115.0, typeof(IronIngot), 1044036, 6, 1044037);
+            this.AddRes(index, typeof(BrilliantAmber), 1032697, 1, 1044240);
+            this.SetNeededExpansion(index, Expansion.SA);
+ 
+            index = this.AddCraft(typeof(GargishRing), 1095786, 1095786, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
+            this.AddRes(index, typeof(StarSapphire), 1062600, 1, 1044253);
+            this.SetNeededExpansion(index, Expansion.SA);
+ 
+            index = this.AddCraft(typeof(GargishNecklace), 1095784, 1095784, 65.0, 115.0, typeof(IronIngot), 1044036, 6, 1044037);
+            this.AddRes(index, typeof(FireRuby), 1032695, 1, 1044253);
+            this.SetNeededExpansion(index, Expansion.SA);
+ 
+            index = this.AddCraft(typeof(GargishEarrings), 1095787, 1095787, 65.0, 115.0, typeof(IronIngot), 1044036, 4, 1044037);
+            this.AddRes(index, typeof(BlueDiamond), 1032696, 1, 1044253);
+            this.SetNeededExpansion(index, Expansion.SA);            
         }
 
         public override void InitCraftList()
