@@ -175,24 +175,8 @@ namespace Server.Engines.Craft
             this.AddRes(index, itemType, 1044231 + offset, 1, 1044240);
 
             index = this.AddCraft(typeof(GoldBracelet), 1044049, 1044221 + offset, 40.0, 90.0, typeof(IronIngot), 1044036, 2, 1044037);
-            this.AddRes(index, itemType, 1044231 + offset, 1, 1044240);
-
-            if (Core.SA)
-            index = this.AddCraft(typeof(GargishBracelet), 1044049, 1095785, 65.0, 115.0, typeof(IronIngot), 1044036, 6, 1044037);
-            this.AddRes(index, typeof(BrilliantAmber), 1032697, 1, 1044240);
-            this.SetNeededExpansion(index, Expansion.SA);
- 
-            index = this.AddCraft(typeof(GargishRing), 1044049, 1095786, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
-            this.AddRes(index, typeof(StarSapphire), 1062600, 1, 1044253);
-            this.SetNeededExpansion(index, Expansion.SA);
- 
-            index = this.AddCraft(typeof(GargishNecklace), 1044049, 1095784, 65.0, 115.0, typeof(IronIngot), 1044036, 6, 1044037);
-            this.AddRes(index, typeof(FireRuby), 1032695, 1, 1044253);
-            this.SetNeededExpansion(index, Expansion.SA);
- 
-            index = this.AddCraft(typeof(GargishEarrings), 1044049, 1095787, 65.0, 115.0, typeof(IronIngot), 1044036, 4, 1044037);
-            this.AddRes(index, typeof(BlueDiamond), 1032696, 1, 1044253);
-            this.SetNeededExpansion(index, Expansion.SA);            
+            this.AddRes(index, itemType, 1044231 + offset, 1, 1044240);     
+             
         }
 
         public override void InitCraftList()
@@ -262,7 +246,7 @@ namespace Server.Engines.Craft
             this.AddCraft(typeof(BarrelHoops), 1044047, 1024321, -15.0, 35.0, typeof(IronIngot), 1044036, 5, 1044037);
             this.AddCraft(typeof(Hinge), 1044047, 1024181, 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
             this.AddCraft(typeof(BolaBall), 1044047, 1023699, 45.0, 95.0, typeof(IronIngot), 1044036, 10, 1044037);
-			
+            
             if (Core.ML)
             {
                 index = this.AddCraft(typeof(JeweledFiligree), 1044047, 1072894, 70.0, 110.0, typeof(IronIngot), 1044036, 2, 1044037);
@@ -270,7 +254,7 @@ namespace Server.Engines.Craft
                 this.AddRes(index, typeof(Ruby), 1044234, 1, 1044253);
                 this.SetNeededExpansion(index, Expansion.ML);
             }
-			
+            
             #endregion
 
             #region Utensils
@@ -357,7 +341,7 @@ namespace Server.Engines.Craft
             this.AddRes(index, typeof(Bottle), 1044250, 10, 1044253);
             this.AddRes(index, typeof(BarrelLid), 1044251, 1, 1044253);
             this.AddRes(index, typeof(BarrelTap), 1044252, 1, 1044253);
-			
+            
             if (Core.SA)
             {
                 index = this.AddCraft(typeof(ModifiedClockworkAssembly), 1044051, 1113031, 65.0, 115.0, typeof(ClockworkAssembly), 1073426, 1, 502910);
@@ -423,7 +407,7 @@ namespace Server.Engines.Craft
             this.AddRes(index, typeof(IronIngot), 1044036, 10, 1044037);
             this.AddRes(index, typeof(Gears), 1044254, 1, 1044253);
 
-            // Faction Spike Trap			
+            // Faction Spike Trap           
             index = this.AddCraft(typeof(FactionSpikeTrapDeed), 1044052, 1044601, 65.0, 115.0, typeof(Silver), 1044572, Core.AOS ? 250 : 1000, 1044253);
             this.AddRes(index, typeof(IronIngot), 1044036, 10, 1044037);
             this.AddRes(index, typeof(Springs), 1044171, 1, 1044253);
@@ -500,6 +484,24 @@ namespace Server.Engines.Craft
                 this.ForceNonExceptional(index);
                 this.SetNeededExpansion(index, Expansion.ML);
             }
+            if (Core.SA)
+            {
+                index = this.AddCraft(typeof(GargishBracelet), 1044049, 1095785, 65.0, 115.0, typeof(IronIngot), 1044036, 6, 1044037);
+                this.AddRes(index, typeof(BrilliantAmber), 1032697, 1, 1044240);
+                this.SetNeededExpansion(index, Expansion.SA);
+     
+                index = this.AddCraft(typeof(GargishRing), 1044049, 1095786, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
+                this.AddRes(index, typeof(StarSapphire), 1062600, 1, 1044253);
+                this.SetNeededExpansion(index, Expansion.SA);
+     
+                index = this.AddCraft(typeof(GargishNecklace), 1044049, 1095784, 65.0, 115.0, typeof(IronIngot), 1044036, 6, 1044037);
+                this.AddRes(index, typeof(FireRuby), 1032695, 1, 1044253);
+                this.SetNeededExpansion(index, Expansion.SA);
+     
+                index = this.AddCraft(typeof(GargishEarrings), 1044049, 1095787, 65.0, 115.0, typeof(IronIngot), 1044036, 4, 1044037);
+                this.AddRes(index, typeof(BlueDiamond), 1032696, 1, 1044253);
+                this.SetNeededExpansion(index, Expansion.SA);  
+            }               
             #endregion
 
             // Set the overridable material
