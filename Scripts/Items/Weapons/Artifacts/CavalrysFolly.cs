@@ -2,11 +2,11 @@ using System;
 
 namespace Server.Items
 {
-    public class CavalrysFolly : BaseSpear
+    public class CavalrysFolly : BladedStaff
     {
         [Constructable]
         public CavalrysFolly()
-            : base(0x26BD)
+            : base()
         {
             this.Name = ("Cavalry's Folly");
 		

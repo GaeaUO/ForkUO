@@ -590,22 +590,17 @@ namespace Server.Mobiles
 
 			this.InitGargOutfit();
 
-			if (this.Name == null)
+			if ( Female = GetGender() )
 			{
-				this.Name = NameList.RandomName("gargoyle vendor");
-			}
-
-			/*	if ( Female = GetGender() )
-			{
-			Body = 0x29B;
-			Name = NameList.RandomName( "female" );
+				Body = 0x29B;
+				Name = NameList.RandomName( "gargoyle female" );
 			}
 			else
 			{
-			Body = 0x29A;
-			Name = NameList.RandomName( "male" );
+				Body = 0x29A;
+				Name = NameList.RandomName( "gargoyle male" );
 			}
-			*/
+
 			this.CapitalizeTitle();
 		}
 
