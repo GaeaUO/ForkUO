@@ -5,11 +5,8 @@ namespace Server.Items
     [FlipableAttribute(0x4644, 0x4645)]     
     public class GargishGlasses : Glasses
     {
-        [Constructable]
-        public AnniversaryRobe() : this(0x4644)
-        {
-        }        
-        public GargishGlasses() : base()
+       
+        public GargishGlasses() : base(0x4644)
         {
         }
 
