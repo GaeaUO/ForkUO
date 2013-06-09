@@ -349,7 +349,7 @@ namespace Server.Engines.Craft
             #region SA
             if (Core.SA)
             {
-                this.AddCraft(typeof(LeatherTalons), 1015288, "Gargish Leather Talons", 40.4, 65.4, typeof(Leather), 1044462, 6, 1044453);
+                this.AddCraft(typeof(LeatherTalons), 1015288, 1095728, 40.4, 65.4, typeof(Leather), 1044462, 6, 1044453);
             }
             #endregion
             #endregion
@@ -451,7 +451,25 @@ namespace Server.Engines.Craft
             #endregion
 
             #endregion
+            #region Gargish Clothing
+            if (Core.SA)
+            {
+                #region SA
+                index = AddCraft(typeof(GargishClothArms), 1111748, 1112737, 46.3, 96.3, typeof(Cloth), 1044286, 6, 1044287);
+                SetNeededExpansion(index, Expansion.SA);
 
+                index = AddCraft(typeof(GargishClothChest), 1111748, 1112738, 55.0, 104.1, typeof(Cloth), 1044286, 12, 1044287);
+                SetNeededExpansion(index, Expansion.SA);
+
+                index = AddCraft(typeof(GargishClothKilt), 1111748, 1112742, 48.9, 100.3, typeof(Cloth), 1044286, 12, 1044287);
+                SetNeededExpansion(index, Expansion.SA);
+
+                index = AddCraft(typeof(GargishClothLegs), 1111748, 1112741, 48.8, 98.8, typeof(Cloth), 1044286, 6, 1044287);
+                SetNeededExpansion(index, Expansion.SA);
+
+                #endregion
+            }
+            #endregion
             #region Studded Armor
             this.AddCraft(typeof(StuddedGorget), 1015300, 1025078, 78.8, 103.8, typeof(Leather), 1044462, 6, 1044463);
             this.AddCraft(typeof(StuddedGloves), 1015300, 1025077, 82.9, 107.9, typeof(Leather), 1044462, 8, 1044463);

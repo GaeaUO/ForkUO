@@ -8,7 +8,7 @@ using Server.Targeting;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0xf9f, 0xf9e)]
+    [FlipableAttribute(0x0DFC, 0x0DFD)]
     public class Clippers : Item, IUsesRemaining, ICraftable
     {
         private int m_UsesRemaining;
@@ -99,9 +99,10 @@ namespace Server.Items
 
         [Constructable]
         public Clippers()
-            : base(0xF9F)
+            : base(0x0DFC)
         {
             this.Weight = 1.0;
+            this.Hue = 1168;
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -293,6 +294,7 @@ namespace Server.Items
                     from.AddToBackpack(dr);
                     plant.Delete();
                 }
+                //TODO: Add in clipping hedges (short and tall) and juniperbushes for topiaries
             }
         }
 

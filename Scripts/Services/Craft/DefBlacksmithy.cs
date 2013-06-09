@@ -302,6 +302,22 @@ namespace Server.Engines.Craft
                 index = this.AddCraft(typeof(PlateHaidate), 1011078, 1030200, 65.0, 115.0, typeof(IronIngot), 1044036, 20, 1044037);
                 this.SetNeededExpansion(index, Expansion.SE);
             }
+            if ( Core.SA )
+            {   
+                #region SA
+                index = AddCraft( typeof( GargishPlateArms ), 1011078, 1095336, 66.3, 116.3, typeof( IronIngot ), 1044036, 18, 1044037 );
+                SetNeededExpansion( index, Expansion.SA );
+                    
+                index = AddCraft( typeof( GargishPlateChest ), 1011078, 1095338, 75.0, 125.0, typeof( IronIngot ), 1044036, 25, 1044037 );
+                SetNeededExpansion( index, Expansion.SA );
+                    
+                index = AddCraft( typeof( GargishPlateKilt ), 1011078, 1095340, 58.9, 116.3, typeof( IronIngot ), 1044036, 12, 1044037 );
+                SetNeededExpansion( index, Expansion.SA );
+                    
+                index = AddCraft( typeof( GargishPlateLegs ), 1011078, 1095342, 68.8, 118.8, typeof( IronIngot ), 1044036, 20, 1044037 );
+                SetNeededExpansion( index, Expansion.SA );
+                #endregion
+                }            
             #endregion
 
             #region Helmets
@@ -377,7 +393,19 @@ namespace Server.Engines.Craft
                 this.AddCraft(typeof(GargishOrderShield), 1011080, 1095810, 85.0, 135.0, typeof(IronIngot), 1044036, 25, 1044037);
             }            
             #endregion
-
+            #region Throwing
+            if ( Core.SA )
+            {   
+                #region SA
+                index = AddCraft( typeof( Boomerang ), 1079508, 1095359, 75.0, 100.0, typeof( IronIngot ), 1044036, 5, 1044037 );
+                SetNeededExpansion( index, Expansion.SA );
+                index = AddCraft( typeof( Cyclone ), 1079508, 1095364, 75.0, 100.0, typeof( IronIngot ), 1044036, 9, 1044037 );
+                SetNeededExpansion( index, Expansion.SA );
+                index = AddCraft( typeof( SoulGlaive ), 1079508, 1095363, 75.0, 100.0, typeof( IronIngot ), 1044036, 9, 1044037 );
+                SetNeededExpansion( index, Expansion.SA );
+                #endregion
+            }
+            #endregion
             #region Bladed
 
             if (Core.AOS)
@@ -780,15 +808,15 @@ namespace Server.Engines.Craft
                 index = this.AddCraft(typeof(DiscMace), 1011084, 1029929, 70.0, 100.0, typeof(IronIngot), 1044036, 20, 1044037);
                 this.SetNeededExpansion(index, Expansion.SA);
 
-                index = this.AddCraft(typeof(GargishMaul), 1011084, "Gargish Maul", 19.4, 69.4, typeof(IronIngot), 1044036, 10, 1044037);
+                index = this.AddCraft(typeof(GargishMaul), 1011084, 1097498, 19.4, 69.4, typeof(IronIngot), 1044036, 10, 1044037);
                 this.SetNeededExpansion(index, Expansion.SA);
 
-                index = this.AddCraft(typeof(GargishTessen), 1011084, "Gargish Tessen", 50.0, 100.0, typeof(IronIngot), 1044036, 16, 1044037);
+                index = this.AddCraft(typeof(GargishTessen), 1011084, 1097508, 50.0, 100.0, typeof(IronIngot), 1044036, 16, 1044037);
                 this.AddSkill(index, SkillName.Tailoring, 50.0, 55.0);
                 this.AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
                 this.SetNeededExpansion(index, Expansion.SA);
 
-                index = this.AddCraft(typeof(GargishWarHammer), 1011084, "Gargish War Hammer", 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
+                index = this.AddCraft(typeof(GargishWarHammer), 1011084, 1097496, 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
                 this.SetNeededExpansion(index, Expansion.SA);
             }
 

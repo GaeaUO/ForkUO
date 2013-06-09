@@ -2,24 +2,20 @@ using System;
 
 namespace Server.Items
 {
-    [Flipable(0x4B9D, 0x4B9E)]
-    public class AnniversaryRobe : BaseOuterTorso
+    [FlipableAttribute(0x4919, 0x491A)]     
+    public class GoblinTopiary : Item
     {
-        [Constructable]
-        public AnniversaryRobe() : this(0x455)
-        {
-        }
+
+        public override int LabelNumber{ get{ return 1070878; } } // a decorative topiary
 
         [Constructable]
-        public AnniversaryRobe(int hue) : base(0x4B9D, hue)
+        public GoblinTopiary() : base(0x4919)
         {
-            this.Name = "15th Anniversary Commemorative Robe";
-            this.LootType = LootType.Blessed;
             this.Weight = 1.0;
+            this.Name = ("a goblin topiary");
         }
 
-        public AnniversaryRobe(Serial serial)
-            : base(serial)
+        public GoblinTopiary(Serial serial) : base(serial)
         {
         }
 
